@@ -5,7 +5,9 @@ export default {
   theme: {
     colors: {
       "primary": "#F32929",
-      "bg":"#ededed"
+      "secondary": "#f79292",
+      "bg":"#ededed",
+      "white":"#ffffff"
     },
     fontFamily: {
       sans: ["Poppins", "sans-serif"],

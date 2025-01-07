@@ -11,6 +11,10 @@ import ManagementPage from "../pages/job-request-management/ManagementPage";
 import InvoicePage from "../pages/invoice/InvoicePage";
 import AddServicePage from "../pages/add-service-catagory/AddServicePage";
 import MakeAdminPage from "../pages/make-admin/MakeAdminPage";
+import Settings from "../pages/settings/Settings";
+import Technician from "../pages/user-management/Technician";
+import AdminClient from "../pages/user-management/AdminClient";
+import ClientSupervisor from "../pages/user-management/ClientSupervisor";
 
 const router = createBrowserRouter([
   {
@@ -25,10 +29,8 @@ const router = createBrowserRouter([
         path: "/",
         element: <DashboardPage />,
       },
-      {
-        path: "/user-management",
-        element: <UserManagementPage />,
-      },
+
+    
       {
         path: "/request-management",
         element: <ManagementPage />,
@@ -46,8 +48,31 @@ const router = createBrowserRouter([
         element: <MakeAdminPage />,
       },
 
-      // settings
+      
+        // user management
+        {
+          path: "/user-management",
+          element: <UserManagementPage />,
+        },
+        {
+          path: "/technician",
+          element: <Technician />,
+        },
+        {
+          path: "/admin-client",
+          element: <AdminClient />,
+        },
+        {
+          path: "/client-supervisor",
+          element: <ClientSupervisor />,
+        },
+  
 
+      // settings
+      {
+        path: "/settings",
+        element: <Settings />,
+      },
       {
         path: "/privacy-policy",
         element: <Policy />,
