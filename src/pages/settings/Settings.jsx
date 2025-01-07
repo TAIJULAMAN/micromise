@@ -1,8 +1,9 @@
+import Policy from "./policy"
 
 function Settings() {
     return (
         <div>
-            settings
+         <Policy />
         </div>
     )
 }
