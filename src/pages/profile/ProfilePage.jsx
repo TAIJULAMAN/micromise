@@ -12,7 +12,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="p-5 overflow-y-auto">
+    <div className="p-5 h-full overflow-y-auto">
       <h3 className="font-semibold pb-5 text-xl text-[#575757]">
         Admin Profile(Super Admin)
       </h3>

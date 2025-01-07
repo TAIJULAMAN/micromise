@@ -3,6 +3,8 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 function ChangePass() {
   const [isEyeOpen, setIsEyeOpen] = useState();
+  const [profilePic, setProfilePic] = useState(null);
+
   const handleSubmit = () => {};
   return (
     <div className="bg-white px-20 w-[715px] pt-10 pb-5 rounded-md">
@@ -95,7 +97,7 @@ function ChangePass() {
           </div>
         </div>
 
-        {/* <div className="text-center">
+        <div className="text-center my-5">
           {profilePic ? (
             <button
               type="button"
@@ -112,7 +114,7 @@ function ChangePass() {
               Save & Changes
             </button>
           )}
-        </div> */}
+        </div>
       </form>
     </div>
   );

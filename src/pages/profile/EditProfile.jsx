@@ -74,7 +74,7 @@ function EditProfile() {
           />
         </div>
 
-        <div className="text-center">
+        <div className="text-center  my-5">
           {profilePic ? (
             <button
               type="button"
