@@ -30,20 +30,16 @@ const router = createBrowserRouter([
         element: <UserManagementPage />,
       },
       {
-        path: "/manage-property",
+        path: "/request-management",
         element: <ManagementPage />,
       },
       {
-        path: "/instant-quote-data",
+        path: "/invoice",
         element: <InvoicePage />,
       },
       {
-        path: "/call-management",
+        path: "/add-service",
         element: <AddServicePage />,
-      },
-      {
-        path: "/project",
-        element: <MakeAdminPage />,
       },
       {
         path: "/make-admin",
