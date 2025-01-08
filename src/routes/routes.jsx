@@ -15,11 +15,31 @@ import Settings from "../pages/settings/Settings";
 import Technician from "../pages/user-management/Technician";
 import AdminClient from "../pages/user-management/AdminClient";
 import ClientSupervisor from "../pages/user-management/ClientSupervisor";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import VerificationCode from "../pages/auth/VerificationCode";
+import NewPassword from "../pages/auth/NewPassword";
+import SuccessPage from "../pages/auth/SuccessPage";
 
 const router = createBrowserRouter([
   {
-    path: "/auth/sign-in",
+    path: "/sign-in",
     element: <SignInPage />,
+  },
+  {
+    path: "/forgate-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/verification-code",
+    element: <VerificationCode />,
+  },
+  {
+    path: "/new-password",
+    element: <NewPassword />,
+  },
+  {
+    path: "/success-message",
+    element: <SuccessPage />,
   },
   {
     path: "/",
