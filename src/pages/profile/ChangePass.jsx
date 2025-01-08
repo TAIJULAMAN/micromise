@@ -45,7 +45,7 @@ function ChangePass() {
             htmlFor="password"
             className="text-[15px] font-[400] text-[#575757]"
           >
-            Password
+            New Password
           </label>
           <div className="w-full relative">
             <input
@@ -73,7 +73,7 @@ function ChangePass() {
             htmlFor="password"
             className="text-[15px] font-[400] text-[#575757]"
           >
-            Password
+            New Password
           </label>
           <div className="w-full relative">
             <input
@@ -104,7 +104,7 @@ function ChangePass() {
               onClick={() => alert("Uploading image...")}
               className="bg-primary text-white p-2 px-10 py-2 rounded-md shadow-lg"
             >
-              Upload Profile Picture
+              Upload Picture
             </button>
           ) : (
             <button

@@ -81,7 +81,7 @@ function EditProfile() {
               onClick={() => alert("Uploading image...")}
               className="bg-primary text-white p-2 px-10 py-2 rounded-md shadow-lg"
             >
-              Upload Profile Picture
+              Upload Picture
             </button>
           ) : (
             <button
