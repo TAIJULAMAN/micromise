@@ -1,7 +1,9 @@
 import { useState } from "react";
+import NotificationModal from "../../components/Modals/NotificationModal";
 
 function NotificationPage() {
   const [clickedIndex, setClickedIndex] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleNotificationClick = (index) => {
     setClickedIndex(index);
@@ -39,6 +41,7 @@ function NotificationPage() {
               </p>
             </div>
             <button
+              onClick={() => setIsModalOpen(true)}
               className={`${
                 clickedIndex === index
                   ? " text-white"
@@ -49,6 +52,7 @@ function NotificationPage() {
             </button>
           </div>
         ))}
+        {isModalOpen && <NotificationModal setIsModalOpen={setIsModalOpen} />}
       </div>
     </div>
   );
