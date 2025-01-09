@@ -2,7 +2,7 @@ import { IoCloseSharp } from "react-icons/io5";
 
 function DeleteModal({ setIsDeleteModalVisible, onDelete, currentRecord }) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded">
       <div className="bg-white px-5 py-10 rounded shadow-lg w-96 relative">
         {/* Close Button */}
         <button
@@ -23,7 +23,7 @@ function DeleteModal({ setIsDeleteModalVisible, onDelete, currentRecord }) {
               onDelete(currentRecord.id);
               setIsDeleteModalVisible(false);
             }}
-            className="px-4 py-2 bg-primary text-white"
+            className="px-4 py-2 bg-primary text-white rounded"
           >
             Delete
           </button>

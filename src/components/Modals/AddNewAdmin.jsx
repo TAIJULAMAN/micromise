@@ -31,7 +31,7 @@ function AddNewAdmin({ onSubmit, setIsAddModalVisible }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="relative bg-white p-6 rounded shadow-lg px-10 w-[500px]">
-        <h3 className="text-lg font-semibold mb-4">Make Admin</h3>
+        <h3 className="text-lg font-semibold mb-4 text-[#242424]">Make Admin</h3>
 
         {/* Close Button */}
         <button
@@ -127,7 +127,7 @@ function AddNewAdmin({ onSubmit, setIsAddModalVisible }) {
             <button
               onClick={handleSubmit}
               type="submit"
-              className="px-4 py-2 bg-primary text-white"
+              className="px-4 py-2 bg-primary text-white rounded"
             >
               Publish
             </button>

@@ -4,7 +4,7 @@ import MainHeader from "../components/MainHeader/MainHeader";
 
 const MainLayout = () => {
   return (
-    <div className="flex h-screen overflow-y-auto">
+    <div className="flex h-screen ">
       {/* Sidebar */}
       <Sidebar />
 
@@ -15,7 +15,7 @@ const MainLayout = () => {
         <MainHeader />
 
         {/* Content */}
-        <main className="p-5 bg-bg">
+        <main className="p-5 bg-bg overflow-y-auto h-[89vh]">
           <Outlet />
         </main>
       </div>

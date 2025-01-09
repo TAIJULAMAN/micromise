@@ -13,7 +13,7 @@ function NotificationPage() {
     <div>
       {/* Header */}
       <div className="flex items-center justify-between pb-5">
-        <h3 className="font-semibold text-xl">Notification</h3>
+        <h3 className="font-semibold text-xl text-primary">Notification</h3>
         <button className="bg-primary text-white font-semibold px-6 py-2 rounded transition duration-200 hover:bg-primary/80">
           Read All
         </button>

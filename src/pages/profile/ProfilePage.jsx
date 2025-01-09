@@ -12,8 +12,9 @@ function ProfilePage() {
   };
 
   return (
-    <div className="p-5 h-full overflow-y-auto">
-      <h3 className="font-semibold pb-5 text-xl text-[#575757]">
+    <div className=" overflow-y-auto">
+      <div className="px-5 pb-5 h-full">
+      <h3 className="font-semibold pb-5 text-xl text-[#242424]">
         Admin Profile(Super Admin)
       </h3>
       <div className="mx-auto flex flex-col justify-center items-center">
@@ -81,6 +82,7 @@ function ProfilePage() {
             {activeTab === "changePassword" && <ChangePass />}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
