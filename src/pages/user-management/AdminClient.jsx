@@ -101,7 +101,7 @@ function AdminClient() {
           {data.map((item) => (
             <tr
               key={item.id}
-              className="grid grid-cols-[1fr_1.5fr_1.5fr_2fr_1.5fr_1.5fr_1fr] px-2 py-4 text-center"
+              className="grid grid-cols-[1fr_1.5fr_1.5fr_2fr_1.5fr_1.5fr_1fr] px-2 py-4 text-center text-[#707070]"
             >
               <td>{item.username}</td>
               <td>

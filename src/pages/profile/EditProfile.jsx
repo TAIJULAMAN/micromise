@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function EditProfile() {
-  const [profilePic, setProfilePic] = useState(null);
+  const [profilePic,] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
