@@ -66,7 +66,7 @@ function MakeAdminPage() {
   };
 
   return (
-    <div className="py-10">
+    <div className="px-5 pb-5">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold text-[#242424]">Make Admin</h2>
         <button

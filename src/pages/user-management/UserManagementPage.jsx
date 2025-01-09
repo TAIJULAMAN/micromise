@@ -1,10 +1,11 @@
+import Technician from "./Technician";
 
 function UserManagementPage() {
-    return (
-        <div>
-            UserManagement
-        </div>
-    )
+  return (
+    <div>
+      <Technician />
+    </div>
+  );
 }
 
-export default UserManagementPage
+export default UserManagementPage;

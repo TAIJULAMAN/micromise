@@ -12,7 +12,7 @@ const Sidebar = () => {
   const [isUserOpen, setIsUserOpen] = useState(false);
 
   const getActiveClass = (path) =>
-    pathname === path ? "bg-primary text-white px-2 py-5 rounded-lg" : "";
+    pathname === path ? "bg-primary text-white px-2 py-5 rounded-lg border-l-2 border-primary " : "";
 
   const getActiveClass2 = (path) => (pathname === path ? "bg-[#f77777]" : "");
 

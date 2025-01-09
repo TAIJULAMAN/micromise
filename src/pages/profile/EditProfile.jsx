@@ -22,7 +22,7 @@ function EditProfile() {
     console.log(formData);
   };
   return (
-    <div className="bg-white px-20 w-[715px] pt-5 pb-2 rounded-md">
+    <div className="bg-white px-20 w-[715px] py-5 rounded-md">
       <p className="text-primary text-center font-bold text-xl mb-5">Edit Your Profile</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

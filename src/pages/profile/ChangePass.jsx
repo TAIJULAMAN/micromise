@@ -7,7 +7,7 @@ function ChangePass() {
 
   const handleSubmit = () => {};
   return (
-    <div className="bg-white px-20 w-[715px] pt-10 pb-5 rounded-md">
+    <div className="bg-white px-20 w-[715px] pt-10 py-5 rounded-md">
       <p className="text-primary text-center font-bold text-xl mb-5">
         Change Password
       </p>

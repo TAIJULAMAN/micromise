@@ -1,6 +1,6 @@
 import { IoCloseSharp } from "react-icons/io5";
 
-function NotificationModal({setIsModalOpen}) {
+function NotificationModal({ setIsModalOpen }) {
   const handleModal = () => {
     setIsModalOpen(false);
   };
@@ -21,7 +21,7 @@ function NotificationModal({setIsModalOpen}) {
         <div className="flex justify-center pt-10">
           <button
             onClick={() => {}}
-            className="px-4 py-2 bg-primary text-white"
+            className="px-4 py-2 bg-primary text-white rounded"
           >
             View Page
           </button>
