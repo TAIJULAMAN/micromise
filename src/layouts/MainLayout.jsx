@@ -15,7 +15,7 @@ const MainLayout = () => {
         <MainHeader />
 
         {/* Content */}
-        <main className="p-5 bg-bg overflow-y-auto h-[89vh]">
+        <main className="p-5 bg-bg overflow-y-auto h-[90vh]">
           <Outlet />
         </main>
       </div>
