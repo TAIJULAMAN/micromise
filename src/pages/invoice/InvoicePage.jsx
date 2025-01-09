@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../../components/Modals/DeleteModal";
+import EditInvoiceModal from "../../components/Modals/EditInvoiceModal";
 
 const invoices = [
   {
@@ -27,9 +28,9 @@ const invoices = [
 ];
 
 function InvoicePage() {
-    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
- 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {invoices.map((invoice, index) => (
@@ -43,7 +44,12 @@ function InvoicePage() {
             <p>Date: {invoice.date}</p>
           </div>
           <div className="flex place-items-start gap-1">
-            <FiEdit3 className="w-6 h-6" />
+            <FiEdit3
+              onClick={() => {
+                setEditModalVisible(true);
+              }}
+              className="w-6 h-6"
+            />
             <RiDeleteBin6Line
               onClick={() => {
                 setIsDeleteModalVisible(true);
@@ -55,6 +61,9 @@ function InvoicePage() {
       ))}
       {isDeleteModalVisible && (
         <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
+      )}
+      {editModalVisible && (
+        <EditInvoiceModal setEditModalVisible={setEditModalVisible} />
       )}
     </div>
   );
