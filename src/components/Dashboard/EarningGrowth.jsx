@@ -34,7 +34,7 @@ const EarningGrowth = () => {
   };
 
   return (
-    <div className="mt-4 p-4">
+    <div className="mt-5">
       <div className="bg-white rounded-lg shadow px-4 py-6">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
