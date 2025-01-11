@@ -4,7 +4,7 @@ import { BsDatabase } from "react-icons/bs";
 
 const AnalyticsInfo = () => {
   return (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Total Job request */}
         <div className="flex flex-col justify-between items-center p-4 bg-white rounded-md gap-5 h-auto md:h-28">
           <div className="flex gap-3 items-center">

@@ -1,13 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import {
-  MdDashboard,
-  MdOutlineCategory,
-} from "react-icons/md";
+import { MdDashboard, MdOutlineCategory } from "react-icons/md";
 import { FaUserPlus, FaUsers } from "react-icons/fa";
 import { BsHouseGearFill } from "react-icons/bs";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
 import { IoMdSettings } from "react-icons/io";
+import { IoCloseSharp } from "react-icons/io5";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { pathname } = useLocation();
@@ -17,11 +15,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   // Determine active menu item
   const getActiveClass = (path) =>
     pathname === path
-      ? "bg-primary text-white px-2 py-5 rounded-lg border-l-2 border-primary"
+      ? "bg-primary text-white px-2 py-3 rounded-lg border-l-4 border-red-500"
       : "";
 
-  const getActiveClass2 = (path) =>
-    pathname === path ? "bg-[#f77777]" : "";
+  const getActiveClass2 = (path) => (pathname === path ? "bg-[#f77777]" : "");
 
   return (
     <div
@@ -30,10 +27,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       } lg:translate-x-0`}
     >
       {/* Logo Section */}
-      <div className="flex justify-start mx-5 md:mx-0 md:justify-center items-center my-5">
+      <div className="flex justify-start md:justify-start mmd:justify-start lg:justify-center items-center mx-5 md:mx-5  mmd:mx-5 lg:mx-0  my-5">
         <img
           src="/logo.png"
-          className="w-[150px] md:w-[218px] h-[40px]"
+          className="w-[150px] md:w-[150px] mmd:w-[150px] lg:w-[218px] h-[40px]"
           alt="Logo"
         />
       </div>
@@ -41,15 +38,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       {/* Close Button (Mobile Only) */}
       <button
         onClick={toggleSidebar}
-        className="absolute top-4 right-4 lg:hidden p-2 text-gray-700"
+        className="absolute top-4 right-4 lg:hidden text-white bg-secondary focus:outline-none p-2 rounded-full"
       >
-        ✕
+        <IoCloseSharp />
       </button>
 
       {/* Sidebar Menu */}
-      <ul className="px-4 mt-20">
+      <ul className="mt-20 px-4">
         {/* Dashboard */}
-        <li className={`flex items-center gap-4 ${getActiveClass("/")}`}>
+        <li className={`flex items-center gap-4 mt-8 cursor-pointer ${getActiveClass("/")}`}>
           <MdDashboard className="w-5 h-5" />
           <Link to="/">Dashboard</Link>
         </li>
@@ -85,7 +82,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           )}`}
         >
           <BsHouseGearFill className="w-5 h-5" />
-          <Link to="/request-management">Job Request Management</Link>
+          <Link to="/request-management">Job Req. Management</Link>
         </li>
 
         {/* Invoice */}
@@ -130,21 +127,29 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
         {isSettingsOpen && (
           <ul className="bg-[#ffebeb] rounded-lg text-center">
-            <li
-              className={`py-[6px] ${getActiveClass2("/privacy-policy")}`}
-            >
+            <li className={`py-[6px] ${getActiveClass2("/privacy-policy")}`}>
               <Link to="/privacy-policy">Privacy Policy</Link>
             </li>
             <li
-              className={`py-[6px] ${getActiveClass2(
-                "/terms-and-condition"
-              )}`}
+              className={`py-[6px] ${getActiveClass2("/terms-and-condition")}`}
             >
               <Link to="/terms-and-condition">Terms and Conditions</Link>
             </li>
           </ul>
         )}
       </ul>
+
+      {/* Logout Button */}
+      <div className="absolute bottom-4 w-full px-4">
+        <Link to="/sign-in">
+          <button
+            className="flex items-center gap-4 w-full py-3 rounded-lg"
+          >
+            <IoMdSettings className="w-5 h-5" />
+            <span>Logout</span>
+          </button>
+        </Link>
+      </div>
     </div>
   );
 };

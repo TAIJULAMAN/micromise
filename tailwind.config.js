@@ -4,16 +4,22 @@ export default {
 
   theme: {
     colors: {
-      "primary": "#F32929",
-      "secondary": "#f79292",
-      "bg":"#ededed",
-      "white":"#ffffff"
+      primary: "#F32929",
+      secondary: "#f79292",
+      bg: "#ededed",
+      white: "#ffffff",
     },
     fontFamily: {
       sans: ["Poppins", "sans-serif"],
       serif: ["Merriweather", "serif"],
     },
     extend: {},
+    screens: {
+      sm: "575px",
+      md: "770px",
+      mmd: "990px",
+      lg: "1300px",
+    },
   },
   plugins: [],
 };
