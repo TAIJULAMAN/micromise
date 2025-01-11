@@ -1,8 +1,27 @@
-# React + Vite
+# **Micromise Auto Solution**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Micromise Auto Solution is a web-based application designed to streamline and optimize auto-related management tasks. This application provides a responsive, user-friendly interface with features like user management, job request handling, notifications, and settings customization.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## **Features**
+- **Dashboard**: Provides an overview of key metrics and activities.
+- **User Management**: Manage technicians, admin clients, and supervisors with ease.
+- **Job Request Management**: Efficiently handle job requests and track their progress.
+- **Notifications**: Stay updated with real-time alerts.
+- **Invoice Management**: Create, view, and manage invoices seamlessly.
+- **Service Categories**: Add and customize service categories.
+- **Settings**: Update privacy policies, terms, and other configurations.
+
+---
+
+## **Tech Stack**
+- **Frontend**: React, Tailwind CSS, Redux
+- **Backend**: Node.js (Optional for API integration)
+- **Database**: MongoDB (optional, as per project requirements)
+- **Icons**: React Icons
+- **Hosting**: Vercel
+
+---
+
+
