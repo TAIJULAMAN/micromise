@@ -25,15 +25,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <div
-      className={`fixed lg:static bg-white w-[280px] h-screen z-50 transition-transform ${
+      className={`fixed lg:static bg-white w-[280px] h-screen overflow-y-auto py-5 md:py-0 z-50 transition-transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } lg:translate-x-0`}
     >
       {/* Logo Section */}
-      <div className="flex justify-center items-center my-5">
+      <div className="flex justify-start mx-5 md:mx-0 md:justify-center items-center my-5">
         <img
           src="/logo.png"
-          className="w-[218px] h-[40px] object-cover"
+          className="w-[150px] md:w-[218px] h-[40px]"
           alt="Logo"
         />
       </div>
