@@ -15,7 +15,7 @@ const initialTableData = [
     id: 2,
     name: "Jane Doe",
     email: "jane@example.com",
-    userType: "user",
+    userType: "admin",
     contact: "234-567-8901",
   },
   {
@@ -29,7 +29,7 @@ const initialTableData = [
     id: 4,
     name: "Alice Johnson",
     email: "alice@example.com",
-    userType: "user",
+    userType: "admin",
     contact: "456-789-0123",
   },
   {

@@ -11,7 +11,7 @@ const MainHeader = ({ toggleSidebar }) => {
           {/* Sidebar Toggle Button for Mobile */}
           <button
             onClick={toggleSidebar}
-            className="lg:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            className=" lg:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -101,7 +101,7 @@ function SignInPage() {
               <Link to="/">
                 <button
                   type="submit"
-                  className="w-full bg-primary text-white font-semibold py-2 rounded-lg shadow-lg hover:bg-primary-dark transition"
+                  className="w-full bg-primary text-white font-semibold py-2 rounded-lg shadow-lg hover:bg-primary-dark transition mt-5"
                 >
                   Log In
                 </button>
