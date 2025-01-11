@@ -21,9 +21,9 @@ function SignInPage() {
   return (
     <div className="bg-white min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-10">
+        <div className="flex  flex-col-reverse md:flex-col-reverse mmd:flex-row lg:flex-row justify-between items-center gap-10">
           {/* Form Section */}
-          <div className="w-full md:w-1/2 bg-white p-8">
+          <div className="w-full lg:w-1/2 bg-white p-8">
             <h2 className="text-[#6F6F6F] text-2xl md:text-3xl font-bold text-center mb-6">
               Login to Account
             </h2>
@@ -110,7 +110,7 @@ function SignInPage() {
           </div>
 
           {/* Welcome Section */}
-          <div className="w-full md:w-1/2 text-center">
+          <div className="w-full lg:w-1/2 text-center">
             <h1 className="text-3xl font-bold mb-6 text-[#6F6F6F]">
               Welcome Back
             </h1>

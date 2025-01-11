@@ -7,7 +7,7 @@ const MainHeader = ({ toggleSidebar }) => {
   return (
     <div className="relative w-full">
       <header className="bg-white shadow-sm">
-        <div className="flex justify-between items-center px-4 md:px-10 h-[70px]">
+        <div className="flex justify-between items-center px-4 h-[70px]">
           {/* Sidebar Toggle Button for Mobile */}
           <button
             onClick={toggleSidebar}

@@ -49,7 +49,7 @@ function InvoicePage() {
           <AddInvoiceModal setAddModalVisible={setAddModalVisible} />
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-2 lg:grid-cols-4  gap-5">
         {invoices.map((invoice, index) => (
           <div
             key={index}

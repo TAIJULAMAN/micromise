@@ -15,7 +15,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   // Determine active menu item
   const getActiveClass = (path) =>
     pathname === path
-      ? "bg-primary text-white px-2 py-3 rounded-lg border-l-4 border-red-500"
+      ? "bg-primary text-white px-2 py-3 rounded-lg"
       : "";
 
   const getActiveClass2 = (path) => (pathname === path ? "bg-[#f77777]" : "");
@@ -53,7 +53,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* User Management */}
         <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer ${getActiveClass(
+          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${getActiveClass(
             "/user-management"
           )}`}
           onClick={() => setIsUserOpen(!isUserOpen)}
@@ -62,7 +62,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <span>User Management</span>
         </li>
         {isUserOpen && (
-          <ul className="bg-[#ffebeb] rounded-lg text-center">
+          <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
             <li className={`py-[6px] ${getActiveClass2("/technician")}`}>
               <Link to="/technician">Technician</Link>
             </li>
@@ -117,7 +117,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Settings */}
         <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer ${getActiveClass(
+          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${getActiveClass(
             "/settings"
           )}`}
           onClick={() => setIsSettingsOpen(!isSettingsOpen)}
@@ -126,7 +126,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <span>Settings</span>
         </li>
         {isSettingsOpen && (
-          <ul className="bg-[#ffebeb] rounded-lg text-center">
+          <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
             <li className={`py-[6px] ${getActiveClass2("/privacy-policy")}`}>
               <Link to="/privacy-policy">Privacy Policy</Link>
             </li>
@@ -140,7 +140,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </ul>
 
       {/* Logout Button */}
-      <div className="absolute bottom-4 w-full px-4">
+      <div className="absolute mt-8 md:mt-0 mmd:mt-8 md:bottom-4 lg:bottom-4 w-full px-4">
         <Link to="/sign-in">
           <button
             className="flex items-center gap-4 w-full py-3 rounded-lg"

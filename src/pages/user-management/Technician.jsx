@@ -75,7 +75,7 @@ function Technician() {
   return (
     <div className="mt-5">
       {/* Header */}
-      <div className="flex items-center justify-between pb-5 flex-wrap sm:flex-nowrap">
+      <div className="flex items-center justify-between pb-5 gap-5">
         <h3 className="font-semibold text-xl text-[#242424]">Technician</h3>
         <div className="relative w-full sm:w-[320px]">
           <input
@@ -91,9 +91,9 @@ function Technician() {
 
       {/* Scrollable Table Container */}
       {/* <div className="overflow-x-scroll"> */}
-        <table className="bg-white w-full pt-5 min-w-[1000px]">
+        <table className="bg-white w-full pt-5">
           <thead>
-            <tr className="grid grid-cols-1 sm:grid-cols-[1fr_1.5fr_1.5fr_1.5fr_1.5fr_1fr_1fr_1fr] px-2 py-4">
+            <tr className="grid grid-cols-[1fr_1.5fr_1.5fr_1.5fr_1.5fr_1fr_1fr_1fr] px-2 py-4">
               <th>User Name</th>
               <th>Name</th>
               <th>Email</th>
@@ -108,7 +108,7 @@ function Technician() {
             {data.map((item) => (
               <tr
                 key={item.id}
-                className="grid grid-cols-1 sm:grid-cols-[1fr_1.5fr_1.5fr_1.5fr_1.5fr_1fr_1fr_1fr] px-2 py-4 text-center text-[#707070]"
+                className="grid grid-cols-[1fr_1.5fr_1.5fr_1.5fr_1.5fr_1fr_1fr_1fr] px-2 py-4 text-center text-[#707070]"
               >
                 <td>{item.username}</td>
                 <td>
