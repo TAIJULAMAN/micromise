@@ -1,7 +1,7 @@
 function ShowInvoiceModal({ setShowInvoiceModal }) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="bg-white w-[600px] rounded-lg shadow-lg p-6">
+        <div className="bg-white md:w-[400px] mmd:w-[500px] lg:w-[600px] rounded-lg shadow-lg p-5">
           {/* Modal Header */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Invoice</h2>
