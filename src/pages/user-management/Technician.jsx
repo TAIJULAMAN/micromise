@@ -8,61 +8,60 @@ import TechnicianViewModal from "../../components/Modals/TechnicianViewModal";
 
 function Technician() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      skills: "ECU Remapping",
-      completedJobs: 1,
-    },
-    {
-      id: 2,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      skills: "ECU Remapping",
-      completedJobs: 1,
-    },
-    {
-      id: 3,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      skills: "ECU Remapping",
-      completedJobs: 1,
-    },
-    {
-      id: 4,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      skills: "ECU Remapping",
-      completedJobs: 1,
-    },
-    {
-      id: 5,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      skills: "ECU Remapping",
-      completedJobs: 1,
-    },
-  ]);
+const [data, setData] = useState([
+  {
+    id: 1,
+    username: "Dindiniya10",
+    name: "Dindiniya",
+    email: "bockelboy@att.com",
+    contact: "(201) 555-0124",
+    location: "Kent, Utah",
+    skills: "ECU Remapping",
+    completedJobs: 1,
+  },
+  {
+    id: 2,
+    username: "Dindiniya10",
+    name: "Dindiniya",
+    email: "bockelboy@att.com",
+    contact: "(201) 555-0124",
+    location: "Kent, Utah",
+    skills: "ECU Remapping",
+    completedJobs: 1,
+  },
+  {
+    id: 3,
+    username: "Dindiniya10",
+    name: "Dindiniya",
+    email: "bockelboy@att.com",
+    contact: "(201) 555-0124",
+    location: "Kent, Utah",
+    skills: "ECU Remapping",
+    completedJobs: 1,
+  },
+  {
+    id: 4,
+    username: "Dindiniya10",
+    name: "Dindiniya",
+    email: "bockelboy@att.com",
+    contact: "(201) 555-0124",
+    location: "Kent, Utah",
+    skills: "ECU Remapping",
+    completedJobs: 1,
+  },
+  {
+    id: 5,
+    username: "Dindiniya10",
+    name: "Dindiniya",
+    email: "bockelboy@att.com",
+    contact: "(201) 555-0124",
+    location: "Kent, Utah",
+    skills: "ECU Remapping",
+    completedJobs: 1,
+  },
+]);
 
   const onDelete = () => {
     setData((prevData) =>
@@ -77,7 +76,7 @@ function Technician() {
       {/* Header */}
       <div className="flex items-center justify-between pb-5 gap-5">
         <h3 className="font-semibold text-xl text-[#242424]">Technician</h3>
-        <div className="relative w-full sm:w-[320px]">
+        <div className="relative w-full sm:w-[300px]">
           <input
             type="text"
             placeholder="Search..."
@@ -90,8 +89,8 @@ function Technician() {
       </div>
 
       {/* Scrollable Table Container */}
-      {/* <div className="overflow-x-scroll"> */}
-        <table className="bg-white w-full pt-5">
+    <div className="relative overflow-x-auto min-w-full">
+        <table className="bg-white w-full">
           <thead>
             <tr className="grid grid-cols-[1fr_1.5fr_1.5fr_1.5fr_1.5fr_1fr_1fr_1fr] px-2 py-4">
               <th>User Name</th>
@@ -150,7 +149,7 @@ function Technician() {
             ))}
           </tbody>
         </table>
-      {/* </div> */}
+      </div>
 
       {isModalVisible && (
         <TechnicianViewModal

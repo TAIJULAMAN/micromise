@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { MdDashboard, MdOutlineCategory } from "react-icons/md";
 import { FaUserPlus, FaUsers } from "react-icons/fa";
@@ -8,17 +8,25 @@ import { IoMdSettings } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  const { pathname } = useLocation();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isUserOpen, setIsUserOpen] = useState(false);
+  // const { pathname } = useLocation();
 
-  // Determine active menu item
-  const getActiveClass = (path) =>
-    pathname === path
-      ? "bg-primary text-white px-2 py-3 rounded-lg"
-      : "";
+  // State to track the active sections
+  const [activeMenu, setActiveMenu] = useState("");  
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);  
+  const [isUserOpen, setIsUserOpen] = useState(false); 
 
-  const getActiveClass2 = (path) => (pathname === path ? "bg-[#f77777]" : "");
+  // Handle active menu and submenu logic
+  const handleMenuClick = (menu) => {
+    setActiveMenu(menu);
+  };
+
+  const handleSubMenuToggle = (submenu) => {
+    if (submenu === "settings") {
+      setIsSettingsOpen(!isSettingsOpen);
+    } else if (submenu === "user") {
+      setIsUserOpen(!isUserOpen);
+    }
+  };
 
   return (
     <div
@@ -46,30 +54,47 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       {/* Sidebar Menu */}
       <ul className="mt-20 px-4">
         {/* Dashboard */}
-        <li className={`flex items-center gap-4 mt-8 cursor-pointer ${getActiveClass("/")}`}>
+        <li
+          className={`flex items-center gap-4 mt-8 cursor-pointer ${
+            activeMenu === "dashboard" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+          }`}
+          onClick={() => handleMenuClick("dashboard")}
+        >
           <MdDashboard className="w-5 h-5" />
           <Link to="/">Dashboard</Link>
         </li>
 
         {/* User Management */}
         <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${getActiveClass(
-            "/user-management"
-          )}`}
-          onClick={() => setIsUserOpen(!isUserOpen)}
+          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${
+            activeMenu === "user-management" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+          }`}
+          onClick={() => {
+            handleMenuClick("user-management");
+            handleSubMenuToggle("user");
+          }}
         >
           <FaUsers className="w-5 h-5" />
           <span>User Management</span>
         </li>
         {isUserOpen && (
           <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
-            <li className={`py-[6px] ${getActiveClass2("/technician")}`}>
+            <li
+              className={`py-[6px] ${activeMenu === "technician" ? "bg-[#f77777]" : ""}`}
+              onClick={() => handleMenuClick("technician")}
+            >
               <Link to="/technician">Technician</Link>
             </li>
-            <li className={`py-[6px] ${getActiveClass2("/admin-client")}`}>
+            <li
+              className={`py-[6px] ${activeMenu === "admin-client" ? "bg-[#f77777]" : ""}`}
+              onClick={() => handleMenuClick("admin-client")}
+            >
               <Link to="/admin-client">Admin Client</Link>
             </li>
-            <li className={`py-[6px] ${getActiveClass2("/client-supervisor")}`}>
+            <li
+              className={`py-[6px] ${activeMenu === "client-supervisor" ? "bg-[#f77777]" : ""}`}
+              onClick={() => handleMenuClick("client-supervisor")}
+            >
               <Link to="/client-supervisor">Client Supervisor</Link>
             </li>
           </ul>
@@ -77,9 +102,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Job Request Management */}
         <li
-          className={`flex items-center gap-4 mt-8 ${getActiveClass(
-            "/request-management"
-          )}`}
+          className={`flex items-center gap-4 mt-8 ${
+            activeMenu === "request-management" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+          }`}
+          onClick={() => handleMenuClick("request-management")}
         >
           <BsHouseGearFill className="w-5 h-5" />
           <Link to="/request-management">Job Req. Management</Link>
@@ -87,9 +113,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Invoice */}
         <li
-          className={`flex items-center gap-4 mt-8 ${getActiveClass(
-            "/invoice"
-          )}`}
+          className={`flex items-center gap-4 mt-8 ${
+            activeMenu === "invoice" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+          }`}
+          onClick={() => handleMenuClick("invoice")}
         >
           <LiaFileInvoiceSolid className="w-5 h-5" />
           <Link to="/invoice">Invoice</Link>
@@ -97,9 +124,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Add Service Category */}
         <li
-          className={`flex items-center gap-4 mt-8 ${getActiveClass(
-            "/add-service"
-          )}`}
+          className={`flex items-center gap-4 mt-8 ${
+            activeMenu === "add-service" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+          }`}
+          onClick={() => handleMenuClick("add-service")}
         >
           <MdOutlineCategory className="w-5 h-5" />
           <Link to="/add-service">Add Service Category</Link>
@@ -107,9 +135,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Make Admin */}
         <li
-          className={`flex items-center gap-4 mt-8 ${getActiveClass(
-            "/make-admin"
-          )}`}
+          className={`flex items-center gap-4 mt-8 ${
+            activeMenu === "make-admin" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+          }`}
+          onClick={() => handleMenuClick("make-admin")}
         >
           <FaUserPlus className="w-5 h-5" />
           <Link to="/make-admin">Make Admin</Link>
@@ -117,21 +146,28 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Settings */}
         <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${getActiveClass(
-            "/settings"
-          )}`}
-          onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${
+            activeMenu === "settings" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+          }`}
+          onClick={() => {
+            handleMenuClick("settings");
+            handleSubMenuToggle("settings");
+          }}
         >
           <IoMdSettings className="w-5 h-5" />
           <span>Settings</span>
         </li>
         {isSettingsOpen && (
           <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
-            <li className={`py-[6px] ${getActiveClass2("/privacy-policy")}`}>
+            <li
+              className={`py-[6px] ${activeMenu === "privacy-policy" ? "bg-[#f77777]" : ""}`}
+              onClick={() => handleMenuClick("privacy-policy")}
+            >
               <Link to="/privacy-policy">Privacy Policy</Link>
             </li>
             <li
-              className={`py-[6px] ${getActiveClass2("/terms-and-condition")}`}
+              className={`py-[6px] ${activeMenu === "terms-and-condition" ? "bg-[#f77777]" : ""}`}
+              onClick={() => handleMenuClick("terms-and-condition")}
             >
               <Link to="/terms-and-condition">Terms and Conditions</Link>
             </li>
@@ -142,9 +178,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       {/* Logout Button */}
       <div className="absolute mt-8 md:mt-0 mmd:mt-8 md:bottom-4 lg:bottom-4 w-full px-4">
         <Link to="/sign-in">
-          <button
-            className="flex items-center gap-4 w-full py-3 rounded-lg"
-          >
+          <button className="flex items-center gap-4 w-full py-3 rounded-lg">
             <IoMdSettings className="w-5 h-5" />
             <span>Logout</span>
           </button>
@@ -155,3 +189,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 };
 
 export default Sidebar;
+
+
+
