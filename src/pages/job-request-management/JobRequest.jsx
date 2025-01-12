@@ -11,6 +11,8 @@ function JobRequest() {
   const [requestModal, setRequestModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
+  const [visibleModals, setVisibleModals] = useState({});
+  const [accordionState, setAccordionState] = useState({});
 
   const data = [
     {
@@ -20,7 +22,7 @@ function JobRequest() {
       services: ["ECU", "Diagnostics", "Software"],
       date: "2025-01-01",
       jobStatus: "Pending",
-      paymentStatus: "Pending",
+      paymentStatus: "Payment pending",
     },
     {
       id: 2,
@@ -38,7 +40,7 @@ function JobRequest() {
       services: ["Cleaning", "Replacement"],
       date: "2025-01-03",
       jobStatus: "Completed",
-      paymentStatus: "Pending",
+      paymentStatus: "Payment made",
     },
     {
       id: 4,
@@ -47,7 +49,7 @@ function JobRequest() {
       services: ["Troubleshoot", "Debug"],
       date: "2025-01-04",
       jobStatus: "Canceled",
-      paymentStatus: "Pending",
+      paymentStatus: "Payment pending",
     },
     {
       id: 5,
@@ -60,10 +62,15 @@ function JobRequest() {
     },
   ];
 
-  const [visibleModals, setVisibleModals] = useState({});
-
   const toggleModal = (id) => {
     setVisibleModals((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const toggleAccordion = (id) => {
+    setAccordionState((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
@@ -72,14 +79,14 @@ function JobRequest() {
   return (
     <table className="bg-white w-full pt-5">
       <thead>
-        <tr className="grid grid-cols-[.5fr_1fr_1fr_2fr_1fr_2fr_1fr_1fr_.5fr] px-2 py-4 text-[#171717]">
+        <tr className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-[#171717]">
           <th>Job Id</th>
           <th className="flex justify-start">Client Admin</th>
           <th className="flex justify-start">Client Supervisor</th>
           <th>Needed Service</th>
           <th>Date</th>
           <th>Assign Technician</th>
-          <th className="flex justify-start">Job Status</th>
+          <th className="">Job Status</th>
           <th className="flex justify-start">Payment</th>
           <th>Action</th>
         </tr>
@@ -88,7 +95,7 @@ function JobRequest() {
         {data.map((item) => (
           <tr
             key={item.id}
-            className="grid grid-cols-[.5fr_1fr_1fr_2fr_1fr_2fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
+            className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
           >
             <td>{item.id}</td>
             <td>
@@ -135,39 +142,55 @@ function JobRequest() {
                 </span>
               </div>
             </td>
-            <td className="flex justify-start ">
+            <td className="flex justify-center">
               <span
                 style={{
                   backgroundColor:
                     item.jobStatus === "Pending"
-                      ? "#f79292"
+                      ? "#d95f5f"
                       : item.jobStatus === "Assigned"
-                      ? "#FFDB97CC"
+                      ? "#f0d29c"
                       : item.jobStatus === "Completed"
-                      ? "#34C759F2"
+                      ? "#3ac75d"
                       : "#F32929",
                 }}
-                className="py-1 px-3 rounded text-white"
+                className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px]"
               >
                 {item.jobStatus}
               </span>
             </td>
-            <td className="flex justify-start">
+            <td className="flex flex-col items-center relative">
               <span
                 style={{
                   backgroundColor:
-                    item.paymentStatus === "Pending"
+                    item.paymentStatus === "Payment pending"
                       ? "#F32929"
                       : item.paymentStatus === "Completed"
-                      ? "#34C759F2"
+                      ? "#3ac75d"
                       : "#ff9500",
                 }}
-                className="py-1 px-3 rounded text-white"
+                className="py-1 px-3 rounded text-white flex justify-center text-center w-[200px] cursor-pointer"
+                onClick={() => toggleAccordion(item.id)}
               >
                 {item.paymentStatus}
               </span>
+              {accordionState[item.id] && (
+                <div className="z-50 mt-10 w-[200px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
+                  <button
+                    className="bg-white text-primary py-1 px-3 rounded w-full border border-primary"
+                    onClick={() => alert("Decline clicked")}
+                  >
+                    Decline
+                  </button>
+                  <button
+                    className="bg-primary text-white py-1 px-3 rounded w-full"
+                    onClick={() => alert("Approve clicked")}
+                  >
+                    Approve
+                  </button>
+                </div>
+              )}
             </td>
-
             <td className="relative">
               <button onClick={() => toggleModal(item.id)} className="w-6 h-6">
                 <TbDotsVertical />
@@ -189,10 +212,8 @@ function JobRequest() {
                     </button>
                     <button
                       className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
-                      onClick={() =>   setAddModalVisible(true)}
+                      onClick={() => setAddModalVisible(true)}
                     >
-                       
-
                       Create invoice
                     </button>
                     <button
@@ -215,7 +236,9 @@ function JobRequest() {
         ))}
         {requestModal && <JobRequestModal setRequestModal={setRequestModal} />}
         {messageModal && <MessageModal setMessageModal={setMessageModal} />}
-        {addModalVisible && <AddInvoiceModal  setAddModalVisible={setAddModalVisible} />}
+        {addModalVisible && (
+          <AddInvoiceModal setAddModalVisible={setAddModalVisible} />
+        )}
       </tbody>
     </table>
   );
