@@ -9,6 +9,14 @@ function RaisedTickets() {
   const [requestModal, setRequestModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
   const [messageTechnisian, setMessageTechnisian] = useState(false);
+  const [accordionState, setAccordionState] = useState({});
+
+  const toggleAccordion = (id) => {
+    setAccordionState((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   const data = [
     {
@@ -18,7 +26,7 @@ function RaisedTickets() {
       services: ["ECU", "Diagnostics", "Software"],
       date: "2025-01-01",
       jobStatus: "Pending",
-      paymentStatus: "Pending",
+      paymentStatus: "Payment pending",
     },
     {
       id: 2,
@@ -36,7 +44,7 @@ function RaisedTickets() {
       services: ["Cleaning", "Replacement"],
       date: "2025-01-03",
       jobStatus: "Completed",
-      paymentStatus: "Pending",
+      paymentStatus: "Payment pending",
     },
     {
       id: 4,
@@ -45,7 +53,7 @@ function RaisedTickets() {
       services: ["Troubleshoot", "Debug"],
       date: "2025-01-04",
       jobStatus: "Canceled",
-      paymentStatus: "Made",
+      paymentStatus: "Payment Made",
     },
     {
       id: 5,
@@ -70,7 +78,7 @@ function RaisedTickets() {
   return (
     <table className="bg-white w-full pt-5">
       <thead>
-        <tr className="grid grid-cols-[.5fr_1fr_1fr_2fr_1fr_2fr_1fr_1fr_.5fr] px-2 py-4 text-[#171717]">
+        <tr className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-[#171717]">
           <th>Job Id</th>
           <th className="flex justify-start">Client Admin</th>
           <t className="flex justify-start font-bold">Client Supervisor</t>
@@ -86,7 +94,7 @@ function RaisedTickets() {
         {data.map((item) => (
           <tr
             key={item.id}
-            className="grid grid-cols-[.5fr_1fr_1fr_2fr_1fr_2fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
+            className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
           >
             <td>{item.id}</td>
             <td>
@@ -130,37 +138,54 @@ function RaisedTickets() {
               </div>
             </td>
             {/* Job Status dropdown */}
-            <td className="flex justify-start px-4">
-              <span
-                style={{
-                  backgroundColor:
-                    item.jobStatus === "Pending"
-                      ? "#f79292"
-                      : item.jobStatus === "Assigned"
-                      ? "#FFDB97CC"
-                      : item.jobStatus === "Completed"
-                      ? "#34C759F2"
-                      : "#F32929",
-                }}
-                className="py-1 px-3 rounded text-white"
-              >
-                {item.jobStatus}
-              </span>
-            </td>
             <td className="flex justify-center">
               <span
                 style={{
                   backgroundColor:
-                    item.paymentStatus === "Pending"
+                    item.jobStatus === "Pending"
+                      ? "#d95f5f"
+                      : item.jobStatus === "Assigned"
+                      ? "#f0d29c"
+                      : item.jobStatus === "Completed"
+                      ? "#3ac75d"
+                      : "#F32929",
+                }}
+                className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px]"
+              >
+                {item.jobStatus}
+              </span>
+            </td>
+            <td className="flex flex-col items-center relative">
+              <span
+                style={{
+                  backgroundColor:
+                    item.paymentStatus === "Payment pending"
                       ? "#F32929"
                       : item.paymentStatus === "Completed"
-                      ? "#34C759F2"
+                      ? "#3ac75d"
                       : "#ff9500",
                 }}
-                className="py-1 px-3 rounded text-white"
+                className="py-1 px-3 rounded text-white flex justify-center text-center w-[200px] cursor-pointer"
+                onClick={() => toggleAccordion(item.id)}
               >
                 {item.paymentStatus}
               </span>
+              {accordionState[item.id] && (
+                <div className="z-50 mt-10 w-[200px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
+                  <button
+                    className="bg-white text-primary py-1 px-3 rounded w-full border border-primary"
+                    onClick={() => alert("Decline clicked")}
+                  >
+                    Decline
+                  </button>
+                  <button
+                    className="bg-primary text-white py-1 px-3 rounded w-full"
+                    onClick={() => alert("Approve clicked")}
+                  >
+                    Approve
+                  </button>
+                </div>
+              )}
             </td>
             <td className="relative">
               <button onClick={() => toggleModal(item.id)} className="w-6 h-6">
