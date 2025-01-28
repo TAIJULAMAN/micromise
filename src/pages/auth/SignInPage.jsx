@@ -1,28 +1,51 @@
 import { useState } from "react";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-// import ForgotPasswordModal from "../../components/Modals/ForgotPasswordModal";
-import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogInMutation } from "../../redux/api/authApi";
+import Swal from "sweetalert2";
+// import { storeUserInfo, storeUserToken } from "../../services/auth.service";
 
 function SignInPage() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [isEyeOpen, setIsEyeOpen] = useState(false);
-  // const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  // const navigate = useNavigate(); 
+  const [logIn, { isLoading }] = useLogInMutation();
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleSignIn = (e) => {
+    e.preventDefault();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Form values:", formData);
+
+    if (!password) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Password is required!",
+      });
+      return;
+    }
+
+    const loginData = { email, password };
+    console.log(loginData);
+
+    logIn(loginData)
+      .unwrap()
+      .then((data) => {
+        console.log("response of sign in", data);
+        }
+      )
+      .catch((error) => {
+       console.log("error of sign in", error);
+        });
+      ;
   };
 
   return (
     <div className="bg-white min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-4">
-        <div className="flex  flex-col-reverse md:flex-col-reverse mmd:flex-row lg:flex-row justify-between items-center gap-10">
-          {/* Form Section */}
+        <div className="flex flex-col-reverse md:flex-col-reverse mmd:flex-row lg:flex-row justify-between items-center gap-10">
           <div className="w-full lg:w-1/2 bg-white p-8">
             <h2 className="text-[#6F6F6F] text-2xl md:text-3xl font-bold text-center mb-6">
               Login to Account
@@ -30,8 +53,11 @@ function SignInPage() {
             <p className="text-[#6F6F6F] text-center mb-8">
               Please enter your email and password to continue
             </p>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email Field */}
+
+            {/* Display Error Message */}
+            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+            <form onSubmit={handleSignIn} className="space-y-6">
               <div>
                 <label className="block text-md font-medium text-[#575757] mb-2">
                   Email
@@ -39,15 +65,14 @@ function SignInPage() {
                 <input
                   type="email"
                   name="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
                   placeholder="Enter Email"
                   required
                 />
               </div>
 
-              {/* Password Field */}
               <div className="w-full">
                 <label
                   htmlFor="password"
@@ -57,66 +82,59 @@ function SignInPage() {
                 </label>
                 <div className="w-full relative">
                   <input
-                    type={isEyeOpen ? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     name="password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     id="password"
                     placeholder="Password"
                     className="peer border-[#e5eaf2] border rounded-md outline-none pl-4 pr-12 py-3 w-full mt-1"
                     required
                   />
-                  {isEyeOpen ? (
-                    <IoEyeOutline
-                      className="absolute top-4 right-4 text-[1.5rem] text-[#777777] cursor-pointer"
-                      onClick={() => setIsEyeOpen(false)}
-                    />
-                  ) : (
-                    <IoEyeOffOutline
-                      className="absolute top-4 right-4 text-[1.5rem] text-[#777777] cursor-pointer"
-                      onClick={() => setIsEyeOpen(true)}
-                    />
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
               </div>
 
-              {/* Remember Me and Forgot Password */}
-              <div className="flex justify-between items-center">
-                <div>
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      name="remember"
-                      className="h-4 w-4 text-primary border-gray-300 rounded"
-                    />
-                    <span className="text-gray-700">Remember Password</span>
-                  </label>
-                </div>
-                <Link to="/forgate-password">
-                  <p className="text-primary">Forgot Password?</p>
+              <div className="flex justify-between items-center text-sm">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="mr-2 text-primary focus:ring-secondary"
+                  />
+                  Remember Password
+                </label>
+                <Link
+                  to="/forgot-password"
+                  className="text-primary hover:underline"
+                >
+                  Forgot Password?
                 </Link>
               </div>
 
-              {/* Submit Button */}
-              <Link to="/">
-                <button
-                  type="submit"
-                  className="w-full bg-primary text-white font-semibold py-2 rounded-lg shadow-lg hover:bg-primary-dark transition mt-5"
-                >
-                  Log In
-                </button>
-              </Link>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-primary text-white font-semibold py-2 rounded-lg shadow-lg hover:bg-primary-dark transition mt-5 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Signing in..." : "Log In"}
+              </button>
             </form>
           </div>
 
-          {/* Welcome Section */}
           <div className="w-full lg:w-1/2 text-center">
             <h1 className="text-3xl font-bold mb-6 text-[#6F6F6F]">
               Welcome Back
             </h1>
             <p className="text-[#6F6F6F] text-lg">
-              Please Sign in into your account with the given details to
-              continue
+              Please Sign in to your account with the given details to continue
             </p>
           </div>
         </div>
