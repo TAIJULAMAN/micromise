@@ -89,13 +89,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               className={`py-[6px] ${activeMenu === "admin-client" ? "bg-[#f77777]" : ""}`}
               onClick={() => handleMenuClick("admin-client")}
             >
-              <Link to="/admin-client">Admin Client</Link>
+              <Link to="/admin-client">Client</Link>
             </li>
             <li
               className={`py-[6px] ${activeMenu === "client-supervisor" ? "bg-[#f77777]" : ""}`}
               onClick={() => handleMenuClick("client-supervisor")}
             >
-              <Link to="/client-supervisor">Client Supervisor</Link>
+              <Link to="/client-supervisor">Supervisor</Link>
             </li>
           </ul>
         )}
