@@ -80,8 +80,8 @@ function RaisedTickets() {
       <thead>
         <tr className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-[#171717]">
           <th>Job Id</th>
-          <th className="flex justify-start">Client Admin</th>
-          <t className="flex justify-start font-bold">Client Supervisor</t>
+          <th className="flex justify-start">Client</th>
+          <t className="flex justify-start font-bold">Supervisor</t>
           <th>Needed Service</th>
           <th>Date</th>
           <th>Assign Technician</th>

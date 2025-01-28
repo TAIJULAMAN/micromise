@@ -92,8 +92,7 @@ const [data, setData] = useState([
     <div className="relative overflow-x-auto min-w-full">
         <table className="bg-white w-full">
           <thead>
-            <tr className="grid grid-cols-[1fr_1.5fr_1.5fr_1.5fr_1.5fr_1fr_1fr_1fr] px-2 py-4">
-              <th>User Name</th>
+            <tr className="grid grid-cols-[1.5fr_2fr_1.5fr_1fr_1.5fr_1.5fr_1fr] px-2 py-4 text-[#171717]">
               <th>Name</th>
               <th>Email</th>
               <th>Contact Number</th>
@@ -107,9 +106,8 @@ const [data, setData] = useState([
             {data.map((item) => (
               <tr
                 key={item.id}
-                className="grid grid-cols-[1fr_1.5fr_1.5fr_1.5fr_1.5fr_1fr_1fr_1fr] px-2 py-4 text-center text-[#707070]"
+                className="grid grid-cols-[1.5fr_2fr_1.5fr_1fr_1.5fr_1.5fr_1fr] px-2 py-4 text-center text-[#707070]"
               >
-                <td>{item.username}</td>
                 <td>
                   <div className="flex gap-2 justify-center">
                     <img

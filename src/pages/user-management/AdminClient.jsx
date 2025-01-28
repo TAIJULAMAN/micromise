@@ -71,7 +71,7 @@ function AdminClient() {
     <div className="mt-5">
       {/* Header */}
       <div className="flex items-center justify-between pb-5">
-        <h3 className="font-semibold text-xl text-[#242424]">Admin Client</h3>
+        <h3 className="font-semibold text-xl text-[#242424]">Client</h3>
         <div className="relative w-[320px]">
           <input
             type="text"
@@ -87,8 +87,7 @@ function AdminClient() {
 
       <table className="bg-white w-full pt-5">
         <thead>
-          <tr className="grid grid-cols-[1fr_1.5fr_1.5fr_2fr_1.5fr_1.5fr_1fr] px-2 py-4">
-            <th>User Name</th>
+          <tr className="grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1.5fr] px-2 py-4 text-[#171717]">
             <th>Name</th>
             <th>Email</th>
             <th>Contact Number</th>
@@ -101,9 +100,8 @@ function AdminClient() {
           {data.map((item) => (
             <tr
               key={item.id}
-              className="grid grid-cols-[1fr_1.5fr_1.5fr_2fr_1.5fr_1.5fr_1fr] px-2 py-4 text-center text-[#707070]"
+              className="grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1.5fr] px-2 py-4 text-center text-[#707070]"
             >
-              <td>{item.username}</td>
               <td>
                 <div className="flex gap-2 justify-center">
                   <img
