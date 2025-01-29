@@ -3,7 +3,7 @@ import { getFromLocalStorage, setToLocalStorage } from "../utils/local-storage";
 
 // Store user info in localStorage
 export const storeUserInfo = (userData) => {
-  console.log("from local storage",userData);
+  console.log("from local storage", userData);
   localStorage.setItem("userData", JSON.stringify(userData));
 };
 
@@ -18,7 +18,11 @@ export const storeUserToken = ({ accessToken }) => {
   if (accessToken) {
     setToLocalStorage("accessToken", accessToken);
   }
- 
+};
+export const storeResetToken = ({ resetToken }) => {
+  if (resetToken) {
+    setToLocalStorage("resetToken", resetToken);
+  }
 };
 
 // Retrieve user info (decoded token) from localStorage

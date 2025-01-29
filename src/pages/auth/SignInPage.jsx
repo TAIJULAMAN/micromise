@@ -37,7 +37,6 @@ function SignInPage() {
     }
 
     const loginData = { email, password };
-    // console.log("log in data of aman", loginData);
 
     logIn(loginData)
       .unwrap()
