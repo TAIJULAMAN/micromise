@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useLogInMutation } from "../../redux/api/authApi";
+
 import Swal from "sweetalert2";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+import { useLogInMutation } from "../../redux/api/authApi";
 import { storeUserToken } from "../../services/auth.service";
 
 function SignInPage() {
@@ -35,12 +37,12 @@ function SignInPage() {
     }
 
     const loginData = { email, password };
-    console.log("log in data of aman", loginData);
+    // console.log("log in data of aman", loginData);
 
     logIn(loginData)
       .unwrap()
       .then((response) => {
-        console.log("response of sign in", response);
+        // console.log("response of sign in", response);
         if (response?.data?.accessToken) {
           storeUserToken({ accessToken: response.data.accessToken });
           Swal.fire({
@@ -48,12 +50,16 @@ function SignInPage() {
             title: "Login successful!",
             text: "You are now logged in.",
           });
-
           navigate("/");
         }
       })
       .catch((error) => {
-        console.log("error of sign in", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text:
+            error?.data?.message || "Something went wrong. Please try again.",
+        });
       });
   };
 
@@ -66,12 +72,9 @@ function SignInPage() {
               Login to Account
             </h2>
             <p className="text-[#6F6F6F] text-center mb-8">
-              Please enter your email and password to continue
+              Please enter your email and password to continue.
             </p>
-
-            {/* Display Error Message */}
             {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
             <form onSubmit={handleSignIn} className="space-y-6">
               <div>
                 <label className="block text-md font-medium text-[#575757] mb-2">
@@ -87,7 +90,6 @@ function SignInPage() {
                   required
                 />
               </div>
-
               <div className="w-full">
                 <label
                   htmlFor="password"
@@ -115,7 +117,6 @@ function SignInPage() {
                   </button>
                 </div>
               </div>
-
               <div className="flex justify-between items-center text-sm">
                 <label className="flex items-center">
                   <input
@@ -133,7 +134,6 @@ function SignInPage() {
                   Forgot Password?
                 </Link>
               </div>
-
               <button
                 type="submit"
                 disabled={isLoading}
@@ -143,13 +143,12 @@ function SignInPage() {
               </button>
             </form>
           </div>
-
           <div className="w-full lg:w-1/2 text-center">
             <h1 className="text-3xl font-bold mb-6 text-[#6F6F6F]">
-              Welcome Back
+              Welcome Back!
             </h1>
             <p className="text-[#6F6F6F] text-lg">
-              Please Sign in to your account with the given details to continue
+              Please Sign in to your account with the given details to continue.
             </p>
           </div>
         </div>
