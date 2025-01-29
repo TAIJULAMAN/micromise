@@ -1,33 +1,61 @@
 import { useState } from "react";
-import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
+
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+import { useResetPasswordMutation } from "../../redux/api/authApi";
 
 function NewPassword() {
-  const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
-  });
-  const [isEyeOpen, setIsEyeOpen] = useState(false);
-  const [isConfirmEyeOpen, setIsConfirmEyeOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email");
+  console.log(email);
+
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+    console.log(newPassword, confirmPassword);
+
+    if (newPassword !== confirmPassword) {
+      Swal.fire({
+        icon: "error",
+        title: "Password Mismatch",
+        text: "The passwords do not match. Please try again.",
+      });
       return;
     }
-    console.log("New Password Set:", formData.password);
-    // Add your password update logic here
+
+    try {
+      const response = await resetPassword({
+        email,
+        newPassword: confirmPassword,
+      }).unwrap();
+      console.log("Password Reset Response:", response);
+
+      // Swal.fire({
+      //   icon: "success",
+      //   title: "Password Updated!",
+      //   text: "Your password has been successfully updated.",
+      // });
+
+      navigate("/success-message");
+    } catch (err) {
+      console.error("Reset Password Error:", err);
+      // const errorMessage =
+      //   err?.data?.message || "Something went wrong. Please try again later.";
+      // Swal.fire({
+      //   icon: "error",
+      //   title: "Password Reset Failed",
+      //   text: errorMessage,
+      // });
+    }
   };
 
   return (
@@ -39,41 +67,33 @@ function NewPassword() {
               Set New Password
             </h2>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {/* Password Field */}
+            <form className="space-y-6" onSubmit={handleUpdatePassword}>
               <div className="w-full">
                 <label
                   htmlFor="password"
                   className="text-[15px] font-[400] text-[#575757]"
                 >
-                  Password
+                  New Password
                 </label>
                 <div className="w-full relative">
                   <input
-                    type={isEyeOpen ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    id="password"
+                    type={showNewPassword ? "text" : "password"}
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
                     className="peer border-[#e5eaf2] border rounded-md outline-none pl-4 pr-12 py-3 w-full mt-1"
                     required
                   />
-                  {isEyeOpen ? (
-                    <IoEyeOutline
-                      className="absolute top-4 right-4 text-[1.5rem] text-[#777777] cursor-pointer"
-                      onClick={() => setIsEyeOpen(false)}
-                    />
-                  ) : (
-                    <IoEyeOffOutline
-                      className="absolute top-4 right-4 text-[1.5rem] text-[#777777] cursor-pointer"
-                      onClick={() => setIsEyeOpen(true)}
-                    />
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                  >
+                    {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
               </div>
-
-              {/* Confirm Password Field */}
               <div className="w-full">
                 <label
                   htmlFor="confirmPassword"
@@ -83,38 +103,30 @@ function NewPassword() {
                 </label>
                 <div className="w-full relative">
                   <input
-                    type={isConfirmEyeOpen ? "text" : "password"}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
+                    type={showConfirmPassword ? "text" : "password"}
                     id="confirmPassword"
-                    placeholder="Re-enter new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your new password"
                     className="peer border-[#e5eaf2] border rounded-md outline-none pl-4 pr-12 py-3 w-full mt-1"
                     required
                   />
-                  {isConfirmEyeOpen ? (
-                    <IoEyeOutline
-                      className="absolute top-4 right-4 text-[1.5rem] text-[#777777] cursor-pointer"
-                      onClick={() => setIsConfirmEyeOpen(false)}
-                    />
-                  ) : (
-                    <IoEyeOffOutline
-                      className="absolute top-4 right-4 text-[1.5rem] text-[#777777] cursor-pointer"
-                      onClick={() => setIsConfirmEyeOpen(true)}
-                    />
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
               </div>
-
-              {/* Submit Button */}
-              <Link to="/success-message">
-                <button
-                  type="submit"
-                  className="w-full bg-primary text-white font-semibold py-2 rounded-lg shadow-lg hover:bg-primary-dark transition mt-5"
-                >
-                  Confirm
-                </button>
-              </Link>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-primary text-white font-semibold py-2 rounded-lg shadow-lg hover:bg-primary-dark transition mt-5"
+              >
+                {isLoading ? "Updating..." : "Update Password"}
+              </button>
             </form>
           </div>
           <div className="w-full md:w-1/2 text-center">

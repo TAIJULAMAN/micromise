@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { useVerifyEmailMutation } from "../../redux/api/authApi";
+import { storeResetToken } from "../../services/auth.service";
 
 function VerificationCode() {
   const [code, setCode] = useState(new Array(4).fill(""));
@@ -28,14 +29,17 @@ function VerificationCode() {
     }
   };
 
-  const handleVerifyCode = () => {
+  const handleVerifyCode = async () => {
     const enteredCode = code.join("");
     console.log(enteredCode);
     if (enteredCode.length === 4) {
-      verifyEmail({ Otp: { email, otp: enteredCode } })
+      await verifyEmail({ Otp: { email, otp: enteredCode } })
         .unwrap()
         .then((response) => {
           console.log("Verification response:", response);
+
+        storeResetToken({ resetToken: response.data.resetToken });
+
           Swal.fire({
             icon: "success",
             title: "Verification successful!",
