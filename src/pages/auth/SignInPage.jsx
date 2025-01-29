@@ -3,7 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogInMutation } from "../../redux/api/authApi";
 import Swal from "sweetalert2";
-// import { storeUserInfo, storeUserToken } from "../../services/auth.service";
+import { storeUserToken } from "../../services/auth.service";
 
 function SignInPage() {
   const [email, setEmail] = useState("");
@@ -11,13 +11,20 @@ function SignInPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  // const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [logIn, { isLoading }] = useLogInMutation();
 
   const handleSignIn = (e) => {
     e.preventDefault();
-
-
+    setError("");
+    if (!email) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Email is required!",
+      });
+      return;
+    }
     if (!password) {
       Swal.fire({
         icon: "error",
@@ -28,18 +35,26 @@ function SignInPage() {
     }
 
     const loginData = { email, password };
-    console.log(loginData);
+    console.log("log in data of aman", loginData);
 
     logIn(loginData)
       .unwrap()
-      .then((data) => {
-        console.log("response of sign in", data);
+      .then((response) => {
+        console.log("response of sign in", response);
+        if (response?.data?.accessToken) {
+          storeUserToken({ accessToken: response.data.accessToken });
+          Swal.fire({
+            icon: "success",
+            title: "Login successful!",
+            text: "You are now logged in.",
+          });
+
+          navigate("/");
         }
-      )
+      })
       .catch((error) => {
-       console.log("error of sign in", error);
-        });
-      ;
+        console.log("error of sign in", error);
+      });
   };
 
   return (
@@ -112,7 +127,7 @@ function SignInPage() {
                   Remember Password
                 </label>
                 <Link
-                  to="/forgot-password"
+                  to="/forgate-password"
                   className="text-primary hover:underline"
                 >
                   Forgot Password?

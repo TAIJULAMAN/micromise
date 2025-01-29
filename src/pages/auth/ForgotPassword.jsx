@@ -1,11 +1,59 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForgotPasswordMutation } from "../../redux/api/authApi";
+import Swal from "sweetalert2";
 function ForgotPassword() {
   const [email, setEmail] = useState("");
+  // const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+
+
+  const handleSendCode = (e) => {
+    e.preventDefault();
+    if (!email) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please enter your email!",
+      });
+      return;
+    }
+  }
+
+  // const handleSendCode = (e) => {
+  //   e.preventDefault();
+
+  //   if (!email) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Oops...",
+  //       text: "Please enter your email!",
+  //     });
+  //     return;
+  //   }
+
+  //   forgotPassword({ email })
+  //     .unwrap()
+  //     .then((response) => {
+  //       console.log(response);
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "OTP Sent",
+  //         text: "The OTP has been sent to your email successfully!",
+  //       });
+  //       navigate(`/verification-code?email=${email}`);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Error",
+  //         text:
+  //           error?.data?.message || "Something went wrong. Please try again.",
+  //       });
+  //     });
+  // };
 
   return (
     <div className="bg-white min-h-screen flex items-center justify-center">
@@ -17,7 +65,7 @@ function ForgotPassword() {
             </h2>
 
             {/* Form Section */}
-            <form className="space-y-6">
+            <form onSubmit={handleSendCode} className="space-y-6">
               <div>
                 <label className="block text-md font-medium text-[#575757] mb-2">
                   Email
@@ -26,7 +74,7 @@ function ForgotPassword() {
                   type="email"
                   name="email"
                   value={email}
-                  onChange={handleChange}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
                   placeholder="Enter Email"
                   required
