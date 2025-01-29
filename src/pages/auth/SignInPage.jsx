@@ -42,7 +42,7 @@ function SignInPage() {
     logIn(loginData)
       .unwrap()
       .then((response) => {
-        // console.log("response of sign in", response);
+        console.log("response of sign in", response);
         if (response?.data?.accessToken) {
           storeUserToken({ accessToken: response.data.accessToken });
           Swal.fire({
