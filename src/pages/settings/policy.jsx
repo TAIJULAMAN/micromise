@@ -1,42 +1,118 @@
-import { useState } from "react";
-import ReactQuill from "react-quill";
+/* eslint-disable no-unused-vars */
 import "react-quill/dist/quill.snow.css";
-function Policy() {
-  const [value, setValue] = useState(
-    "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum.There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum."
-  );
+import { useEffect, useState } from "react";
+import ReactQuill from "react-quill";
+import Swal from "sweetalert2";
+import {
+  useGetPrivacyPolicyQuery,
+  useUpdatePrivacyPolicyMutation,
+} from "../../redux/api/privacyPolicyApi";
+
+const PrivacyPolicyPage = () => {
+  const [content, setContent] = useState("");
+
+  const { data } = useGetPrivacyPolicyQuery();
+  const [updatePrivacyPolicy, { isLoading }] = useUpdatePrivacyPolicyMutation();
+
+  useEffect(() => {
+    if (data?.data?.length) {
+      setContent(data.data[0].message || "");
+    }
+  }, [data]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!content.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Privacy policy cannot be empty!",
+      });
+      return;
+    }
+  
+    const finalData = { Privacy: { message: content } };
+  
+    try {
+      const response = await updatePrivacyPolicy(finalData).unwrap();
+  
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: response?.message || "Privacy Policy Updated Successfully",
+      });
+    } catch (error) {
+      console.error("API Error:", error);
+  
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text:
+          error?.data?.errorSources?.[0]?.message ||
+          error?.data?.message ||
+          "Something went wrong!",
+      });
+    }
+  };
+  
+
+  const quillModules = {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }, { font: [] }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image", "video"],
+      ["clean"],
+    ],
+  };
+
+  const quillFormats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "video",
+  ];
 
   return (
-    <div className="px-5 pb-5">
-      <h3 className="font-semibold pb-5 text-xl text-[#242424]">
-        Privacy Policy
-      </h3>
+    <div className="container mx-auto p-6">
+      <h3 className="font-semibold pb-5 text-xl">Privacy Policy</h3>
 
-      <div className=" bg-white rounded shadow p-5 h-full">
-        <ReactQuill
-          theme="snow"
-          value={value}
-          onChange={setValue}
-          className="bg-white h-full"
-          modules={{
-            toolbar: [
-              ["bold", "italic", "underline"],
-              [{ list: "ordered" }, { list: "bullet" }],
-              ["link", "image"],
-            ],
-          }}
-        />
-      </div>
-      <div className="text-center py-6">
-        <button
-          onClick={() => console.log(value)}
-          className="bg-primary text-white font-semibold px-6 py-2 rounded transition duration-200"
-        >
-          Save changes
-        </button>
+      <div className="bg-white p-4 shadow rounded">
+        <form onSubmit={handleSubmit}>
+          <label className="block font-medium mb-2">Edit Privacy Policy</label>
+          <ReactQuill
+            value={content}
+            onChange={setContent}
+            placeholder="Write your privacy policy here..."
+            modules={quillModules}
+            formats={quillFormats}
+            className="h-96 mb-10"
+          />
+
+          <div className="flex justify-center pt-6">
+            <button
+              type="submit"
+              className="bg-[#4A5D4E] hover:bg-primary/80 text-white font-semibold px-6 py-2 rounded transition duration-200"
+              disabled={isLoading}
+            >
+              {isLoading ? "Saving..." : "Save"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
-}
+};
 
-export default Policy;
+export default PrivacyPolicyPage;

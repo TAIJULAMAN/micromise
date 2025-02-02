@@ -19,10 +19,28 @@ export const storeUserToken = ({ accessToken }) => {
     setToLocalStorage("accessToken", accessToken);
   }
 };
+
+export const getUserToken = () => {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    console.error("Authorization token is missing or invalid.");
+    return "";
+  }
+  return token;
+};
+
 export const storeResetToken = ({ resetToken }) => {
   if (resetToken) {
     setToLocalStorage("resetToken", resetToken);
   }
+};
+export const getResetToken = () => {
+  const token = localStorage.getItem("resetToken");
+  if (!token) {
+    console.error("Reset token is missing or invalid.");
+    return "";
+  }
+  return token;
 };
 
 // Retrieve user info (decoded token) from localStorage
