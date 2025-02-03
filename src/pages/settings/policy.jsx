@@ -1,28 +1,38 @@
-/* eslint-disable no-unused-vars */
 import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
-import Swal from "sweetalert2";
 import {
+  useAddPrivacyPolicyMutation,
   useGetPrivacyPolicyQuery,
-  useUpdatePrivacyPolicyMutation,
 } from "../../redux/api/privacyPolicyApi";
+import Swal from "sweetalert2";
 
 const PrivacyPolicyPage = () => {
   const [content, setContent] = useState("");
 
-  const { data } = useGetPrivacyPolicyQuery();
-  const [updatePrivacyPolicy, { isLoading }] = useUpdatePrivacyPolicyMutation();
+  // Fetch privacy policy
+  const {
+    data: privacyData,
+    isLoading: isFetching,
+    error,
+  } = useGetPrivacyPolicyQuery();
+  console.log("Fetched Privacy Policy Data:", privacyData);
 
   useEffect(() => {
-    if (data?.data?.length) {
-      setContent(data.data[0].message || "");
+    if (privacyData?.data?._id) {
+      setContent(privacyData?.data?.message);
+      console.log("Privacy Policy set in api:", privacyData?.data?.message);
     }
-  }, [data]);
+  }, [privacyData]);
+
+  const [addPrivacyPolicy, { isLoading: isAdding }] =
+    useAddPrivacyPolicyMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    console.log(e);
+
     if (!content.trim()) {
       Swal.fire({
         icon: "error",
@@ -31,31 +41,30 @@ const PrivacyPolicyPage = () => {
       });
       return;
     }
-  
-    const finalData = { Privacy: { message: content } };
-  
+
+    const finalData = {
+      Privacy: { message: content },
+    };
+    console.log("Privacy Policy final Data:", finalData);
+
     try {
-      const response = await updatePrivacyPolicy(finalData).unwrap();
-  
+      const response = await addPrivacyPolicy(finalData).unwrap();
+      console.log("Privacy Policy Added Successfully:", response);
+      setContent(response?.data?.message);
       Swal.fire({
         icon: "success",
-        title: "Success!",
-        text: response?.message || "Privacy Policy Updated Successfully",
+        title: "Success",
+        text: "Privacy Policy Added Successfully.",
       });
     } catch (error) {
       console.error("API Error:", error);
-  
       Swal.fire({
         icon: "error",
-        title: "Error!",
-        text:
-          error?.data?.errorSources?.[0]?.message ||
-          error?.data?.message ||
-          "Something went wrong!",
+        title: "Error",
+        text: error?.data?.error || "Something went wrong!",
       });
     }
   };
-  
 
   const quillModules = {
     toolbar: [
@@ -89,6 +98,15 @@ const PrivacyPolicyPage = () => {
       <h3 className="font-semibold pb-5 text-xl">Privacy Policy</h3>
 
       <div className="bg-white p-4 shadow rounded">
+        {isFetching && (
+          <p className="text-gray-500">Loading privacy policy...</p>
+        )}
+        {error && (
+          <p className="text-red-500">
+            Error loading privacy policy. Try again.
+          </p>
+        )}
+
         <form onSubmit={handleSubmit}>
           <label className="block font-medium mb-2">Edit Privacy Policy</label>
           <ReactQuill
@@ -104,9 +122,9 @@ const PrivacyPolicyPage = () => {
             <button
               type="submit"
               className="bg-[#4A5D4E] hover:bg-primary/80 text-white font-semibold px-6 py-2 rounded transition duration-200"
-              disabled={isLoading}
+              disabled={isAdding}
             >
-              {isLoading ? "Saving..." : "Save"}
+              {isAdding ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
