@@ -20,7 +20,6 @@ function MakeAdminPage() {
     isLoading,
     refetch,
   } = useGetAllAdminsQuery();
-  // console.log(adminsData);
 
   const [createAdmin] = useCreateAdminMutation();
   const [deleteAdmin] = useDeleteAdminMutation();
@@ -58,48 +57,6 @@ function MakeAdminPage() {
       }
     });
   };
-
-  // const [newAdmin, setNewAdmin] = useState({
-  //   User: {
-  //     fullName: "",
-  //     email: "",
-  //     password: "",
-  //     contactNo: "",
-  //     role: "admin",
-  //   },
-  // });
-  // // console.log(newAdmin);
-
-  // const handleAddAdmin = async () => {
-  //   try {
-  //     await createAdmin(newAdmin).unwrap();
-  //     // console.log(response);
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "Admin Added",
-  //       text: "The new admin was added successfully!",
-  //     });
-
-  //     setIsAddModalVisible(false);
-  //     setNewAdmin({
-  //       User: {
-  //         fullName: "",
-  //         email: "",
-  //         password: "",
-  //         contactNo: "",
-  //         role: "admin",
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "Failed to add the new admin. Please try again.",
-  //     });
-  //   }
-  // };
-
   const [newAdmin, setNewAdmin] = useState({
     User: {
       fullName: "",
@@ -109,7 +66,7 @@ function MakeAdminPage() {
       role: "admin",
     },
   });
-  
+
   // Function to update User fields inside newAdmin
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -117,11 +74,11 @@ function MakeAdminPage() {
       ...prevState,
       User: {
         ...prevState.User,
-        [name]: value, // Update the specific field inside User
+        [name]: value,
       },
     }));
   };
-  
+
   const handleAddAdmin = async () => {
     try {
       await createAdmin(newAdmin).unwrap();
@@ -130,7 +87,7 @@ function MakeAdminPage() {
         title: "Admin Added",
         text: "The new admin was added successfully!",
       });
-  
+
       setIsAddModalVisible(false);
       setNewAdmin({
         User: {
@@ -150,7 +107,6 @@ function MakeAdminPage() {
       });
     }
   };
-  
 
   if (isLoading)
     return (
@@ -235,66 +191,69 @@ function MakeAdminPage() {
                 <IoCloseSharp />
               </button>
               <div>
-  <label className="block text-md font-medium text-[#575757] mb-2">
-    User Name
-  </label>
-  <input
-    type="text"
-    name="fullName"
-    value={newAdmin.User.fullName}
-    onChange={handleChange}
-    className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
-    placeholder="Enter Name"
-    required
-  />
-</div>
+                <label className="block text-md font-medium text-[#575757] mb-2">
+                  User Name
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={newAdmin.User.fullName}
+                  onChange={handleChange}
+                  className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
+                  placeholder="Enter Name"
+                  required
+                />
+              </div>
 
-<div>
-  <label className="block text-md font-medium text-[#575757] mb-2">
-    Email
-  </label>
-  <input
-    type="email"
-    name="email"
-    value={newAdmin.User.email}
-    onChange={handleChange}
-    className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
-    placeholder="Enter Email"
-    required
-  />
-</div>
+              <div>
+                <label className="block text-md font-medium text-[#575757] mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={newAdmin.User.email}
+                  onChange={handleChange}
+                  className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
+                  placeholder="Enter Email"
+                  required
+                />
+              </div>
 
-<div>
-  <label className="block text-md font-medium text-[#575757] mb-2">
-    Contact No
-  </label>
-  <input
-    type="text"
-    name="contactNo"
-    value={newAdmin.User.contactNo}
-    onChange={handleChange}
-    className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
-    placeholder="Enter Contact Number"
-    required
-  />
-</div>
+              <div>
+                <label className="block text-md font-medium text-[#575757] mb-2">
+                  Contact No
+                </label>
+                <input
+                  type="text"
+                  name="contactNo"
+                  value={newAdmin.User.contactNo}
+                  onChange={handleChange}
+                  className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
+                  placeholder="Enter Contact Number"
+                  required
+                />
+              </div>
 
-<div className="w-full">
-  <label htmlFor="password" className="text-[15px] font-[400] text-[#575757]">
-    Password
-  </label>
-  <div className="w-full relative">
-    <input
-      type="password"
-      name="password"
-      id="password"
-      value={newAdmin.User.password}
-      onChange={handleChange}
-      placeholder="Password"
-      className="peer border-[#e5eaf2] border rounded-md outline-none pl-4 pr-12 py-3 w-full mt-1"
-    />
-  </div>
-</div>
+              <div className="w-full">
+                <label
+                  htmlFor="password"
+                  className="text-[15px] font-[400] text-[#575757]"
+                >
+                  Password
+                </label>
+                <div className="w-full relative">
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={newAdmin.User.password}
+                    onChange={handleChange}
+                    placeholder="Password"
+                    className="peer border-[#e5eaf2] border rounded-md outline-none pl-4 pr-12 py-3 w-full mt-1"
+                  />
+                </div>
+              </div>
 
               <div className="flex justify-start space-x-2">
                 <button
