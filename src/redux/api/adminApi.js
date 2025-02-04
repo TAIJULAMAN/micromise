@@ -12,6 +12,7 @@ const adminApi = baseApi.injectEndpoints({
         },
         params,
       }),
+      invalidatesTags: ["admin"],
     }),
     createAdmin: builder.mutation({
       query: (data) => ({
@@ -22,6 +23,7 @@ const adminApi = baseApi.injectEndpoints({
           Authorization: `Bearer ${getUserToken()}`,
         },
       }),
+      invalidatesTags: ["admin"],
     }),
 
     deleteAdmin: builder.mutation({
@@ -32,6 +34,7 @@ const adminApi = baseApi.injectEndpoints({
           Authorization: `Bearer ${getUserToken()}`,
         },
       }),
+      invalidatesTags: ["admin"],
     }),
   }),
 });
