@@ -37,13 +37,14 @@ function SignInPage() {
     }
 
     const loginData = { email, password };
-    // console.log("loginData", loginData);
+    console.log("loginData", loginData);
 
     logIn(loginData)
       .unwrap()
       .then((response) => {
-        // console.log("response of sign in", response);
+        console.log("response of sign in", response);
         if (response?.data?.accessToken) {
+          console.log(response?.data?.accessToken);
           storeUserToken({ accessToken: response?.data?.accessToken });
           Swal.fire({
             icon: "success",
@@ -54,12 +55,11 @@ function SignInPage() {
         }
       })
       .catch((error) => {
-        // console.log("error of loh in", error);
+        console.log("error of loh in", error);
         Swal.fire({
           icon: "error",
           title: "Error",
-          text:
-            error?.data?.message,
+          text: error?.data?.message,
         });
       });
   };
@@ -149,7 +149,7 @@ function SignInPage() {
               Welcome Back!
             </h1>
             <p className="text-[#6F6F6F] text-lg">
-              Please Sign in to your account with the given information. 
+              Please Sign in to your account with the given information.
             </p>
           </div>
         </div>

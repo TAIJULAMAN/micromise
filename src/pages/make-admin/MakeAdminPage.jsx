@@ -1,69 +1,24 @@
 import { useState } from "react";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import AddNewAdmin from "../../components/Modals/AddNewAdmin";
 import DeleteModal from "../../components/Modals/DeleteModal";
-
-const initialTableData = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    userType: "admin",
-    contact: "123-456-7890",
-  },
-  {
-    id: 2,
-    name: "Jane Doe",
-    email: "jane@example.com",
-    userType: "admin",
-    contact: "234-567-8901",
-  },
-  {
-    id: 3,
-    name: "Bob Smith",
-    email: "bob@example.com",
-    userType: "admin",
-    contact: "345-678-9012",
-  },
-  {
-    id: 4,
-    name: "Alice Johnson",
-    email: "alice@example.com",
-    userType: "admin",
-    contact: "456-789-0123",
-  },
-  {
-    id: 5,
-    name: "Michael Brown",
-    email: "michael@example.com",
-    userType: "admin",
-    contact: "567-890-1234",
-  },
-];
+import { useGetAllAdminsQuery } from "../../redux/api/adminApi";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function MakeAdminPage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
-  const [tableData, setTableData] = useState(initialTableData);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData);
+  const { data:adminsData, error, isLoading } = useGetAllAdminsQuery();
+  console.log(adminsData);
 
-    // Add new record to the tableData state
-    setTableData((prevData) => [
-      ...prevData,
-      { id: prevData.length + 1, ...data },
-    ]);
-
-    setIsAddModalVisible(false);
+  const handleDeleteClick = (item) => {
+    setCurrentRecord(item);
+    setIsDeleteModalVisible(true);
   };
 
-  const onDelete = (id) => {
-    setTableData(tableData.filter((item) => item.id !== id));
-  };
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">Failed to load admins.</p>;
 
   return (
     <div className="px-5 pb-5">
@@ -79,42 +34,31 @@ function MakeAdminPage() {
 
       <div className="py-10 bg-white">
         <table className="min-w-full">
-          <thead className="pt-[100px]">
+          <thead>
             <tr className="text-left text-[#1f1f1f]">
-              <th className="py-3 pr-4 pl-10">S.ID</th>
+              <th className="py-3 pr-4 pl-10">S no.</th>
               <th className="py-3 px-4">Name</th>
               <th className="py-3 px-4">Email</th>
-              <th className="py-3 px-4">Contact no</th>
+              <th className="py-3 px-4">Contact No</th>
               <th className="py-3 px-4">User Type</th>
               <th className="py-3 px-4 text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-            {tableData.map((item) => (
-              <tr key={item.id} className="space-y-5 text-[#707070]">
-                <td className="py-3 pr-4 pl-10">#{item.id}</td>
-                <td className="py-3 px-4">{item.name}</td>
-                <td className="py-3 px-4">{item.email}</td>
-                <td className="py-3 px-4">{item.contact}</td>
+            {adminsData?.data?.map((admin) => (
+              <tr key={admin?._id} className="text-[#707070]">
+                <td className="py-3 pr-4 pl-10">#{admin?._id}</td>
+                <td className="py-3 px-4">{admin?.fullName
+                }</td>
+                <td className="py-3 px-4">{admin?.email}</td>
+                <td className="py-3 px-4">{admin?.contactNo}</td>
                 <td className="py-3 px-4">
-                  <span
-                    className={
-                      item.userType === "admin"
-                        ? "text-primary"
-                        : "text-[#707070]"
-                    }
-                  >
-                    {item.userType === "admin" ? "Admin" : "User"}
+                  <span className={admin?.role === "admin" ? "text-primary" : "text-[#707070]"}>
+                    {admin?.role === "admin" ? "Admin" : "User"}
                   </span>
                 </td>
                 <td className="py-3 px-4 text-center">
-                  <button
-                    onClick={() => {
-                      setIsDeleteModalVisible(true);
-                      setCurrentRecord(item);
-                    }}
-                    className="text-primary w-6 h-6"
-                  >
+                  <button onClick={() => handleDeleteClick(admin)} className="text-primary w-6 h-6">
                     <RiDeleteBin6Line />
                   </button>
                 </td>
@@ -123,19 +67,9 @@ function MakeAdminPage() {
           </tbody>
         </table>
 
-        {isAddModalVisible && (
-          <AddNewAdmin
-            onSubmit={onSubmit}
-            setIsAddModalVisible={setIsAddModalVisible}
-          />
-        )}
-
+        {isAddModalVisible && <AddNewAdmin setIsAddModalVisible={setIsAddModalVisible} />}
         {isDeleteModalVisible && (
-          <DeleteModal
-            setIsDeleteModalVisible={setIsDeleteModalVisible}
-            onDelete={onDelete}
-            currentRecord={currentRecord}
-          />
+          <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} currentRecord={currentRecord} />
         )}
       </div>
     </div>
