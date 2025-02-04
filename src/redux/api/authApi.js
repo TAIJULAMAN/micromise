@@ -1,4 +1,3 @@
-// import { getResetToken } from "../../services/auth.service";
 import { baseApi } from "./baseApi";
 
 const authApi = baseApi.injectEndpoints({
@@ -48,6 +47,3 @@ export const {
 } = authApi;
 
 export default authApi;
-
-
-// Authorization: `Bearer ${getResetToken()}`,
