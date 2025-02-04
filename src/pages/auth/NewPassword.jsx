@@ -32,29 +32,48 @@ function NewPassword() {
       return;
     }
 
+    const resetToken = localStorage.getItem("resetToken");
+    console.log("Reset Token:", resetToken);
+
+    if (!resetToken) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Request",
+        text: "The password reset token is invalid. Please try again.",
+      });
+      return;
+    }
+    if (!email || !newPassword || !resetToken) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Request",
+        text: "Missing required fields.",
+      });
+      return;
+    }
+
     try {
       const response = await resetPassword({
         email,
         newPassword: confirmPassword,
+        // resetToken,
       }).unwrap();
-      console.log("Password Reset Response:", response);
+      console.log("Response of reset password:", response);
 
-      // Swal.fire({
-      //   icon: "success",
-      //   title: "Password Updated!",
-      //   text: "Your password has been successfully updated.",
-      // });
+      Swal.fire({
+        icon: "success",
+        title: "Password Updated!",
+        text: "Your password has been successfully updated.",
+      });
 
       navigate("/success-message");
-    } catch (err) {
-      console.error("Reset Password Error:", err);
-      // const errorMessage =
-      //   err?.data?.message || "Something went wrong. Please try again later.";
-      // Swal.fire({
-      //   icon: "error",
-      //   title: "Password Reset Failed",
-      //   text: errorMessage,
-      // });
+    } catch (error) {
+      console.error("Reset Password Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Password Reset Failed",
+        text: error?.message || "Please try again.",
+      });
     }
   };
 

@@ -1,3 +1,4 @@
+// import { getResetToken } from "../../services/auth.service";
 import { baseApi } from "./baseApi";
 
 const authApi = baseApi.injectEndpoints({
@@ -32,6 +33,7 @@ const authApi = baseApi.injectEndpoints({
         url: "/auth/reset-password",
         method: "POST",
         body: data,
+        headers: { Authorization: localStorage.getItem("resetToken") },
       }),
       invalidatesTags: ["admin"],
     }),
@@ -46,3 +48,6 @@ export const {
 } = authApi;
 
 export default authApi;
+
+
+// Authorization: `Bearer ${getResetToken()}`,

@@ -1,41 +1,121 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-function TermsConditionPage() {
-  const [value, setValue] = useState(
-    "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum.There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum."
-  );
-  return (
-    <div className="px-5 pb-5">
-      <h3 className="font-semibold pb-5 text-xl text-[#242424]">
-       Terms And Condition
-      </h3>
+import Swal from "sweetalert2";
+import {
+  useGetTermsQuery,
+  useUpdateTermsAndConditionMutation,
+} from "../../redux/api/termsAndConditionApi";
 
-      <div className="bg-white rounded shadow p-5 h-full">
-        <ReactQuill
-          theme="snow"
-          value={value}
-          onChange={setValue}
-          className="bg-white h-full"
-          modules={{
-            toolbar: [
-              ["bold", "italic", "underline"],
-              [{ list: "ordered" }, { list: "bullet" }],
-              ["link", "image"],
-            ],
-          }}
-        />
-      </div>
-      <div className="text-center py-6">
-        <button
-          onClick={() => console.log(value)}
-          className="bg-primary text-white font-semibold px-6 py-2 rounded transition duration-200"
-        >
-          Save changes
-        </button>
-      </div>
+const TermsConditions = () => {
+  const [content, setContent] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Fetch data from the backend
+  const { data: termsData, isLoading: isFetching, error } = useGetTermsQuery();
+  console.log(termsData);
+
+  const [updateTerms] = useUpdateTermsAndConditionMutation();
+
+  useEffect(() => {
+    if (termsData?.data?.message) {
+      setContent(termsData?.data?.message);
+    }
+  }, [termsData]);
+
+  const handleSave = async () => {
+    const finalData = {
+      Term: { message: content },
+    };
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to save the changes to Terms & Conditions?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, save it!",
+    }).then(async (result) => {
+      if (result?.isConfirmed) {
+        try {
+          setIsSaving(true);
+          const response = await updateTerms(finalData).unwrap();
+          console.log("Updated Response:", response);
+
+          Swal.fire({
+            icon: "success",
+            title: "Saved!",
+            text: "Terms & Conditions updated successfully.",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
+
+          setIsSaving(false);
+        } catch (error) {
+          console.error("Error updating content:", error);
+
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to save Terms & Conditions. Please try again.",
+          });
+
+          setIsSaving(false);
+        }
+      }
+    });
+  };
+
+  return (
+    <div className="p-5 bg-white">
+      {/* Page Header */}
+      <h1 className="text-start text-3xl font-bold mb-5">
+        Terms & Conditions
+      </h1>
+
+      {/* Loading state */}
+      {isFetching && (
+        <div className="flex justify-center items-center h-64">
+          <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+
+        </div>
+      )}
+
+      {/* Editor Container */}
+      {!isFetching && (
+        <div className="border border-bg rounded-md p-5">
+          {/* ReactQuill Editor */}
+          <ReactQuill
+            style={{ height: 300, padding:"10px" }}
+            theme="snow"
+            value={content}
+            onChange={setContent}
+          />
+
+          {/* Save Button */}
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className={`w-full px-10 py-3 mt-20 rounded bg-primary text-white font-semibold shadow-lg flex items-center justify-center ${
+              isSaving ? "opacity-50 cursor-not-allowed" : "hover:bg-primary"
+            }`}
+            type="submit"
+          >
+            {isSaving ? "Saving..." : "Save & Change"}
+          </button>
+        </div>
+      )}
+
+      {/* Error handling */}
+      {error && (
+        <div className="mt-6 text-center text-red-600">
+          <p>Error fetching data: {error.message || "Something went wrong."}</p>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default TermsConditionPage;
+export default TermsConditions;

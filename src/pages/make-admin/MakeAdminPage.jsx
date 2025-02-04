@@ -1,69 +1,162 @@
 import { useState } from "react";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import AddNewAdmin from "../../components/Modals/AddNewAdmin";
 import DeleteModal from "../../components/Modals/DeleteModal";
-
-const initialTableData = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    userType: "admin",
-    contact: "123-456-7890",
-  },
-  {
-    id: 2,
-    name: "Jane Doe",
-    email: "jane@example.com",
-    userType: "admin",
-    contact: "234-567-8901",
-  },
-  {
-    id: 3,
-    name: "Bob Smith",
-    email: "bob@example.com",
-    userType: "admin",
-    contact: "345-678-9012",
-  },
-  {
-    id: 4,
-    name: "Alice Johnson",
-    email: "alice@example.com",
-    userType: "admin",
-    contact: "456-789-0123",
-  },
-  {
-    id: 5,
-    name: "Michael Brown",
-    email: "michael@example.com",
-    userType: "admin",
-    contact: "567-890-1234",
-  },
-];
+import {
+  useCreateAdminMutation,
+  useDeleteAdminMutation,
+  useGetAllAdminsQuery,
+} from "../../redux/api/adminApi";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import Swal from "sweetalert2";
+import { IoCloseSharp } from "react-icons/io5";
 
 function MakeAdminPage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState(null);
-  const [tableData, setTableData] = useState(initialTableData);
+  const [currentRecord] = useState(null);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData);
+  const {
+    data: adminsData,
+    error,
+    isLoading,
+    refetch,
+  } = useGetAllAdminsQuery();
+  // console.log(adminsData);
 
-    // Add new record to the tableData state
-    setTableData((prevData) => [
-      ...prevData,
-      { id: prevData.length + 1, ...data },
-    ]);
+  const [createAdmin] = useCreateAdminMutation();
+  const [deleteAdmin] = useDeleteAdminMutation();
 
-    setIsAddModalVisible(false);
+  // Handle deleting an admin
+  const handleDeleteAdmin = (admin) => {
+    console.log(admin);
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete admin: ${admin.fullName}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteAdmin(admin._id).unwrap();
+
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "The admin has been deleted successfully.",
+          });
+          refetch();
+        } catch (error) {
+          console.error("delete Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to delete the admin. Please try again.",
+          });
+        }
+      }
+    });
   };
 
-  const onDelete = (id) => {
-    setTableData(tableData.filter((item) => item.id !== id));
+  // const [newAdmin, setNewAdmin] = useState({
+  //   User: {
+  //     fullName: "",
+  //     email: "",
+  //     password: "",
+  //     contactNo: "",
+  //     role: "admin",
+  //   },
+  // });
+  // // console.log(newAdmin);
+
+  // const handleAddAdmin = async () => {
+  //   try {
+  //     await createAdmin(newAdmin).unwrap();
+  //     // console.log(response);
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Admin Added",
+  //       text: "The new admin was added successfully!",
+  //     });
+
+  //     setIsAddModalVisible(false);
+  //     setNewAdmin({
+  //       User: {
+  //         fullName: "",
+  //         email: "",
+  //         password: "",
+  //         contactNo: "",
+  //         role: "admin",
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "Failed to add the new admin. Please try again.",
+  //     });
+  //   }
+  // };
+
+  const [newAdmin, setNewAdmin] = useState({
+    User: {
+      fullName: "",
+      email: "",
+      password: "",
+      contactNo: "",
+      role: "admin",
+    },
+  });
+  
+  // Function to update User fields inside newAdmin
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewAdmin((prevState) => ({
+      ...prevState,
+      User: {
+        ...prevState.User,
+        [name]: value, // Update the specific field inside User
+      },
+    }));
   };
+  
+  const handleAddAdmin = async () => {
+    try {
+      await createAdmin(newAdmin).unwrap();
+      Swal.fire({
+        icon: "success",
+        title: "Admin Added",
+        text: "The new admin was added successfully!",
+      });
+  
+      setIsAddModalVisible(false);
+      setNewAdmin({
+        User: {
+          fullName: "",
+          email: "",
+          password: "",
+          contactNo: "",
+          role: "admin",
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to add the new admin. Please try again.",
+      });
+    }
+  };
+  
+
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load admins!</p>;
 
   return (
     <div className="px-5 pb-5">
@@ -79,40 +172,37 @@ function MakeAdminPage() {
 
       <div className="py-10 bg-white">
         <table className="min-w-full">
-          <thead className="pt-[100px]">
+          <thead>
             <tr className="text-left text-[#1f1f1f]">
-              <th className="py-3 pr-4 pl-10">S.ID</th>
+              <th className="py-3 pr-4 pl-10">S no.</th>
               <th className="py-3 px-4">Name</th>
               <th className="py-3 px-4">Email</th>
-              <th className="py-3 px-4">Contact no</th>
+              <th className="py-3 px-4">Contact No</th>
               <th className="py-3 px-4">User Type</th>
               <th className="py-3 px-4 text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-            {tableData.map((item) => (
-              <tr key={item.id} className="space-y-5 text-[#707070]">
-                <td className="py-3 pr-4 pl-10">#{item.id}</td>
-                <td className="py-3 px-4">{item.name}</td>
-                <td className="py-3 px-4">{item.email}</td>
-                <td className="py-3 px-4">{item.contact}</td>
+            {adminsData?.data?.map((admin, index) => (
+              <tr key={index} className="text-[#707070]">
+                <td className="py-3 pr-4 pl-10">#{index + 1}</td>
+                <td className="py-3 px-4">{admin?.fullName}</td>
+                <td className="py-3 px-4">{admin?.email}</td>
+                <td className="py-3 px-4">{admin?.contactNo}</td>
                 <td className="py-3 px-4">
                   <span
                     className={
-                      item.userType === "admin"
+                      admin?.role === "admin"
                         ? "text-primary"
                         : "text-[#707070]"
                     }
                   >
-                    {item.userType === "admin" ? "Admin" : "User"}
+                    {admin?.role === "admin" ? "Admin" : "User"}
                   </span>
                 </td>
                 <td className="py-3 px-4 text-center">
                   <button
-                    onClick={() => {
-                      setIsDeleteModalVisible(true);
-                      setCurrentRecord(item);
-                    }}
+                    onClick={() => handleDeleteAdmin(admin)}
                     className="text-primary w-6 h-6"
                   >
                     <RiDeleteBin6Line />
@@ -122,20 +212,101 @@ function MakeAdminPage() {
             ))}
           </tbody>
         </table>
-
-        {isAddModalVisible && (
-          <AddNewAdmin
-            onSubmit={onSubmit}
-            setIsAddModalVisible={setIsAddModalVisible}
-          />
-        )}
-
+        {/* Delete modal */}
         {isDeleteModalVisible && (
           <DeleteModal
             setIsDeleteModalVisible={setIsDeleteModalVisible}
-            onDelete={onDelete}
             currentRecord={currentRecord}
           />
+        )}
+        {/* Add Admin Modal */}
+        {isAddModalVisible && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="relative bg-white p-6 rounded shadow-lg px-10 w-[500px]">
+              <h3 className="text-lg font-semibold mb-4 text-[#242424]">
+                Make Admin
+              </h3>
+
+              {/* Close Button */}
+              <button
+                onClick={() => setIsAddModalVisible(false)}
+                className="absolute top-2 right-2 text-white bg-secondary focus:outline-none p-2 rounded-full"
+              >
+                <IoCloseSharp />
+              </button>
+              <div>
+  <label className="block text-md font-medium text-[#575757] mb-2">
+    User Name
+  </label>
+  <input
+    type="text"
+    name="fullName"
+    value={newAdmin.User.fullName}
+    onChange={handleChange}
+    className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
+    placeholder="Enter Name"
+    required
+  />
+</div>
+
+<div>
+  <label className="block text-md font-medium text-[#575757] mb-2">
+    Email
+  </label>
+  <input
+    type="email"
+    name="email"
+    value={newAdmin.User.email}
+    onChange={handleChange}
+    className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
+    placeholder="Enter Email"
+    required
+  />
+</div>
+
+<div>
+  <label className="block text-md font-medium text-[#575757] mb-2">
+    Contact No
+  </label>
+  <input
+    type="text"
+    name="contactNo"
+    value={newAdmin.User.contactNo}
+    onChange={handleChange}
+    className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
+    placeholder="Enter Contact Number"
+    required
+  />
+</div>
+
+<div className="w-full">
+  <label htmlFor="password" className="text-[15px] font-[400] text-[#575757]">
+    Password
+  </label>
+  <div className="w-full relative">
+    <input
+      type="password"
+      name="password"
+      id="password"
+      value={newAdmin.User.password}
+      onChange={handleChange}
+      placeholder="Password"
+      className="peer border-[#e5eaf2] border rounded-md outline-none pl-4 pr-12 py-3 w-full mt-1"
+    />
+  </div>
+</div>
+
+              <div className="flex justify-start space-x-2">
+                <button
+                  onClick={handleAddAdmin}
+                  type="submit"
+                  className="px-4 py-2 bg-primary text-white rounded"
+                >
+                  Add Admin
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
