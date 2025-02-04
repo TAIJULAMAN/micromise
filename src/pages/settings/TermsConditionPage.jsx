@@ -15,7 +15,7 @@ const TermsConditions = () => {
   const { data: termsData, isLoading: isFetching, error } = useGetTermsQuery();
   console.log(termsData);
 
-  const [updatePrivacy] = useUpdateTermsAndConditionMutation();
+  const [updateTerms] = useUpdateTermsAndConditionMutation();
 
   useEffect(() => {
     if (termsData?.data?.message) {
@@ -37,10 +37,10 @@ const TermsConditions = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, save it!",
     }).then(async (result) => {
-      if (result.isConfirmed) {
+      if (result?.isConfirmed) {
         try {
           setIsSaving(true);
-          const response = await updatePrivacy(finalData).unwrap();
+          const response = await updateTerms(finalData).unwrap();
           console.log("Updated Response:", response);
 
           Swal.fire({
@@ -69,25 +69,26 @@ const TermsConditions = () => {
   };
 
   return (
-    <div className="p-6 md:p-12">
+    <div className="p-5 bg-white">
       {/* Page Header */}
-      <h1 className="text-start text-3xl font-bold mb-6">
+      <h1 className="text-start text-3xl font-bold mb-5">
         Terms & Conditions
       </h1>
 
       {/* Loading state */}
       {isFetching && (
         <div className="flex justify-center items-center h-64">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+
         </div>
       )}
 
       {/* Editor Container */}
       {!isFetching && (
-        <div className="border rounded-md shadow-md p-4">
+        <div className="border border-bg rounded-md p-5">
           {/* ReactQuill Editor */}
           <ReactQuill
-            style={{ height: 300 }}
+            style={{ height: 300, padding:"10px" }}
             theme="snow"
             value={content}
             onChange={setContent}
@@ -98,7 +99,7 @@ const TermsConditions = () => {
             onClick={handleSave}
             disabled={isSaving}
             className={`w-full px-10 py-3 mt-20 rounded bg-primary text-white font-semibold shadow-lg flex items-center justify-center ${
-              isSaving ? "opacity-50 cursor-not-allowed" : "hover:bg-secondary"
+              isSaving ? "opacity-50 cursor-not-allowed" : "hover:bg-primary"
             }`}
             type="submit"
           >

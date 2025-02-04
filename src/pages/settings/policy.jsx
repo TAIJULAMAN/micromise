@@ -1,134 +1,121 @@
-import "react-quill/dist/quill.snow.css";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
-import {
-  useAddPrivacyPolicyMutation,
-  useGetPrivacyPolicyQuery,
-} from "../../redux/api/privacyPolicyApi";
+import "react-quill/dist/quill.snow.css";
 import Swal from "sweetalert2";
+import {
+  useGetPrivacyQuery,
+  useUpdatePrivacyMutation,
+} from "../../redux/api/privacyPolicyApi";
 
 const PrivacyPolicyPage = () => {
   const [content, setContent] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Fetch privacy policy
+  // Fetch data from the backend
   const {
     data: privacyData,
     isLoading: isFetching,
     error,
-  } = useGetPrivacyPolicyQuery();
-  console.log("Fetched Privacy Policy Data:", privacyData);
+  } = useGetPrivacyQuery();
+  console.log(privacyData);
+
+  const [updatePrivacy] = useUpdatePrivacyMutation();
 
   useEffect(() => {
-    if (privacyData?.data?._id) {
+    if (privacyData?.data?.message) {
+      console.log(privacyData?.data?.message);
       setContent(privacyData?.data?.message);
-      console.log("Privacy Policy set in api:", privacyData?.data?.message);
     }
   }, [privacyData]);
 
-  const [addPrivacyPolicy, { isLoading: isAdding }] =
-    useAddPrivacyPolicyMutation();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    console.log(e);
-
-    if (!content.trim()) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Privacy policy cannot be empty!",
-      });
-      return;
-    }
-
+  const handleSave = async () => {
     const finalData = {
       Privacy: { message: content },
     };
-    console.log("Privacy Policy final Data:", finalData);
+    console.log(finalData);
 
-    try {
-      const response = await addPrivacyPolicy(finalData).unwrap();
-      console.log("Privacy Policy Added Successfully:", response);
-      setContent(response?.data?.message);
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Privacy Policy Added Successfully.",
-      });
-    } catch (error) {
-      console.error("API Error:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error?.data?.error || "Something went wrong!",
-      });
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to save the changes to privacy policy?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, save it!",
+    }).then(async (result) => {
+      if (result?.isConfirmed) {
+        try {
+          setIsSaving(true);
+          const response = await updatePrivacy(finalData).unwrap();
+          console.log("Updated Response:", response);
+
+          Swal.fire({
+            icon: "success",
+            title: "Saved!",
+            text: "Terms & Conditions updated successfully.",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+          });
+
+          setIsSaving(false);
+        } catch (error) {
+          console.error("Error updating content:", error);
+
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to save privacy policy. Please try again.",
+          });
+
+          setIsSaving(false);
+        }
+      }
+    });
   };
-
-  const quillModules = {
-    toolbar: [
-      [{ header: "1" }, { header: "2" }, { font: [] }],
-      [{ size: [] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image", "video"],
-      ["clean"],
-    ],
-  };
-
-  const quillFormats = [
-    "header",
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "link",
-    "image",
-    "video",
-  ];
 
   return (
-    <div className="container mx-auto p-6">
-      <h3 className="font-semibold pb-5 text-xl">Privacy Policy</h3>
+    <div className="p-5 bg-white">
+      {/* Page Header */}
+      <h1 className="text-start text-3xl font-bold mb-5">Privacy Policy</h1>
 
-      <div className="bg-white p-4 shadow rounded">
-        {isFetching && (
-          <p className="text-gray-500">Loading privacy policy...</p>
-        )}
-        {error && (
-          <p className="text-red-500">
-            Error loading privacy policy. Try again.
-          </p>
-        )}
+      {/* Loading state */}
+      {isFetching && (
+        <div className="flex justify-center items-center h-64">
+          <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+        </div>
+      )}
 
-        <form onSubmit={handleSubmit}>
-          <label className="block font-medium mb-2">Edit Privacy Policy</label>
+      {/* Editor Container */}
+      {!isFetching && (
+        <div className="border border-bg rounded-md p-5">
           <ReactQuill
+            style={{ height: 300, padding: "10px" }}
+            theme="snow"
             value={content}
             onChange={setContent}
-            placeholder="Write your privacy policy here..."
-            modules={quillModules}
-            formats={quillFormats}
-            className="h-96 mb-10"
           />
 
-          <div className="flex justify-center pt-6">
-            <button
-              type="submit"
-              className="bg-[#4A5D4E] hover:bg-primary/80 text-white font-semibold px-6 py-2 rounded transition duration-200"
-              disabled={isAdding}
-            >
-              {isAdding ? "Saving..." : "Save"}
-            </button>
-          </div>
-        </form>
-      </div>
+          {/* Save Button */}
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className={`w-full px-10 py-3 mt-20 rounded bg-primary text-white font-semibold shadow-lg flex items-center justify-center ${
+              isSaving ? "opacity-50 cursor-not-allowed" : "hover:bg-primary"
+            }`}
+            type="submit"
+          >
+            {isSaving ? "Saving..." : "Save & Change"}
+          </button>
+        </div>
+      )}
+
+      {/* Error handling */}
+      {error && (
+        <div className="mt-6 text-center text-red-600">
+          <p>Error fetching data: {error.message || "Something went wrong."}</p>
+        </div>
+      )}
     </div>
   );
 };
