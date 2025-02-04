@@ -4,6 +4,7 @@ import DeleteModal from "../../components/Modals/DeleteModal";
 import { FiEdit3 } from "react-icons/fi";
 import AddServiceModal from "../../components/Modals/AddServiceModal";
 import EditServiceModal from "../../components/Modals/EditServiceModal";
+import { useGetAllServicesQuery } from "../../redux/api/serviceCategoryApi";
 
 const initialTableData = [
   {
@@ -53,6 +54,10 @@ function AddServicePage() {
   const onDelete = (id) => {
     setTableData(tableData.filter((item) => item.id !== id));
   };
+
+  const { data: serviceData, error, isLoading } = useGetAllServicesQuery();
+  console.log(serviceData);
+
   return (
     <div className="pb-10 overflow-y-auto">
       <div className="flex justify-between items-center mb-5">
@@ -77,26 +82,24 @@ function AddServicePage() {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((item) => (
-              <tr
-                key={item.id}
-                className="text-center space-y-5 text-[#707070]"
-              >
-                <td className="py-3 pr-4 pl-10">0{item.id}</td>
-                <td className="py-3 px-4">{item.category}</td>
+            {serviceData?.data?.map((service, index) => (
+              <tr key={index} className="text-center space-y-5 text-[#707070]">
+                <td className="py-3 pr-4 pl-10">0{index + 1}</td>
+                <td className="py-3 px-4">{service?.name}</td>
                 <td className="py-3 px-4 flex gap-2 justify-center text-center">
                   <button
                     onClick={() => {
-                        setIsEditModalVisible(true);
-                        setCurrentRecord(item);
-                      }}
-                  className="w-6 h-6">
+                      setIsEditModalVisible(true);
+                      setCurrentRecord(service);
+                    }}
+                    className="w-6 h-6"
+                  >
                     <FiEdit3 />
                   </button>
                   <button
                     onClick={() => {
                       setIsDeleteModalVisible(true);
-                      setCurrentRecord(item);
+                      setCurrentRecord(service);
                     }}
                     className="text-primary w-6 h-6"
                   >
