@@ -58,15 +58,6 @@ function TechnicianViewModal({ setIsModalVisible, currentRecord }) {
               </div>
             )}
           </div>
-
-          {/* <div className="mt-6 flex justify-center">
-            <button
-              onClick={() => setIsModalVisible(false)}
-              className="px-4 py-2 bg-primary text-white rounded"
-            >
-              Close
-            </button>
-          </div> */}
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ export const baseApi = createApi({
   tagTypes: [
     "admin",
     "services",
+    "technician"
     
   ],
 });
