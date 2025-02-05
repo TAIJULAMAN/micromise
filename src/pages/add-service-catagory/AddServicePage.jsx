@@ -2,61 +2,181 @@ import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../../components/Modals/DeleteModal";
 import { FiEdit3 } from "react-icons/fi";
-import AddServiceModal from "../../components/Modals/AddServiceModal";
-import EditServiceModal from "../../components/Modals/EditServiceModal";
-import { useGetAllServicesQuery } from "../../redux/api/serviceCategoryApi";
-
-const initialTableData = [
-  {
-    id: 1,
-    category: "ECU Remapping",
-  },
-  {
-    id: 2,
-    category: "Car Diagnostics",
-  },
-  {
-    id: 3,
-    category: "Performance Tuning",
-  },
-  {
-    id: 4,
-    category: "Diesel Tuning",
-  },
-  {
-    id: 5,
-    category: "Petrol Engine Tuning",
-  },
-];
+import {
+  useCreateServiceMutation,
+  useDeleteServiceMutation,
+  useGetAllServicesQuery,
+  useUpdateServiceMutation,
+} from "../../redux/api/serviceCategoryApi";
+import Swal from "sweetalert2";
+import { IoCloseSharp } from "react-icons/io5";
 
 function AddServicePage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
-  const [currentRecord, setCurrentRecord] = useState(null);
-  const [tableData, setTableData] = useState(initialTableData);
+  // deleteServiceData
+  const {
+    data: serviceData,
+    error,
+    isLoading,
+    refetch,
+  } = useGetAllServicesQuery({ isDeleted: false });
 
-  const onSubmit = (e) => {
+  // deleteServiceData
+  const [deleteService] = useDeleteServiceMutation();
+  const handleDeleteAdmin = (service) => {
+    console.log(service);
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete ${service?.name}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteService(service?._id).unwrap();
+
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "The admin has been deleted successfully.",
+          });
+          refetch();
+        } catch (error) {
+          console.error("delete Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to delete the admin. Please try again.",
+          });
+        }
+      }
+    });
+  };
+
+  // add new service
+  const [createService] = useCreateServiceMutation();
+  const [newService, setNewService] = useState({
+    Service: {
+      name: "",
+    },
+  });
+
+  // User fields update  inside newAdmin
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewService((prevState) => ({
+      ...prevState,
+      Service: {
+        ...prevState.Service,
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleAddService = async () => {
+    try {
+      await createService(newService).unwrap();
+
+      Swal.fire({
+        icon: "success",
+        title: "Service Added",
+        text: "The new service was added successfully!",
+      });
+
+      setIsAddModalVisible(false);
+      setNewService({
+        Service: {
+          name: "",
+        },
+      });
+      refetch();
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to add the new service.Please try again.",
+      });
+    }
+  };
+
+  // Update service
+  const [updateService] = useUpdateServiceMutation();
+  const [EditService, setEditService] = useState({
+    Service: {
+      name: "",
+    },
+  });
+  console.log("edit service", EditService);
+
+  const handleChangeService = (e) => {
+    const { name, value } = e.target;
+    setEditService((prev) => ({
+      ...prev,
+      Service: {
+        ...prev.Service,
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleEditService = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData);
+    try {
+      await updateService({
+        _id: EditService?.Service?._id,
+        // data: { name: EditService?.Service?.name },
+        data: {
+          Service: {
+            name: EditService?.Service?.name,
+          },
+        },
+      }).unwrap();
 
-    // Add new record to the tableData state
-    setTableData((prevData) => [
-      ...prevData,
-      { id: prevData.length + 1, ...data },
-    ]);
+      Swal.fire({
+        icon: "success",
+        title: "Service Updated",
+        text: "The service category has been updated successfully!",
+      });
 
-    setIsAddModalVisible(false);
+      setIsEditModalVisible(false);
+      setEditService({
+        Service: {
+          name: "",
+        },
+      });
+      refetch();
+    } catch (error) {
+      console.error("Update Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to update the service category. Please try again.",
+      });
+    }
   };
 
-  const onDelete = (id) => {
-    setTableData(tableData.filter((item) => item.id !== id));
+  const handleOpenEditModal = (service) => {
+    setEditService({
+      Service: {
+        _id: service._id,
+        name: service.name,
+      },
+    });
+    setIsEditModalVisible(true);
   };
 
-  const { data: serviceData, error, isLoading } = useGetAllServicesQuery();
-  console.log(serviceData);
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load service!</p>;
 
   return (
     <div className="pb-10 overflow-y-auto">
@@ -88,19 +208,13 @@ function AddServicePage() {
                 <td className="py-3 px-4">{service?.name}</td>
                 <td className="py-3 px-4 flex gap-2 justify-center text-center">
                   <button
-                    onClick={() => {
-                      setIsEditModalVisible(true);
-                      setCurrentRecord(service);
-                    }}
+                    onClick={() => handleOpenEditModal(service)}
                     className="w-6 h-6"
                   >
                     <FiEdit3 />
                   </button>
                   <button
-                    onClick={() => {
-                      setIsDeleteModalVisible(true);
-                      setCurrentRecord(service);
-                    }}
+                    onClick={() => handleDeleteAdmin(service)}
                     className="text-primary w-6 h-6"
                   >
                     <RiDeleteBin6Line />
@@ -112,23 +226,94 @@ function AddServicePage() {
         </table>
 
         {isAddModalVisible && (
-          <AddServiceModal
-            onSubmit={onSubmit}
-            setIsAddModalVisible={setIsAddModalVisible}
-          />
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="relative bg-white p-6 rounded shadow-lg px-10 w-[500px]">
+              <h3 className="text-lg font-semibold mb-5 text-[#242424]">
+                Add new service category
+              </h3>
+
+              {/* Close Button */}
+              <button
+                onClick={() => setIsAddModalVisible(false)}
+                className="absolute top-2 right-2 text-white bg-secondary focus:outline-none p-2 rounded-full"
+              >
+                <IoCloseSharp />
+              </button>
+
+              <div>
+                <label className="block text-md font-medium text-[#575757] mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newService?.Service?.name}
+                  onChange={handleChange}
+                  className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none  text-md"
+                  placeholder="Enter Name"
+                  required
+                />
+              </div>
+
+              <div className="flex justify-start mt-5">
+                <button
+                  onClick={handleAddService}
+                  type="submit"
+                  className="px-4 py-2 bg-primary text-white rounded"
+                >
+                  Publish
+                </button>
+              </div>
+            </div>
+          </div>
         )}
         {isEditModalVisible && (
-          <EditServiceModal
-            onSubmit={onSubmit}
-            setIsEditModalVisible={setIsEditModalVisible}
-          />
-        )}
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="relative bg-white p-6 rounded shadow-lg px-10 pb-10 w-[500px]">
+              <h3 className="text-lg font-semibold mb-5 text-[#242424]">
+                Edit service category
+              </h3>
 
+              {/* Close Button */}
+              <button
+                onClick={() => setIsEditModalVisible(false)}
+                className="absolute top-2 right-2 text-white bg-secondary focus:outline-none p-2 rounded-full"
+              >
+                <IoCloseSharp />
+              </button>
+
+              <div>
+                <label className="block text-md font-medium text-[#575757] mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={EditService.Service.name}
+                  onChange={handleChangeService}
+                  className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
+                  placeholder="Enter Name"
+                  required
+                />
+              </div>
+
+              <div className="flex justify-start mt-5">
+                <button
+                  onClick={handleEditService}
+                  type="submit"
+                  className="px-4 py-2 bg-primary text-white rounded"
+                >
+                  Publish
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {isDeleteModalVisible && (
           <DeleteModal
             setIsDeleteModalVisible={setIsDeleteModalVisible}
-            onDelete={onDelete}
-            currentRecord={currentRecord}
+            // handleDeleteAdmin={handleDeleteAdmin}
+            // currentRecord={currentRecord}
           />
         )}
       </div>

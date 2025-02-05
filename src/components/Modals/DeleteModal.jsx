@@ -1,6 +1,6 @@
 import { IoCloseSharp } from "react-icons/io5";
 
-function DeleteModal({ setIsDeleteModalVisible, onDelete, currentRecord }) {
+function DeleteModal({ setIsDeleteModalVisible }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center rounded">
       <div className="bg-white px-5 py-10 rounded shadow-lg w-96 relative">
@@ -15,12 +15,11 @@ function DeleteModal({ setIsDeleteModalVisible, onDelete, currentRecord }) {
           Are you sure!!
         </h3>
         <p className="text-sm mb-4 text-gray-600 text-center">
-          Do you want to delete this content ?
+          Do you want to delete this ?
         </p>
         <div className="flex justify-center">
           <button
             onClick={() => {
-              onDelete(currentRecord.id);
               setIsDeleteModalVisible(false);
             }}
             className="px-4 py-2 bg-primary text-white rounded"
