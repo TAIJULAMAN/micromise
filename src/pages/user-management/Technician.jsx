@@ -22,10 +22,12 @@ function Technician() {
     isLoading,
     refetch,
   } = useGetAllTechnicianQuery({ isDeleted: false });
+  console.log(technicianData);
 
-  // deleteServiceData
+  // delete Data
   const [deleteTechnician] = useDeleteTechnicianMutation();
   const handleDeleteAdmin = (technician) => {
+    console.log(technician);
     Swal.fire({
       title: "Are you sure?",
       text: `You are about to delete ${technician?.name}`,
@@ -93,7 +95,7 @@ function Technician() {
             </tr>
           </thead>
           <tbody className="text-start">
-            {technicianData?.data?.map((technician, index) => (
+            {technicianData?.data?.result?.map((technician, index) => (
               <tr
                 key={index}
                 className="grid grid-cols-[1.5fr_2fr_1.5fr_1fr_1.5fr_1.5fr_1fr] px-2 py-4 text-center text-[#707070]"
