@@ -9,7 +9,7 @@ export const baseApi = createApi({
     baseUrl: getBaseUrl(),
 
     prepareHeaders: (headers, { getState }) => {
-        // console.log(getState);
+      // console.log(getState);
       const token = getUserToken();
       if (token) {
         headers.set("Authorization", token);
@@ -19,11 +19,5 @@ export const baseApi = createApi({
     },
   }),
   endpoints: () => ({}),
-  tagTypes: [
-    "admin",
-    "services",
-    "technician"
-    
-  ],
+  tagTypes: ["admin", "services", "technician", "supervisor"],
 });
-

@@ -1,5 +1,5 @@
 import { IoCloseSharp } from "react-icons/io5";
-import img from "/table.png";
+import { getBaseUrl } from "../../config/envConfig";
 function TechnicianViewModal({ setIsModalVisible, currentRecord }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
@@ -7,10 +7,18 @@ function TechnicianViewModal({ setIsModalVisible, currentRecord }) {
         {/* Header Section */}
         <div className="bg-secondary pt-5 pb-2 text-center relative">
           <div className="w-20 h-20 mx-auto rounded-full overflow-hidden">
-            <img src={img} alt="Technician Profile" className="w-full h-full" />
+            <img
+              src={
+                currentRecord?.profileImg
+                  ? `${getBaseUrl()}/${currentRecord?.profileImg}`
+                  : "https://avatar.iran.liara.run/public/44"
+              }
+              alt={currentRecord?.fullName || "User"}
+              className="h-20 w-20 rounded-full"
+            />{" "}
           </div>
           <h2 className="text-md font-bold mt-2 text-white">
-            {currentRecord?.name}
+            {currentRecord?.fullName}
           </h2>
           <h2 className="text-sm mt-1 text-gray-600">Technisian</h2>
           {/* Close Button */}
@@ -30,7 +38,7 @@ function TechnicianViewModal({ setIsModalVisible, currentRecord }) {
           <div className="space-y-2">
             <div className="flex flex-col space-y-2">
               <span className="font-medium text-[#171717]">User Name</span>
-              <span className="text-[#707070]">{currentRecord?.username}</span>
+              <span className="text-[#707070]">{currentRecord?.userName}</span>
             </div>
             <div className="flex flex-col space-y-2">
               <span className="font-medium text-[#171717]">Email</span>
@@ -38,23 +46,29 @@ function TechnicianViewModal({ setIsModalVisible, currentRecord }) {
             </div>
             <div className="flex flex-col space-y-2">
               <span className="font-medium text-[#171717]">Contact</span>
-              <span className="text-[#707070]">{currentRecord?.contact}</span>
+              <span className="text-[#707070]">{currentRecord?.contactNo}</span>
             </div>
             <div className="flex flex-col space-y-2">
               <span className="font-medium text-[#171717]">Location</span>
               <span className="text-[#707070]">{currentRecord?.location}</span>
             </div>
-            {currentRecord?.skills && (
-              <div className="flex flex-col space-y-2">
-                <span className="font-medium text-[#171717]">Skills</span>
-                <span className="text-[#707070]">{currentRecord.skills}</span>
-              </div>
-            )}
+            {currentRecord?.skills?.length > 0 && (
+                  <div className="flex flex-col space-y-2">
+                    <span className="font-medium text-[#171717]">Skills</span>
+                    <ul className="text-[#707070] list-disc pl-5">
+                      {currentRecord.skills.map((skill, index) => (
+                        <li key={index}>{skill}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
             {currentRecord?.upline && (
               <div className="flex flex-col space-y-2">
                 <span className="font-medium text-[#171717]">Upline</span>
-                <span className="text-[#707070]">{currentRecord.upline}</span>
+                <span className="text-[#707070]">
+                  {currentRecord?.upline || "No data"}
+                </span>
               </div>
             )}
           </div>

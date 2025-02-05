@@ -22,12 +22,10 @@ function Technician() {
     isLoading,
     refetch,
   } = useGetAllTechnicianQuery({ isDeleted: false });
-  console.log(technicianData);
 
   // deleteServiceData
   const [deleteTechnician] = useDeleteTechnicianMutation();
   const handleDeleteAdmin = (technician) => {
-    console.log(technician);
     Swal.fire({
       title: "Are you sure?",
       text: `You are about to delete ${technician?.name}`,

@@ -5,72 +5,28 @@ import image from "/table.png";
 import { LuEye } from "react-icons/lu";
 import { IoSearch } from "react-icons/io5";
 import TechnicianViewModal from "../../components/Modals/TechnicianViewModal";
+import { useGetAllSupervisorQuery } from "../../redux/api/supervisorApi";
+import { getBaseUrl } from "../../config/envConfig";
 
 function ClientSupervisor() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      upline: "Mr.zuberii",
-      completedJobs: 1,
-    },
-    {
-      id: 2,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      upline: "Mr.zuberii",
-      completedJobs: 1,
-    },
-    {
-      id: 3,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      upline: "Mr.zuberii",
-      completedJobs: 1,
-    },
-    {
-      id: 4,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      upline: "Mr.zuberii",
-      completedJobs: 1,
-    },
-    {
-      id: 5,
-      username: "Dindiniya10",
-      name: "Dindiniya",
-      email: "bockelboy@att.com",
-      contact: "(201) 555-0124",
-      location: "Kent, Utah",
-      upline: "Mr.zuberii",
-      completedJobs: 1,
-    },
-  ]);
 
-  const onDelete = () => {
-    setData((prevData) =>
-      prevData.filter((item) => item.id !== currentRecord.id)
+  // get all supervisor
+  const {
+    data: supervisorData,
+    error,
+    isLoading,
+    refetch,
+  } = useGetAllSupervisorQuery({ isDeleted: false });
+  console.log(supervisorData);
+
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
     );
-    setIsDeleteModalVisible(false);
-    setCurrentRecord(null);
-  };
+  if (error) return <p className="text-red-500">Failed to load service!</p>;
 
   return (
     <div className="mt-5">
@@ -103,32 +59,38 @@ function ClientSupervisor() {
           </tr>
         </thead>
         <tbody className="text-start">
-          {data.map((item) => (
+          {supervisorData?.data?.map((supervisor, index) => (
             <tr
-              key={item.id}
+              key={index}
               className="grid grid-cols-[1.5fr_2fr_1.5fr_1.5fr_1fr_1.5fr_1fr] px-2 py-4 text-center text-[#707070]"
             >
               {" "}
               <td>
-                <div className="flex gap-2 justify-center">
+                <div className="flex gap-2 justify-center items-center">
                   <img
-                    className="h-[20px] w-[20px] object-cover rounded"
-                    alt="avatar"
-                    src={image}
+                    src={
+                      supervisor?.profileImg
+                        ? `${getBaseUrl()}/${supervisor?.profileImg}`
+                        : "https://avatar.iran.liara.run/public/44"
+                    }
+                    alt={supervisor?.fullName
+                      || "User"}
+                    className="h-10 w-10 rounded-full"
                   />
-                  <span>{item.name}</span>
+                  <span>{supervisor?.fullName
+                  }</span>
                 </div>
               </td>
-              <td>{item.email}</td>
-              <td>{item.contact}</td>
-              <td>{item.location}</td>
-              <td>{item.upline}</td>
-              <td>{item.completedJobs}</td>
+              <td>{supervisor?.email}</td>
+              <td>{supervisor?.contactNo}</td>
+              <td>{supervisor?.location}</td>
+              <td>{supervisor?.upline || "No data"}</td>
+              <td>{supervisor?.jobRequest || "No data"}</td>
               <td className="flex justify-center gap-2">
                 <button
                   onClick={() => {
                     setIsModalVisible(true);
-                    setCurrentRecord(item);
+                    setCurrentRecord(supervisor);
                   }}
                   className="w-6 h-6"
                 >
@@ -137,7 +99,7 @@ function ClientSupervisor() {
                 <button
                   onClick={() => {
                     setIsDeleteModalVisible(true);
-                    setCurrentRecord(item);
+                    setCurrentRecord(supervisor);
                   }}
                   className="text-primary w-6 h-6"
                 >
@@ -156,11 +118,7 @@ function ClientSupervisor() {
         />
       )}
       {isDeleteModalVisible && (
-        <DeleteModal
-          setIsDeleteModalVisible={setIsDeleteModalVisible}
-          onDelete={onDelete}
-          currentRecord={currentRecord}
-        />
+        <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
       )}
     </div>
   );
