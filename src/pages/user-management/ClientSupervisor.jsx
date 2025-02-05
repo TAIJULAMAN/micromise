@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../../components/Modals/DeleteModal";
-import image from "/table.png";
 import { LuEye } from "react-icons/lu";
-import { IoSearch } from "react-icons/io5";
-import TechnicianViewModal from "../../components/Modals/TechnicianViewModal";
-import { useGetAllSupervisorQuery } from "../../redux/api/supervisorApi";
+import { IoCloseSharp, IoSearch } from "react-icons/io5";
+import {
+  useDeleteSupervisorMutation,
+  useGetAllSupervisorQuery,
+} from "../../redux/api/supervisorApi";
 import { getBaseUrl } from "../../config/envConfig";
+import Swal from "sweetalert2";
 
 function ClientSupervisor() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -21,6 +23,40 @@ function ClientSupervisor() {
     refetch,
   } = useGetAllSupervisorQuery({ isDeleted: false });
   console.log(supervisorData);
+
+  // deleteServiceData
+  const [deleteTechnician] = useDeleteSupervisorMutation();
+  const handleDeleteAdmin = (supervisor) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete ${supervisor?.fullName}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteTechnician(supervisor?._id).unwrap();
+
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "The admin has been deleted successfully.",
+          });
+          refetch();
+        } catch (error) {
+          console.error("delete Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to delete the admin. Please try again.",
+          });
+        }
+      }
+    });
+  };
 
   if (isLoading)
     return (
@@ -73,12 +109,10 @@ function ClientSupervisor() {
                         ? `${getBaseUrl()}/${supervisor?.profileImg}`
                         : "https://avatar.iran.liara.run/public/44"
                     }
-                    alt={supervisor?.fullName
-                      || "User"}
+                    alt={supervisor?.fullName || "User"}
                     className="h-10 w-10 rounded-full"
                   />
-                  <span>{supervisor?.fullName
-                  }</span>
+                  <span>{supervisor?.fullName}</span>
                 </div>
               </td>
               <td>{supervisor?.email}</td>
@@ -97,10 +131,7 @@ function ClientSupervisor() {
                   <LuEye />
                 </button>
                 <button
-                  onClick={() => {
-                    setIsDeleteModalVisible(true);
-                    setCurrentRecord(supervisor);
-                  }}
+                  onClick={() => handleDeleteAdmin(supervisor)}
                   className="text-primary w-6 h-6"
                 >
                   <RiDeleteBin6Line />
@@ -112,10 +143,79 @@ function ClientSupervisor() {
       </table>
 
       {isModalVisible && (
-        <TechnicianViewModal
-          setIsModalVisible={setIsModalVisible}
-          currentRecord={currentRecord}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
+             <div className="bg-white w-[400px] rounded-lg shadow-lg overflow-hidden">
+               {/* Header Section */}
+               <div className="bg-secondary pt-5 pb-2 text-center relative">
+                 <div className="w-20 h-20 mx-auto rounded-full overflow-hidden">
+                   <img
+                     src={
+                       currentRecord?.profileImg
+                         ? `${getBaseUrl()}/${currentRecord?.profileImg}`
+                         : "https://avatar.iran.liara.run/public/44"
+                     }
+                     alt={currentRecord?.fullName || "User"}
+                     className="h-20 w-20 rounded-full"
+                   />{" "}
+                 </div>
+                 <h2 className="text-md font-bold mt-2 text-white">
+                   {currentRecord?.fullName}
+                 </h2>
+                 <h2 className="text-sm mt-1 text-gray-600">Technisian</h2>
+                 {/* Close Button */}
+                 <button
+                   onClick={() => setIsModalVisible(false)}
+                   className="absolute top-2 right-2 text-white bg-primary focus:outline-none p-2 rounded-full"
+                 >
+                   <IoCloseSharp />
+                 </button>
+               </div>
+       
+               {/* Details Section */}
+               <div className="p-6">
+                 <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                   Technician Details
+                 </h2>
+                 <div className="space-y-2">
+                   <div className="flex flex-col space-y-2">
+                     <span className="font-medium text-[#171717]">User Name</span>
+                     <span className="text-[#707070]">{currentRecord?.userName}</span>
+                   </div>
+                   <div className="flex flex-col space-y-2">
+                     <span className="font-medium text-[#171717]">Email</span>
+                     <span className="text-[#707070]">{currentRecord?.email}</span>
+                   </div>
+                   <div className="flex flex-col space-y-2">
+                     <span className="font-medium text-[#171717]">Contact</span>
+                     <span className="text-[#707070]">{currentRecord?.contactNo}</span>
+                   </div>
+                   <div className="flex flex-col space-y-2">
+                     <span className="font-medium text-[#171717]">Location</span>
+                     <span className="text-[#707070]">{currentRecord?.location}</span>
+                   </div>
+                   {currentRecord?.skills?.length > 0 && (
+                         <div className="flex flex-col space-y-2">
+                           <span className="font-medium text-[#171717]">Skills</span>
+                           <ul className="text-[#707070] list-disc pl-5">
+                             {currentRecord.skills.map((skill, index) => (
+                               <li key={index}>{skill}</li>
+                             ))}
+                           </ul>
+                         </div>
+                       )}
+       
+                   {currentRecord?.upline && (
+                     <div className="flex flex-col space-y-2">
+                       <span className="font-medium text-[#171717]">Upline</span>
+                       <span className="text-[#707070]">
+                         {currentRecord?.upline || "No data"}
+                       </span>
+                     </div>
+                   )}
+                 </div>
+               </div>
+             </div>
+           </div>
       )}
       {isDeleteModalVisible && (
         <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
