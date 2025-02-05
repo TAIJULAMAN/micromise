@@ -8,35 +8,42 @@ const serviceCategoryApi = baseApi.injectEndpoints({
         method: "GET",
         params,
       }),
-      providesTags: ["Service"],
+      providesTags: ["services"],
+    }),
+    deleteService: builder.mutation({
+      query: (_id) => ({
+        url: `/services/${_id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["services"],
+    }),
+    createService: builder.mutation({
+      query: (data) => ({
+        url: "/services/create-service",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["services"],
+    }),
+    updateService: builder.mutation({
+      query: ({ _id, data }) => {
+        console.log(_id, data);
+        return {
+          url: `/services/${_id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["services"],
     }),
   }),
 });
 
-export const { useGetAllServicesQuery } = serviceCategoryApi;
+export const {
+  useGetAllServicesQuery,
+  useDeleteServiceMutation,
+  useCreateServiceMutation,
+  useUpdateServiceMutation,
+} = serviceCategoryApi;
 
 export default serviceCategoryApi;
-
-// createAdmin: builder.mutation({
-//   query: (data) => ({
-//     url: "/admin/create",
-//     method: "POST",
-//     body: data,
-//   }),
-//   invalidatesTags: ["admins"],
-// }),
-// updateAdmin: builder.mutation({
-//   query: ({ _id, status }) => ({
-//     url: `/admin/update/${_id}`,
-//     method: "PATCH",
-//     body: { status },
-//   }),
-//   invalidatesTags: ["admins"],
-// }),
-// deleteAdmin: builder.mutation({
-//   query: (_id) => ({
-//     url: `/admin/delete/${_id}`,
-//     method: "DELETE",
-//   }),
-//   invalidatesTags: ["admins"],
-// }),

@@ -12,8 +12,6 @@ import { IoCloseSharp } from "react-icons/io5";
 function MakeAdminPage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [currentRecord] = useState(null);
-
   const {
     data: adminsData,
     error,
@@ -98,6 +96,7 @@ function MakeAdminPage() {
           role: "admin",
         },
       });
+      refetch();
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -172,7 +171,6 @@ function MakeAdminPage() {
         {isDeleteModalVisible && (
           <DeleteModal
             setIsDeleteModalVisible={setIsDeleteModalVisible}
-            currentRecord={currentRecord}
           />
         )}
         {/* Add Admin Modal */}
@@ -197,7 +195,7 @@ function MakeAdminPage() {
                 <input
                   type="text"
                   name="fullName"
-                  value={newAdmin.User.fullName}
+                  value={newAdmin?.User?.fullName}
                   onChange={handleChange}
                   className="w-full p-2 border-2 border-[#F2F2F2] rounded-md focus:outline-none text-md"
                   placeholder="Enter Name"
@@ -255,7 +253,7 @@ function MakeAdminPage() {
                 </div>
               </div>
 
-              <div className="flex justify-start space-x-2">
+              <div className="flex justify-start space-x-2 mt-5">
                 <button
                   onClick={handleAddAdmin}
                   type="submit"
