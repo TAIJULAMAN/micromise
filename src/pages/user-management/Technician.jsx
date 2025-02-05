@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../../components/Modals/DeleteModal";
-import image from "/table.png";
 import { LuEye } from "react-icons/lu";
 import { IoCloseSharp, IoSearch } from "react-icons/io5";
-import { useGetAllTechnicianQuery } from "../../redux/api/technicianApi";
+import {
+  useDeleteTechnicianMutation,
+  useGetAllTechnicianQuery,
+} from "../../redux/api/technicianApi";
 import { getBaseUrl } from "../../config/envConfig";
+import Swal from "sweetalert2";
 
 function Technician() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
-  console.log(currentRecord);
+
+  // fetch all technician
   const {
     data: technicianData,
     error,
@@ -19,6 +23,47 @@ function Technician() {
     refetch,
   } = useGetAllTechnicianQuery({ isDeleted: false });
   console.log(technicianData);
+
+  // deleteServiceData
+  const [deleteTechnician] = useDeleteTechnicianMutation();
+  const handleDeleteAdmin = (technician) => {
+    console.log(technician);
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete ${technician?.name}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteTechnician(technician?._id).unwrap();
+
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "The admin has been deleted successfully.",
+          });
+          refetch();
+        } catch (error) {
+          console.error("delete Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to delete the admin. Please try again.",
+          });
+        }
+      }
+    });
+  };
+
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load service!</p>;
 
   return (
     <div className="mt-5">
@@ -95,10 +140,7 @@ function Technician() {
                     <LuEye />
                   </button>
                   <button
-                    onClick={() => {
-                      setIsDeleteModalVisible(true);
-                      setCurrentRecord(technician);
-                    }}
+                    onClick={() => handleDeleteAdmin(technician)}
                     className="text-primary w-6 h-6"
                   >
                     <RiDeleteBin6Line />
@@ -198,11 +240,7 @@ function Technician() {
       )}
 
       {isDeleteModalVisible && (
-        <DeleteModal
-          setIsDeleteModalVisible={setIsDeleteModalVisible}
-          onDelete={onDelete}
-          currentRecord={currentRecord}
-        />
+        <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
       )}
     </div>
   );
