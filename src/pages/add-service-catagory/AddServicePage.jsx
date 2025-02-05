@@ -16,7 +16,7 @@ function AddServicePage() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
-  // deleteServiceData
+  // fetch ServiceData
   const {
     data: serviceData,
     error,
@@ -58,7 +58,6 @@ function AddServicePage() {
       }
     });
   };
-
   // add new service
   const [createService] = useCreateServiceMutation();
   const [newService, setNewService] = useState({
@@ -113,8 +112,6 @@ function AddServicePage() {
       name: "",
     },
   });
-  console.log("edit service", EditService);
-
   const handleChangeService = (e) => {
     const { name, value } = e.target;
     setEditService((prev) => ({
@@ -312,8 +309,6 @@ function AddServicePage() {
         {isDeleteModalVisible && (
           <DeleteModal
             setIsDeleteModalVisible={setIsDeleteModalVisible}
-            // handleDeleteAdmin={handleDeleteAdmin}
-            // currentRecord={currentRecord}
           />
         )}
       </div>
