@@ -9,26 +9,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import dayjs from "dayjs";
+import { useGetAllDashboardQuery } from "../../redux/api/dashboardApi";
 
 const EarningGrowth = () => {
   const [selectedYear, setSelectedYear] = useState(dayjs().year());
 
-  // Mock data
-  const mockData = [
-    { name: "Jan", earnings: 10 },
-    { name: "Feb", earnings: 20 },
-    { name: "Mar", earnings: 30 },
-    { name: "Apr", earnings: 70 },
-    { name: "May", earnings: 65 },
-    { name: "Jun", earnings: 40 },
-    { name: "Jul", earnings: 30 },
-    { name: "Aug", earnings: 45 },
-    { name: "Sep", earnings: 40 },
-    { name: "Oct", earnings: 60 },
-    { name: "Nov", earnings: 80 },
-    { name: "Dec", earnings: 90 },
-  ];
+  const { data: dashboardData, isLoading, error } = useGetAllDashboardQuery();
+  const completedJobData = dashboardData?.data?.completedJobMonthly;
 
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load service!</p>;
   const onChange = (e) => {
     setSelectedYear(e.target.value);
   };
@@ -38,7 +31,7 @@ const EarningGrowth = () => {
       <div className="bg-white rounded-lg shadow px-4 py-6">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <h1 className="text-lg md:text-xl font-medium">Earning Growth</h1>
+          <h1 className="text-lg md:text-xl font-medium">Completed Job</h1>
           {/* Year Selector */}
           <select
             value={selectedYear}
@@ -59,7 +52,7 @@ const EarningGrowth = () => {
         <div className="mt-6" style={{ height: "300px" }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={mockData}
+              data={completedJobData}
               margin={{
                 top: 10,
                 right: 20,
@@ -74,12 +67,12 @@ const EarningGrowth = () => {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="month" />
               <YAxis tickFormatter={(value) => `${value}%`} />
               <Tooltip />
               <Area
                 type="monotone"
-                dataKey="earnings"
+                dataKey="count"
                 stroke="#F32929"
                 fillOpacity={1}
                 fill="url(#colorEarnings)"

@@ -18,7 +18,6 @@ const UserGrowth = () => {
 
   const { data: dashboardData, isLoading, error } = useGetAllDashboardQuery();
   const userData = dashboardData?.data?.userGrowthMonthly;
-  console.log(userData);
 
   if (isLoading)
     return (
@@ -39,7 +38,7 @@ const UserGrowth = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <h1 className="text-lg md:text-xl font-medium">
-            Total Users Statistics
+          User Growth
           </h1>
           <div className="w-full md:w-auto">
             <input
