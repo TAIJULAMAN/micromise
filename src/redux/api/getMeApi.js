@@ -1,9 +1,9 @@
 import { getUserToken } from "../../services/auth.service";
 import { baseApi } from "./baseApi";
 
-const getMeApi = baseApi.injectEndpoints({
+const UserApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMe: builder.query({
+    ownData: builder.query({
       query: () => ({
         url: "/users/me",
         method: "GET",
@@ -15,6 +15,6 @@ const getMeApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetMeQuery } = getMeApi;
+export const { useOwnDataQuery } = UserApi;
 
-export default getMeApi;
+export default UserApi;

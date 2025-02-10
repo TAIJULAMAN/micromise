@@ -19,6 +19,7 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import VerificationCode from "../pages/auth/VerificationCode";
 import NewPassword from "../pages/auth/NewPassword";
 import SuccessPage from "../pages/auth/SuccessPage";
+import EmailVerificationCode from "../pages/auth/EmailVerificationCode";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,11 @@ const router = createBrowserRouter([
     element: <SignInPage />,
   },
   {
-    path: "/forgate-password",
+    path: "/EmailVerificationCode",
+    element: <EmailVerificationCode />,
+  },
+  {
+    path: "/forget-password",
     element: <ForgotPassword />,
   },
   {
@@ -50,7 +55,6 @@ const router = createBrowserRouter([
         element: <DashboardPage />,
       },
 
-    
       {
         path: "/request-management",
         element: <ManagementPage />,
@@ -68,25 +72,23 @@ const router = createBrowserRouter([
         element: <MakeAdminPage />,
       },
 
-      
-        // user management
-        {
-          path: "/user-management",
-          element: <UserManagementPage />,
-        },
-        {
-          path: "/technician",
-          element: <Technician />,
-        },
-        {
-          path: "/admin-client",
-          element: <AdminClient />,
-        },
-        {
-          path: "/client-supervisor",
-          element: <ClientSupervisor />,
-        },
-  
+      // user management
+      {
+        path: "/user-management",
+        element: <UserManagementPage />,
+      },
+      {
+        path: "/technician",
+        element: <Technician />,
+      },
+      {
+        path: "/admin-client",
+        element: <AdminClient />,
+      },
+      {
+        path: "/client-supervisor",
+        element: <ClientSupervisor />,
+      },
 
       // settings
       {
@@ -114,8 +116,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-
-  
 ]);
 
 export default router;
