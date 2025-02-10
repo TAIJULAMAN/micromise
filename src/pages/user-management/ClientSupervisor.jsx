@@ -102,7 +102,7 @@ function ClientSupervisor() {
             >
               {" "}
               <td>
-                <div className="flex gap-2 justify-center items-center">
+                <div className="flex gap-2 justify-start items-center ml-10">
                   <img
                     src={
                       supervisor?.profileImg
@@ -119,7 +119,7 @@ function ClientSupervisor() {
               <td>{supervisor?.contactNo}</td>
               <td>{supervisor?.location}</td>
               <td>{supervisor?.upline || "No data"}</td>
-              <td>{supervisor?.jobRequest || "No data"}</td>
+              <td>{supervisor?.completedJobs}</td>
               <td className="flex justify-center gap-2">
                 <button
                   onClick={() => {

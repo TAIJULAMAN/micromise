@@ -1,10 +1,11 @@
+import { getUserToken } from "../../services/auth.service";
 import { baseApi } from "./baseApi";
 
 const profileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    editAdminProfile: builder.mutation({
+    editAdmin: builder.mutation({
       query: ({ data, _id }) => ({
-        url: `/users${_id}`,
+        url: `/users/${_id}`,
         method: "PATCH",
         body: data,
       }),
@@ -16,12 +17,15 @@ const profileApi = baseApi.injectEndpoints({
         url: "/auth/change-password",
         method: "POST",
         body: data,
+        headers: {
+          Authorization: `Bearer ${getUserToken()}`,
+        },
       }),
     }),
   }),
 });
 
-export const { useEditAdminProfileMutation, useChangeAdminPasswordMutation } =
+export const { useEditAdminMutation, useChangeAdminPasswordMutation } =
   profileApi;
 
 export default profileApi;

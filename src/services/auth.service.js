@@ -13,13 +13,13 @@ export const getUserData = () => {
   console.log(" from local storage", userData);
   return userData ? JSON.parse(userData) : null;
 };
-
+// Store user token in localStorage
 export const storeUserToken = ({ accessToken }) => {
   if (accessToken) {
     setToLocalStorage("accessToken", accessToken);
   }
 };
-
+// Retrieve user token from localStorage
 export const getUserToken = () => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
