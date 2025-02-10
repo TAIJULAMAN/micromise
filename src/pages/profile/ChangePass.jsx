@@ -10,7 +10,7 @@ function ChangePass() {
     oldPassword: "",
     newPassword: "",
   });
-  const { data: getMeData, isLoading, refetch } = useOwnDataQuery();
+  const { data: getMeData, isLoading } = useOwnDataQuery();
 
   console.log(getMeData);
 
