@@ -14,7 +14,7 @@ function EditProfile() {
     dob: "",
   });
 
-  const { data: getMeData, isLoading } = useOwnDataQuery();
+  const { data: getMeData, isLoading, refetch } = useOwnDataQuery();
 
   useEffect(() => {
     if (getMeData) {
@@ -71,6 +71,7 @@ function EditProfile() {
         title: "Profile Updated",
         text: "Your profile has been updated successfully!",
       });
+      refetch();
 
       navigate("/");
     } catch (error) {

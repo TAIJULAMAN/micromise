@@ -1,3 +1,4 @@
+import { getUserToken } from "../../services/auth.service";
 import { baseApi } from "./baseApi";
 
 const profileApi = baseApi.injectEndpoints({
@@ -16,6 +17,9 @@ const profileApi = baseApi.injectEndpoints({
         url: "/auth/change-password",
         method: "POST",
         body: data,
+        headers: {
+          Authorization: `Bearer ${getUserToken()}`,
+        },
       }),
     }),
   }),
