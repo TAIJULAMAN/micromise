@@ -2,11 +2,16 @@ import { useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import ChangePass from "./ChangePass";
+import { useOwnDataQuery } from "../../redux/api/getMeApi";
+import { getBaseUrl } from "../../config/envConfig";
 
 function ProfilePage() {
-  const [, setProfilePic] = useState(null);
-
+  const [profilePic, setProfilePic] = useState(null);
   const [activeTab, setActiveTab] = useState("editProfile");
+
+  const { data: getMeData, isLoading, refetch } = useOwnDataQuery();
+  console.log(getMeData);
+
   const handleProfilePicUpload = (e) => {
     setProfilePic(e.target.files[0]);
   };
@@ -22,19 +27,14 @@ function ProfilePage() {
           <div className="flex justify-center items-center bg-secondary mt-5 text-white w-[715px] mx-auto p-5 gap-5 rounded-md">
             <div className="relative">
               <div className="w-[122px] h-[122px] bg-gray-300 rounded-full border-4 border-white shadow-xl flex justify-center items-center">
-                {/* {profilePic ? (
                 <img
-                  src="/avatar.png"
-                  alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              ) : (
-                <div className="text-white text-3xl">MS</div>
-              )} */}
-                <img
-                  src="/avatar.png"
-                  alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
+                  src={
+                    getMeData?.data?.profileImg
+                      ? `${getBaseUrl()}/${getMeData?.data?.profileImg}`
+                      : "https://avatar.iran.liara.run/public/44"
+                  }
+                  alt={getMeData?.data?.fullName || "User"}
+                  className="h-30 w-32 rounded-full"
                 />
                 {/* Upload Icon */}
                 <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
@@ -51,8 +51,10 @@ function ProfilePage() {
               </div>
             </div>
             <div>
-              <p className="text-xl md:text-2xl font-bold">Mr. Simoon</p>
-              <p className="text-sm font-semibold">Admin</p>
+              <p className="text-xl md:text-2xl font-bold">
+                {getMeData?.data?.fullName}
+              </p>
+              <p className="text-sm font-semibold">{getMeData?.data?.role}</p>
             </div>
           </div>
 
