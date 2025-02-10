@@ -5,35 +5,22 @@ import DeleteModal from "../../components/Modals/DeleteModal";
 import EditInvoiceModal from "../../components/Modals/EditInvoiceModal";
 import AddInvoiceModal from "../../components/Modals/AddInvoiceModal";
 import ShowInvoiceModal from "../../components/Modals/ShowInvoiceModal";
-
-const invoices = [
-  {
-    invoiceNo: "#123554",
-    jobId: "#A101",
-    date: "02/05/2025",
-  },
-  {
-    invoiceNo: "#123555",
-    jobId: "#A102",
-    date: "03/05/2025",
-  },
-  {
-    invoiceNo: "#123556",
-    jobId: "#A103",
-    date: "04/05/2025",
-  },
-  {
-    invoiceNo: "#123557",
-    jobId: "#A104",
-    date: "05/05/2025",
-  },
-];
+import { useGetAllInvoicesQuery } from "../../redux/api/invoiceApi";
 
 function InvoicePage() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+
+  const { data: invoiceData, isLoading, error } = useGetAllInvoicesQuery();
+  console.log(invoiceData);
+
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load service!</p>;
 
   return (
     <div>
@@ -50,7 +37,7 @@ function InvoicePage() {
         )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-2 lg:grid-cols-4  gap-5">
-        {invoices.map((invoice, index) => (
+        {invoiceData?.data?.map((invoice, index) => (
           <div
             key={index}
             className="flex justify-between p-5 bg-white rounded-lg gap-5 h-auto md:h-28 border border-primary"
@@ -61,9 +48,18 @@ function InvoicePage() {
               }}
               className="flex flex-col"
             >
-              <p>Invoice no: {invoice.invoiceNo}</p>
-              <p>Job Id: {invoice.jobId}</p>
-              <p>Date: {invoice.date}</p>
+              <p>Invoice no : {invoice?.invoiceNo || "No data"}</p>
+              <p>Job Id : {invoice?.jobId}</p>
+              <p>
+                Date:{" "}
+                {invoice?.createdAt
+                  ? new Date(invoice.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "No data"}
+              </p>
             </div>
             <div className="flex place-items-start gap-1">
               <FiEdit3

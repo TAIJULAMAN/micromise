@@ -1,14 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useGetMeQuery } from "../../";
+
 
 function EditProfile() {
-  const [profilePic,] = useState(null);
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     contact: "",
     address: "",
   });
+  const { data: getMeData, isLoading, error } = useGetMeQuery();
+  const [EditAdmin, { isLoading }] = useEditAdminMutation();
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -23,10 +29,14 @@ function EditProfile() {
   };
   return (
     <div className="bg-white px-20 w-[715px] py-5 rounded-md">
-      <p className="text-primary text-center font-bold text-xl mb-5">Edit Your Profile</p>
+      <p className="text-primary text-center font-bold text-xl mb-5">
+        Edit Your Profile
+      </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-md font-medium text-[#575757] mb-2">User Name</label>
+          <label className="block text-md font-medium text-[#575757] mb-2">
+            User Name
+          </label>
           <input
             type="text"
             name="name"
@@ -38,7 +48,9 @@ function EditProfile() {
           />
         </div>
         <div>
-          <label className="block text-md font-medium text-[#575757] mb-2">Email</label>
+          <label className="block text-md font-medium text-[#575757] mb-2">
+            Email
+          </label>
           <input
             type="email"
             name="email"
@@ -50,7 +62,9 @@ function EditProfile() {
           />
         </div>
         <div>
-          <label className="block text-md font-medium text-[#575757] mb-2">Contact No</label>
+          <label className="block text-md font-medium text-[#575757] mb-2">
+            Contact No
+          </label>
           <input
             type="text"
             name="contact"
@@ -62,7 +76,9 @@ function EditProfile() {
           />
         </div>
         <div>
-          <label className="block text-md font-medium text-[#575757] mb-2">Address</label>
+          <label className="block text-md font-medium text-[#575757] mb-2">
+            Address
+          </label>
           <input
             type="text"
             name="address"
@@ -75,22 +91,12 @@ function EditProfile() {
         </div>
 
         <div className="text-center  my-5">
-          {profilePic ? (
-            <button
-              type="button"
-              onClick={() => alert("Uploading image...")}
-              className="bg-primary text-white p-2 px-10 py-2 rounded-md shadow-lg"
-            >
-              Upload Picture
-            </button>
-          ) : (
-            <button
-              type="submit"
-              className="font-bold bg-primary text-white p-2 px-10 py-2 rounded-md shadow-lg"
-            >
-              Save & Changes
-            </button>
-          )}
+          <button
+            type="submit"
+            className="font-bold bg-primary text-white p-2 px-10 py-2 rounded-md shadow-lg"
+          >
+            Save & Changes
+          </button>
         </div>
       </form>
     </div>

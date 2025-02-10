@@ -117,7 +117,7 @@ function AdminClient() {
               <td>{client?.email}</td>
               <td>{client?.contactNo}</td>
               <td>{client?.location || "No data"}</td>
-              <td>{client?.requestedJobs || "No data"}</td>
+              <td>{client?.completedJobs || "No data"}</td>
               <td className="flex justify-center gap-2">
                 <button
                   onClick={() => {

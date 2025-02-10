@@ -2,9 +2,9 @@ import { baseApi } from "./baseApi";
 
 const profileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    editAdminProfile: builder.mutation({
+    editAdmin: builder.mutation({
       query: ({ data, _id }) => ({
-        url: `/users${_id}`,
+        url: `/users/${_id}`,
         method: "PATCH",
         body: data,
       }),
@@ -21,7 +21,7 @@ const profileApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useEditAdminProfileMutation, useChangeAdminPasswordMutation } =
+export const { useEditAdminMutation, useChangeAdminPasswordMutation } =
   profileApi;
 
 export default profileApi;
