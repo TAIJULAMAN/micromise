@@ -10,20 +10,24 @@ const jobApi = baseApi.injectEndpoints({
       }),
       providesTags: ["jobs"],
     }),
+    updateJob: builder.mutation({
+      query: ({ _id, data }) => {
+        console.log(_id, data);
+        return {
+          url: `/jobs/${_id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["jobs"],
+    }),
   }),
 });
 
-export const { useGetAllJobsQuery } = jobApi;
+export const { useGetAllJobsQuery, useUpdateJobMutation } = jobApi;
 
 export default jobApi;
 
-// deleteService: builder.mutation({
-//     query: (_id) => ({
-//       url: `/services/${_id}`,
-//       method: "DELETE",
-//     }),
-//     invalidatesTags: ["services"],
-//   }),
 //   createService: builder.mutation({
 //     query: (data) => ({
 //       url: "/services/create-service",
@@ -32,14 +36,5 @@ export default jobApi;
 //     }),
 //     invalidatesTags: ["services"],
 //   }),
-//   updateService: builder.mutation({
-//     query: ({ _id, data }) => {
-//       console.log(_id, data);
-//       return {
-//         url: `/services/${_id}`,
-//         method: "PATCH",
-//         body: data,
-//       };
-//     },
-//     invalidatesTags: ["services"],
-//   }),
+
+// /jobs/679871bb6e9478cfe64ae76f
