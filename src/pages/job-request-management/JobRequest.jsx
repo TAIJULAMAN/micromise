@@ -1,10 +1,13 @@
-import { useState } from "react";
-import image from "/table.png";
+import { useEffect, useState } from "react";
 import { TbDotsVertical } from "react-icons/tb";
 import JobRequestModal from "../../components/Modals/JobRequestModal";
 import MessageModal from "../../components/Modals/MessageModal";
-import { IoSearch } from "react-icons/io5";
 import AddInvoiceModal from "../../components/Modals/AddInvoiceModal";
+import {
+  useGetAllJobsQuery,
+  useUpdateJobMutation,
+} from "../../redux/api/jobApi";
+import { useGetAllTechnicianQuery } from "../../redux/api/technicianApi";
 
 function JobRequest() {
   const [searchText, setSearchText] = useState("");
@@ -14,66 +17,91 @@ function JobRequest() {
   const [visibleModals, setVisibleModals] = useState({});
   const [accordionState, setAccordionState] = useState({});
 
-  const data = [
-    {
-      id: 1,
-      aName: "Dindiniya10",
-      sName: "Dindiniya",
-      services: ["ECU", "Diagnostics", "Software"],
-      date: "2025-01-01",
-      jobStatus: "Pending",
-      paymentStatus: "Payment pending",
-    },
-    {
-      id: 2,
-      aName: "TechGuru20",
-      sName: "Guru",
-      services: ["Hardware", "Network Setup"],
-      date: "2025-01-02",
-      jobStatus: "Assigned",
-      paymentStatus: "Completed",
-    },
-    {
-      id: 3,
-      aName: "FixItFast",
-      sName: "Fixer",
-      services: ["Cleaning", "Replacement"],
-      date: "2025-01-03",
-      jobStatus: "Completed",
-      paymentStatus: "Payment made",
-    },
-    {
-      id: 4,
-      aName: "CodeMaster",
-      sName: "Coder",
-      services: ["Troubleshoot", "Debug"],
-      date: "2025-01-04",
-      jobStatus: "Canceled",
-      paymentStatus: "Payment pending",
-    },
-    {
-      id: 5,
-      aName: "NetPro",
-      sName: "Networker",
-      services: ["Optimization", "Setup", "VPN"],
-      date: "2025-01-05",
-      jobStatus: "Pending",
-      paymentStatus: "Completed",
-    },
-  ];
+  const [selectedTechnician, setSelectedTechnician] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const toggleModal = (id) => {
-    setVisibleModals((prev) => ({
-      ...prev,
-      [id]: !prev[id],
+  const { data: jobData, isLoading, error } = useGetAllJobsQuery();
+  const { data: technicianData } = useGetAllTechnicianQuery();
+
+  const [jobs, setJobs] = useState([]);
+  const [accordionState2, setAccordionState2] = useState({});
+
+  useEffect(() => {
+    if (jobData?.data) {
+      setJobs(jobData.data);
+    }
+  }, [jobData]);
+
+  const toggleAccordion2 = (jobId) => {
+    setAccordionState2((prevState) => ({
+      ...prevState,
+      [jobId]: !prevState[jobId],
     }));
   };
 
-  const toggleAccordion = (id) => {
+  const handleUpdateJobStatus = async (jobId, newStatus) => {
+    try {
+      await updateJob({ _id: jobId, data: { status: newStatus } }).unwrap();
+
+      // Update local state to reflect the status change immediately
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job._id === jobId ? { ...job, status: newStatus } : job
+        )
+      );
+
+      // Close the dropdown after updating the status
+      setAccordionState2((prevState) => ({
+        ...prevState,
+        [jobId]: false,
+      }));
+    } catch (error) {
+      console.error("Failed to update job status:", error);
+    }
+  };
+
+  // Ensure technicianData?.data?.result is an array before filtering
+  const filteredTechnicians = Array.isArray(technicianData?.data?.result)
+    ? technicianData.data.result.filter((technician) =>
+        technician.fullName?.toLowerCase().includes(searchText.toLowerCase())
+      )
+    : [];
+
+  const toggleModal = (_id) => {
+    setVisibleModals((prev) => ({
+      ...prev,
+      [_id]: !prev[_id],
+    }));
+  };
+
+  const toggleAccordion = (_id) => {
     setAccordionState((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [_id]: !prev[_id],
     }));
+  };
+
+  // ...............................
+
+  const [updateJob] = useUpdateJobMutation();
+
+  const handleSelectTechnician = async (jobId, technician) => {
+    setSelectedTechnician(technician);
+    setSearchText(technician.fullName);
+    setDropdownOpen(false);
+
+    // Update the job with the assigned technician
+    await updateJob({
+      id: jobId,
+      body: { assignedTechnician: technician._id },
+    });
+  };
+
+  const handleUpdatePaymentStatus = async (jobId, newStatus) => {
+    await updateJob({
+      id: jobId,
+      body: { paymentStatus: newStatus },
+    });
   };
 
   return (
@@ -92,42 +120,75 @@ function JobRequest() {
         </tr>
       </thead>
       <tbody className="text-start">
-        {data.map((item) => (
+        {jobData?.data?.map((job, index) => (
           <tr
-            key={item.id}
+            key={job._id}
             className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
           >
-            <td>{item.id}</td>
+            <td>{index + 1}</td>
             <td>
-              <div className="flex gap-2 justify-start">
-                <img
-                  className="h-[20px] w-[20px] object-cover rounded"
-                  alt="avatar"
-                  src={image}
-                />
-                <span>{item.aName}</span>
-              </div>
+              {job?.grandId ? (
+                <div className="flex gap-2 justify-start items-center">
+                  <img
+                    src={
+                      job?.grandId?.profileImg
+                        ? `${job?.grandId?.profileImg}`
+                        : "https://avatar.iran.liara.run/public/44"
+                    }
+                    alt={job?.grandId?.fullName || "Anonymous User"}
+                    className="h-8 w-8 rounded-full object-cover"
+                    width={20}
+                    height={20}
+                  />
+                  <span>{job?.grandId?.fullName || "No Name"}</span>
+                </div>
+              ) : job?.userId?.role === "client" ? (
+                <div className="flex gap-2 justify-start items-center">
+                  <img
+                    src={
+                      job?.userId?.profileImg
+                        ? `${job?.userId?.profileImg}`
+                        : "https://avatar.iran.liara.run/public/44"
+                    }
+                    alt={job?.userId?.fullName || "Anonymous User"}
+                    className="h-8 w-8 rounded-full object-cover"
+                    width={20}
+                    height={20}
+                  />
+                  <span>{job?.userId?.fullName || "No Name"}</span>
+                </div>
+              ) : (
+                <span>No Client</span>
+              )}
             </td>
             <td>
-              <div className="flex gap-2 justify-start">
-                <img
-                  className="h-[20px] w-[20px] object-cover rounded"
-                  alt="avatar"
-                  src={image}
-                />
-                <span>{item.sName}</span>
-              </div>
+              {job?.userId?.role === "supervisor" ? (
+                <div className="flex gap-2 justify-start items-center">
+                  <img
+                    src={
+                      job.userId.profileImg
+                        ? `${job.userId.profileImg}`
+                        : "https://avatar.iran.liara.run/public/44"
+                    }
+                    alt={job.userId.fullName || "Anonymous User"}
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                  <span>{job.userId.fullName || "Unknown User"}</span>
+                </div>
+              ) : (
+                <span>No Supervisor</span>
+              )}
             </td>
-            <td className="text-xs w-[280px]">
+            <td className="text-xs w-full">
               <ul className="flex gap-2 list-disc text-left border p-2 border-primary rounded">
-                {item.services.map((service, index) => (
+                {(job?.services || []).map((service, index) => (
                   <li key={index} className="list-inside">
                     {service}
                   </li>
                 ))}
               </ul>
             </td>
-            <td>{item.date}</td>
+            <td>{new Date(job?.createdAt).toLocaleDateString()}</td>
             <td>
               <div className="relative w-[280px]">
                 <input
@@ -135,56 +196,98 @@ function JobRequest() {
                   placeholder="Search Technician"
                   className="border border-primary rounded-md py-[4px] px-3 w-full focus:outline-none"
                   value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                    setDropdownOpen(true);
+                  }}
                 />
-                <span className="bg-gray-300 text-gray-500 absolute top-0 right-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer hover:bg-gray-400 group">
-                  <IoSearch className="text-[1.3rem] text-primary" />
-                </span>
+                {dropdownOpen && searchText && (
+                  <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-40 overflow-y-auto">
+                    {filteredTechnicians.map((technician) => (
+                      <li
+                        key={technician._id}
+                        className="px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center gap-2"
+                        onClick={() =>
+                          handleSelectTechnician(job._id, technician)
+                        }
+                      >
+                        <img
+                          src={
+                            technician?.profileImg ||
+                            "https://avatar.iran.liara.run/public/44"
+                          }
+                          className="h-6 w-6 rounded-full object-cover"
+                        />
+                        <span>{technician?.fullName}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </td>
-            <td className="flex justify-center">
+            <td>
               <span
                 style={{
                   backgroundColor:
-                    item.jobStatus === "Pending"
+                    job?.status === "pending"
                       ? "#d95f5f"
-                      : item.jobStatus === "Assigned"
+                      : job.status === "raised"
                       ? "#f0d29c"
-                      : item.jobStatus === "Completed"
+                      : job.status === "completed"
                       ? "#3ac75d"
+                      : job.status === "cancelled"
+                      ? "#F32929"
+                      : "#707070",
+                }}
+                className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px] cursor-pointer"
+                onClick={() => toggleAccordion2(job?._id)}
+              >
+                {job?.status}
+              </span>
+
+              {accordionState2[job._id] && (
+                <div className="z-50 mt-2 w-[100px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
+                  <button
+                    className="text-white bg-primary py-1 px-3 rounded w-full border border-primary"
+                    onClick={() => handleUpdateJobStatus(job._id, "cancelled")}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </td>
+            <td>
+              <span
+                style={{
+                  backgroundColor:
+                    job?.paymentStatus === "pending"
+                      ? "#ff9500"
+                      : job?.paymentStatus === "completed"
+                      ? "#3ac75d"
+                      : job?.paymentStatus === "cancelled"
+                      ? "#F32929"
                       : "#F32929",
                 }}
-                className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px]"
-              >
-                {item.jobStatus}
-              </span>
-            </td>
-            <td className="flex flex-col items-center relative">
-              <span
-                style={{
-                  backgroundColor:
-                    item.paymentStatus === "Payment pending"
-                      ? "#F32929"
-                      : item.paymentStatus === "Completed"
-                      ? "#3ac75d"
-                      : "#ff9500",
-                }}
                 className="py-1 px-3 rounded text-white flex justify-center text-center w-[200px] cursor-pointer"
-                onClick={() => toggleAccordion(item.id)}
+                onClick={() => toggleAccordion(job?._id)}
               >
-                {item.paymentStatus}
+                {job.paymentStatus}
               </span>
-              {accordionState[item.id] && (
-                <div className="z-50 mt-10 w-[200px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
+              {accordionState[job._id] && (
+                <div className="z-50 mt-2 w-[200px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
                   <button
                     className="bg-white text-primary py-1 px-3 rounded w-full border border-primary"
-                    onClick={() => alert("Decline clicked")}
+                    onClick={() =>
+                      handleUpdatePaymentStatus(job._id, "declined")
+                    }
                   >
                     Decline
                   </button>
                   <button
                     className="bg-primary text-white py-1 px-3 rounded w-full"
-                    onClick={() => alert("Approve clicked")}
+                    onClick={() =>
+                      handleUpdatePaymentStatus(job._id, "completed")
+                    }
                   >
                     Approve
                   </button>
@@ -192,11 +295,11 @@ function JobRequest() {
               )}
             </td>
             <td className="relative">
-              <button onClick={() => toggleModal(item.id)} className="w-6 h-6">
+              <button onClick={() => toggleModal(job._id)} className="w-6 h-6">
                 <TbDotsVertical />
               </button>
-              {visibleModals[item.id] && (
-                <div className="absolute top-full right-0 mt-2 bg-white border border-primary rounded-lg shadow-lg w-[130px] z-10">
+              {visibleModals[job._id] && (
+                <div className="absolute top-full right-0 bg-white border border-primary rounded-lg shadow-lg w-[130px] z-10">
                   <div className="bg-white shadow-lg rounded-lg p-2">
                     <button
                       className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
@@ -218,18 +321,12 @@ function JobRequest() {
                     </button>
                     <button
                       className="border border-primary text-primary py-2 rounded w-full mb-2 text-xs"
-                      onClick={() => toggleModal(item.id)}
+                      onClick={() => toggleModal(job._id)}
                     >
                       Cancel
                     </button>
                   </div>
                 </div>
-              )}
-              {visibleModals[item.id] && (
-                <div
-                  onClick={() => toggleModal(item.id)}
-                  className="fixed inset-0 z-0"
-                ></div>
               )}
             </td>
           </tr>

@@ -28,5 +28,6 @@ export const baseApi = createApi({
     "dashboard",
     "notification",
     "Profile",
+    "jobs"
   ],
 });
