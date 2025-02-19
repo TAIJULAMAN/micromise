@@ -189,7 +189,7 @@ const HandleJobStatusUpdate= async(value,jobId)=>{
 
 
  
-  console.log(jobData?.data,'jobData?.data')
+  // console.log(jobData?.data,'jobData?.data')
 
   // console.log(openSelectTechnician,'openSelectTechnician')
   return (
@@ -391,11 +391,12 @@ const HandleJobStatusUpdate= async(value,jobId)=>{
                   </div>
                 </div>
               )}
+                  {messageModal && <MessageModal setMessageModal={setMessageModal} job={job}  />}
             </td>
           </tr>
         ))}
         {requestModal && <JobRequestModal setRequestModal={setRequestModal} />}
-        {messageModal && <MessageModal setMessageModal={setMessageModal} />}
+    
         {addModalVisible && (
           <AddInvoiceModal setAddModalVisible={setAddModalVisible} />
         )}
