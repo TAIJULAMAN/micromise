@@ -10,19 +10,26 @@ import {
 } from "../../redux/api/serviceCategoryApi";
 import Swal from "sweetalert2";
 import { IoCloseSharp } from "react-icons/io5";
+import { Pagination } from "antd";
 
 function AddServicePage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
-  // fetch ServiceData
+  const [currentPage, setCurrentPage] = useState(1);
+  const query = { isDeleted: false, page: currentPage };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const {
     data: serviceData,
     error,
     isLoading,
     refetch,
-  } = useGetAllServicesQuery({ isDeleted: false });
+  } = useGetAllServicesQuery(query);
 
   // deleteServiceData
   const [deleteService] = useDeleteServiceMutation();
@@ -201,8 +208,7 @@ function AddServicePage() {
           <tbody>
             {serviceData?.data?.map((service, index) => (
               <tr key={index} className="text-center space-y-5 text-[#707070]">
-                <td className="py-3 pr-4 pl-10">
-                  #{index + 1}</td>
+                <td className="py-3 pr-4 pl-10">#{index + 1}</td>
                 <td className="py-3 px-4">{service?.name}</td>
                 <td className="py-3 px-4 flex gap-2 justify-center text-center">
                   <button
@@ -222,6 +228,16 @@ function AddServicePage() {
             ))}
           </tbody>
         </table>
+        <div className="mt-5 flex justify-end ">
+          {serviceData?.data?.length !== 0 && (
+            <Pagination
+              current={serviceData.meta?.page}
+              pageSize={serviceData?.meta?.limit}
+              total={serviceData?.meta?.total}
+              onChange={handlePageChange}
+            />
+          )}
+        </div>
 
         {isAddModalVisible && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -308,9 +324,7 @@ function AddServicePage() {
           </div>
         )}
         {isDeleteModalVisible && (
-          <DeleteModal
-            setIsDeleteModalVisible={setIsDeleteModalVisible}
-          />
+          <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
         )}
       </div>
     </div>
