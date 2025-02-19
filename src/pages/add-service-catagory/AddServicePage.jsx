@@ -231,7 +231,7 @@ function AddServicePage() {
         <div className="mt-5 flex justify-end ">
           {serviceData?.data?.length !== 0 && (
             <Pagination
-              current={serviceData.meta?.page}
+              current={serviceData?.meta?.page}
               pageSize={serviceData?.meta?.limit}
               total={serviceData?.meta?.total}
               onChange={handlePageChange}
