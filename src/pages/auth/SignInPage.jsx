@@ -47,7 +47,7 @@ function SignInPage() {
           text: "You are now logged in.",
         });
 
-        navigate("/EmailVerificationCode");
+        navigate("/");
       }
     } catch (error) {
       console.error("Login error:", error);
