@@ -194,7 +194,7 @@ function Technician() {
               <div className="w-20 h-20 mx-auto rounded-full overflow-hidden">
                 <img
                   src={
-                    currentRecord?.image
+                    currentRecord?.profileImg
                       ? `${getBaseUrl()}/${currentRecord?.profileImg}`
                       : "https://avatar.iran.liara.run/public/44"
                   }

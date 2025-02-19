@@ -10,9 +10,16 @@ const notificationApi = baseApi.injectEndpoints({
       }),
       providesTags: ["notification"],
     }),
+    getAllNotificationReadAll: builder.query({
+      query: () => ({
+        url: "/notifications/read-all",
+        method: "GET",
+      }),
+      providesTags: ["notification"],
+    }),
   }),
 });
 
-export const { useGetAllNotificationQuery } = notificationApi;
+export const { useGetAllNotificationQuery, useGetAllNotificationReadAllQuery } = notificationApi;
 
 export default notificationApi;
