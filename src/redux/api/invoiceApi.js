@@ -10,20 +10,20 @@ const invoiceApi = baseApi.injectEndpoints({
       }),
       providesTags: ["invoices"],
     }),
+    deleteInvoice: builder.mutation({
+      query: (_id) => ({
+        url: `/invoices/${_id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["invoices"],
+    }),
   }),
 });
 
-export const { useGetAllInvoicesQuery } = invoiceApi;
+export const { useGetAllInvoicesQuery, useDeleteInvoiceMutation } = invoiceApi;
 
 export default invoiceApi;
 
-// deleteService: builder.mutation({
-//     query: (_id) => ({
-//       url: `/services/${_id}`,
-//       method: "DELETE",
-//     }),
-//     invalidatesTags: ["services"],
-//   }),
 //   createService: builder.mutation({
 //     query: (data) => ({
 //       url: "/services/create-service",
