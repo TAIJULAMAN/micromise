@@ -6,6 +6,7 @@ import EditInvoiceModal from "../../components/Modals/EditInvoiceModal";
 import AddInvoiceModal from "../../components/Modals/AddInvoiceModal";
 import ShowInvoiceModal from "../../components/Modals/ShowInvoiceModal";
 import { useGetAllInvoicesQuery } from "../../redux/api/invoiceApi";
+import { Pagination } from "antd";
 
 function InvoicePage() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -13,8 +14,14 @@ function InvoicePage() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
-  const { data: invoiceData, isLoading, error } = useGetAllInvoicesQuery();
-  console.log(invoiceData);
+  const [currentPage, setCurrentPage] = useState(1);
+  const query = { isDeleted: false, page: currentPage };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const { data: invoiceData, isLoading, error } = useGetAllInvoicesQuery(query);
+  // console.log(invoiceData);
 
   if (isLoading)
     return (
@@ -49,7 +56,7 @@ function InvoicePage() {
               className="flex flex-col"
             >
               <p>Invoice no : {invoice?.invoiceNo || "No data"}</p>
-              <p>Job Id : {invoice?.jobId}</p>
+              <p className="text-sm">Job Id : {invoice?.jobId}</p>
               <p>
                 Date:{" "}
                 {invoice?.createdAt
@@ -77,6 +84,7 @@ function InvoicePage() {
             </div>
           </div>
         ))}
+
         {isDeleteModalVisible && (
           <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
         )}
@@ -86,6 +94,16 @@ function InvoicePage() {
         )}
         {showInvoiceModal && (
           <ShowInvoiceModal setShowInvoiceModal={setShowInvoiceModal} />
+        )}
+      </div>
+      <div className="mt-5 flex justify-end ">
+        {invoiceData?.data?.length !== 0 && (
+          <Pagination
+            current={invoiceData?.meta?.page}
+            pageSize={invoiceData?.meta?.limit}
+            total={invoiceData?.meta?.total}
+            onChange={handlePageChange}
+          />
         )}
       </div>
     </div>
