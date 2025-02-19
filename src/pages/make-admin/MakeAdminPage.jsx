@@ -8,16 +8,25 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Swal from "sweetalert2";
 import { IoCloseSharp } from "react-icons/io5";
+import { Pagination } from "antd";
 
 function MakeAdminPage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const query = { isDeleted: false, page: currentPage };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const {
     data: adminsData,
     error,
     isLoading,
     refetch,
-  } = useGetAllAdminsQuery();
+  } = useGetAllAdminsQuery(query);
 
   const [createAdmin] = useCreateAdminMutation();
   const [deleteAdmin] = useDeleteAdminMutation();
@@ -114,7 +123,7 @@ function MakeAdminPage() {
   if (error) return <p className="text-red-500">Failed to load admins!</p>;
 
   return (
-    <div className="px-5 pb-5">
+    <div className="mt-5 overflow-hidden">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-semibold text-[#242424]">Make Admin</h2>
         <button
@@ -167,13 +176,21 @@ function MakeAdminPage() {
             ))}
           </tbody>
         </table>
-        {/* Delete modal */}
+        <div className="mt-5 flex justify-end ">
+          {adminsData?.data?.length !== 0 && (
+            <Pagination
+              current={adminsData?.meta?.page}
+              pageSize={adminsData?.meta?.limit}
+              total={adminsData?.meta?.total}
+              onChange={handlePageChange}
+            />
+          )}
+        </div>
+
         {isDeleteModalVisible && (
-          <DeleteModal
-            setIsDeleteModalVisible={setIsDeleteModalVisible}
-          />
+          <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
         )}
-        {/* Add Admin Modal */}
+
         {isAddModalVisible && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="relative bg-white p-6 rounded shadow-lg px-10 w-[500px]">

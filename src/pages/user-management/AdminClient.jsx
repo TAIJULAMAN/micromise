@@ -9,11 +9,34 @@ import {
 } from "../../redux/api/clientApi";
 import { getBaseUrl } from "../../config/envConfig";
 import Swal from "sweetalert2";
+import { Pagination } from "antd";
+import { useDebounced } from "../../utils/hook";
 
 function AdminClient() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const query = { isDeleted: false, page: currentPage };
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounced({
+    searchTerm: searchTerm,
+    delay: 500,
+  });
+
+  // console.log("add er age", query);
+  query.searchTerm = debouncedSearchTerm;
+  // console.log("add er pore", query);
+
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setSearchTerm(searchText);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   // fetch all technician
   const {
@@ -21,8 +44,8 @@ function AdminClient() {
     error,
     isLoading,
     refetch,
-  } = useGetAllClientQuery({ isDeleted: false });
-  console.log(clientData);
+  } = useGetAllClientQuery(query);
+  // console.log(clientData);
 
   // deleteServiceData
   const [deleteClient] = useDeleteClientMutation();
@@ -66,13 +89,14 @@ function AdminClient() {
   if (error) return <p className="text-red-500">Failed to load service!</p>;
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between pb-5">
         <h3 className="font-semibold text-xl text-[#242424]">Client</h3>
         <div className="relative w-[320px]">
           <input
             type="text"
+            onChange={handleSearch}
             placeholder="Search..."
             className="border border-[#e5eaf2] py-3 pl-4 pr-[65px] outline-none w-full rounded-md "
           />
@@ -82,63 +106,74 @@ function AdminClient() {
           </span>
         </div>
       </div>
-
-      <table className="bg-white w-full pt-5">
-        <thead>
-          <tr className="grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1.5fr] px-2 py-4 text-[#171717]">
-            <th>Name</th>
-            <th>Email</th>
-            <th>Contact Number</th>
-            <th>Location</th>
-            <th>Requested job</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody className="text-start">
-          {clientData?.data?.map((client, index) => (
-            <tr
-              key={index}
-              className="grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1.5fr] px-2 py-4 text-center text-[#707070]"
-            >
-              <td>
-                <div className="flex gap-2 justify-start text-center ml-10">
-                  <img
-                    src={
-                      client?.image
-                        ? `${getBaseUrl()}/${client?.profileImg}`
-                        : "https://avatar.iran.liara.run/public/44"
-                    }
-                    alt={client?.fullName || "User"}
-                    className="h-10 w-10 rounded-full"
-                  />
-                  <span>{client?.fullName}</span>
-                </div>
-              </td>
-              <td>{client?.email}</td>
-              <td>{client?.contactNo}</td>
-              <td>{client?.location || "No data"}</td>
-              <td>{client?.completedJobs || "No data"}</td>
-              <td className="flex justify-center gap-2">
-                <button
-                  onClick={() => {
-                    setIsModalVisible(true);
-                    setCurrentRecord(client);
-                  }}
-                  className="w-6 h-6"
-                >
-                  <LuEye />
-                </button>
-                <button
-                  onClick={() => handleDeleteAdmin(client)}
-                  className="text-primary w-6 h-6"
-                >
-                  <RiDeleteBin6Line />
-                </button>
-              </td>
+      <div className="min-w-full">
+        <table className="bg-white w-full pt-5">
+          <thead>
+            <tr className="grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1.5fr] px-2 py-4 text-[#171717]">
+              <th>Name</th>
+              <th>Email</th>
+              <th>Contact Number</th>
+              <th>Location</th>
+              <th>Requested job</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="text-start">
+            {clientData?.data?.map((client, index) => (
+              <tr
+                key={index}
+                className="grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1.5fr] px-2 py-4 text-center text-[#707070]"
+              >
+                <td>
+                  <div className="flex gap-2 justify-start text-center ml-10">
+                    <img
+                      src={
+                        client?.image
+                          ? `${getBaseUrl()}/${client?.profileImg}`
+                          : "https://avatar.iran.liara.run/public/44"
+                      }
+                      alt={client?.fullName || "User"}
+                      className="h-10 w-10 rounded-full"
+                    />
+                    <span>{client?.fullName}</span>
+                  </div>
+                </td>
+                <td>{client?.email}</td>
+                <td>{client?.contactNo}</td>
+                <td>{client?.location || "No data"}</td>
+                <td>{client?.completedJobs || "No data"}</td>
+                <td className="flex justify-center gap-2">
+                  <button
+                    onClick={() => {
+                      setIsModalVisible(true);
+                      setCurrentRecord(client);
+                    }}
+                    className="w-6 h-6"
+                  >
+                    <LuEye />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteAdmin(client)}
+                    className="text-primary w-6 h-6"
+                  >
+                    <RiDeleteBin6Line />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="mt-5 flex justify-end ">
+          {clientData?.data?.length !== 0 && (
+            <Pagination
+              current={clientData?.meta?.page}
+              pageSize={clientData?.meta?.limit}
+              total={clientData?.meta?.total}
+              onChange={handlePageChange}
+            />
+          )}
+        </div>
+      </div>
 
       {isModalVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
