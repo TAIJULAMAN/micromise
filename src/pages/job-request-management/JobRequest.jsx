@@ -8,7 +8,9 @@ import {
   useUpdateJobMutation,
 } from "../../redux/api/jobApi";
 import { useGetAllTechnicianQuery } from "../../redux/api/technicianApi";
-
+import { Select } from 'antd';
+import SelectAndSubmit from "../../components/Common/SelectAndSubmit";
+import Swal from "sweetalert2";
 function JobRequest() {
   const [searchText, setSearchText] = useState("");
   const [requestModal, setRequestModal] = useState(false);
@@ -18,7 +20,7 @@ function JobRequest() {
   const [accordionState, setAccordionState] = useState({});
 
   const [selectedTechnician, setSelectedTechnician] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState("");
 
   const { data: jobData, isLoading, error } = useGetAllJobsQuery();
   const { data: technicianData } = useGetAllTechnicianQuery();
@@ -60,12 +62,7 @@ function JobRequest() {
     }
   };
 
-  // Ensure technicianData?.data?.result is an array before filtering
-  const filteredTechnicians = Array.isArray(technicianData?.data?.result)
-    ? technicianData.data.result.filter((technician) =>
-        technician.fullName?.toLowerCase().includes(searchText.toLowerCase())
-      )
-    : [];
+
 
   const toggleModal = (_id) => {
     setVisibleModals((prev) => ({
@@ -81,29 +78,120 @@ function JobRequest() {
     }));
   };
 
-  // ...............................
+
+
+  // console.log(filterTechnicians,'filterTechnicians')
 
   const [updateJob] = useUpdateJobMutation();
 
-  const handleSelectTechnician = async (jobId, technician) => {
-    setSelectedTechnician(technician);
-    setSearchText(technician.fullName);
-    setDropdownOpen(false);
+ // ! Technicians Selecting
+  const filterTechnicians = Array.isArray(technicianData?.data?.result)
+  ? technicianData?.data?.result.map((technician) =>
+     {
+      return {
+        label: technician.fullName,
+        value: technician._id
+      }
+     }
+    )
+  : [];
+  // console.log(filterTechnicians,"filterTechnicians")
 
-    // Update the job with the assigned technician
-    await updateJob({
-      id: jobId,
-      body: { assignedTechnician: technician._id },
-    });
+  const handleTechnicianSelect= async(value,jobId)=>{
+    const  bodyData={
+      Job:{
+        assignedTechnician: value
+      }
+    }
+    // console.log(bodyData,"bodyData")
+    const result= await updateJob({
+      _id: jobId,
+      data: bodyData
+    })
+    if(result?.data?.success){
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "The job has been assigned successfully.",
+      })
+    }
+  }
+
+  
+//! Job Status Update
+const filterJobStatus= ['cancelled' , 'pending' , 'completed' , 'raised']?.map((status) =>
+  {
+   return {
+    label: status,
+    value: status
+   }
+  }
+ )
+
+//  console.log(filterJobStatus,'filterJobStatus')
+const HandleJobStatusUpdate= async(value,jobId)=>{
+  const  bodyData={
+    Job:{
+      status: value
+    }
+  }
+  // console.log(bodyData,"bodyData")
+  const result= await updateJob({
+    _id: jobId,
+    data: bodyData
+  })
+  if(result?.data?.success){
+    Swal.fire({
+      icon: "success",
+      title: "Success",
+      text: "The job status has been updated successfully.",
+    })
+  }
+}
+ 
+
+  //! Payment Status Update
+//  'cancelled' | 'pending' | 'completed'
+  const filterPaymentStatus=[{
+    label:<span className="text-red-500">cancelled</span>,
+    value: 'cancelled'
+  },
+  {
+    label: <span className="text-yellow-500">pending</span>,
+    value: 'pending'
+  },
+  {
+    label: <span className="text-green-500">completed</span>,
+    value: 'completed' 
+  },
+]
+
+
+  const handleUpdatePaymentStatus = async (value,jobId) => {
+    const  bodyData={
+      Job:{
+        paymentStatus: value
+      }
+    }
+    // console.log(bodyData,"bodyData")
+    const result= await updateJob({
+      _id: jobId,
+      data: bodyData
+    })
+    if(result?.data?.success){
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "The payment Status has been updated successfully.",
+      })
+    }
   };
 
-  const handleUpdatePaymentStatus = async (jobId, newStatus) => {
-    await updateJob({
-      id: jobId,
-      body: { paymentStatus: newStatus },
-    });
-  };
 
+ 
+  // console.log(jobData?.data,'jobData?.data')
+
+  // console.log(openSelectTechnician,'openSelectTechnician')
   return (
     <table className="bg-white w-full pt-5">
       <thead>
@@ -189,75 +277,36 @@ function JobRequest() {
               </ul>
             </td>
             <td>{new Date(job?.createdAt).toLocaleDateString()}</td>
+
+            {/*//! selectTechnician */}
             <td>
               <div className="relative w-[280px]">
-                <input
-                  type="text"
-                  placeholder="Search Technician"
-                  className="border border-primary rounded-md py-[4px] px-3 w-full focus:outline-none"
-                  value={searchText}
-                  onChange={(e) => {
-                    setSearchText(e.target.value);
-                    setDropdownOpen(true);
-                  }}
-                />
-                {dropdownOpen && searchText && (
-                  <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-40 overflow-y-auto">
-                    {filteredTechnicians.map((technician) => (
-                      <li
-                        key={technician._id}
-                        className="px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center gap-2"
-                        onClick={() =>
-                          handleSelectTechnician(job._id, technician)
-                        }
-                      >
-                        <img
-                          src={
-                            technician?.profileImg ||
-                            "https://avatar.iran.liara.run/public/44"
-                          }
-                          className="h-6 w-6 rounded-full object-cover"
-                        />
-                        <span>{technician?.fullName}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+           <SelectAndSubmit 
+           options={filterTechnicians} 
+           Id={job?._id} 
+           OnSaveHandler={handleTechnicianSelect}
+           defaultValues={job?.assignedTechnician ? [{
+             value: job?.assignedTechnician?._id,
+             label: job?.assignedTechnician?.fullName
+           }] : []}
+           />
               </div>
             </td>
             <td>
-              <span
-                style={{
-                  backgroundColor:
-                    job?.status === "pending"
-                      ? "#d95f5f"
-                      : job.status === "raised"
-                      ? "#f0d29c"
-                      : job.status === "completed"
-                      ? "#3ac75d"
-                      : job.status === "cancelled"
-                      ? "#F32929"
-                      : "#707070",
-                }}
-                className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px] cursor-pointer"
-                onClick={() => toggleAccordion2(job?._id)}
-              >
-                {job?.status}
-              </span>
+          
 
-              {accordionState2[job._id] && (
-                <div className="z-50 mt-2 w-[100px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
-                  <button
-                    className="text-white bg-primary py-1 px-3 rounded w-full border border-primary"
-                    onClick={() => handleUpdateJobStatus(job._id, "cancelled")}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
+              <SelectAndSubmit 
+           options={filterJobStatus} 
+           Id={job?._id} 
+           OnSaveHandler={HandleJobStatusUpdate}
+           defaultValues={job?.status ? [{
+             value: job?.status,
+             label: job?.status
+           }] : []}
+           />
             </td>
             <td>
-              <span
+              {/* <span
                 style={{
                   backgroundColor:
                     job?.paymentStatus === "pending"
@@ -292,7 +341,21 @@ function JobRequest() {
                     Approve
                   </button>
                 </div>
-              )}
+              )} */}
+
+
+       <div className="ml-2">
+               
+       <SelectAndSubmit 
+           options={filterPaymentStatus} 
+           Id={job?._id} 
+           OnSaveHandler={handleUpdatePaymentStatus}
+           defaultValues={job?.paymentStatus ? [{
+             value: job?.paymentStatus,
+             label: job?.paymentStatus
+           }] : []}
+           />
+       </div>
             </td>
             <td className="relative">
               <button onClick={() => toggleModal(job._id)} className="w-6 h-6">
@@ -328,11 +391,12 @@ function JobRequest() {
                   </div>
                 </div>
               )}
+                  {messageModal && <MessageModal setMessageModal={setMessageModal} job={job}  />}
             </td>
           </tr>
         ))}
         {requestModal && <JobRequestModal setRequestModal={setRequestModal} />}
-        {messageModal && <MessageModal setMessageModal={setMessageModal} />}
+    
         {addModalVisible && (
           <AddInvoiceModal setAddModalVisible={setAddModalVisible} />
         )}
