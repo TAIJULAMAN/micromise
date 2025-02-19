@@ -16,26 +16,27 @@ function Technician() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
   // ............................................................
+  const [currentPage, setCurrentPage] = useState(1);
   const query = { isDeleted: false, page: currentPage };
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounced({
     searchTerm: searchTerm,
     delay: 500,
   });
-  console.log(debouncedSearchTerm, " debouncedSearchTerm");
-  query["searchTerm"] = debouncedSearchTerm;
-  // eslint-disable-next-line no-extra-boolean-cast
-  // if (!!debouncedSearchTerm) {
-  //     query["searchTerm"] = debouncedSearchTerm;
-  // }
+
+  // console.log("add er age", query);
+  query.searchTerm = debouncedSearchTerm;
+  // console.log("add er pore", query);
+
   const handleSearch = (e) => {
     const searchText = e.target.value;
-    // console.log(searchText,"searchText")
     setSearchTerm(searchText);
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   // ...................................................................
 
   // fetch all technician
@@ -45,11 +46,6 @@ function Technician() {
     isLoading,
     refetch,
   } = useGetAllTechnicianQuery(query);
-  // console.log(technicianData);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
 
   // delete Data
   const [deleteTechnician] = useDeleteTechnicianMutation();
@@ -198,7 +194,7 @@ function Technician() {
               <div className="w-20 h-20 mx-auto rounded-full overflow-hidden">
                 <img
                   src={
-                    currentRecord?.image
+                    currentRecord?.profileImg
                       ? `${getBaseUrl()}/${currentRecord?.profileImg}`
                       : "https://avatar.iran.liara.run/public/44"
                   }
