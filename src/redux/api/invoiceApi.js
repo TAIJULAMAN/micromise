@@ -17,29 +17,30 @@ const invoiceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["invoices"],
     }),
+    createInvoice: builder.mutation({
+      query: (data) => ({
+        url: "invoices/create-invoice",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["invoices"],
+    }),
+    updateInvoice: builder.mutation({
+      query: ({ _id, data }) => {
+        console.log(_id, data);
+        return {
+          url: `/services/${_id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["invoices"],
+    }),
   }),
 });
 
-export const { useGetAllInvoicesQuery, useDeleteInvoiceMutation } = invoiceApi;
+export const { useGetAllInvoicesQuery, useDeleteInvoiceMutation, useCreateInvoiceMutation, } = invoiceApi;
 
 export default invoiceApi;
 
-//   createService: builder.mutation({
-//     query: (data) => ({
-//       url: "/services/create-service",
-//       method: "POST",
-//       body: data,
-//     }),
-//     invalidatesTags: ["services"],
-//   }),
-//   updateService: builder.mutation({
-//     query: ({ _id, data }) => {
-//       console.log(_id, data);
-//       return {
-//         url: `/services/${_id}`,
-//         method: "PATCH",
-//         body: data,
-//       };
-//     },
-//     invalidatesTags: ["services"],
-//   }),
+

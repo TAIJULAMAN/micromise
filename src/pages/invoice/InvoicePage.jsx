@@ -30,7 +30,6 @@ function InvoicePage() {
     error,
     refetch,
   } = useGetAllInvoicesQuery(query);
-  // console.log(invoiceData);
 
   const [deleteInvoice] = useDeleteInvoiceMutation();
 

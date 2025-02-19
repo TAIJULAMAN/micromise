@@ -135,7 +135,6 @@ function AddServicePage() {
     try {
       await updateService({
         _id: EditService?.Service?._id,
-        // data: { name: EditService?.Service?.name },
         data: {
           Service: {
             name: EditService?.Service?.name,
