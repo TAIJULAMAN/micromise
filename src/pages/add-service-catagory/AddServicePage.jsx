@@ -201,7 +201,8 @@ function AddServicePage() {
           <tbody>
             {serviceData?.data?.map((service, index) => (
               <tr key={index} className="text-center space-y-5 text-[#707070]">
-                <td className="py-3 pr-4 pl-10">0{index + 1}</td>
+                <td className="py-3 pr-4 pl-10">
+                  #{index + 1}</td>
                 <td className="py-3 px-4">{service?.name}</td>
                 <td className="py-3 px-4 flex gap-2 justify-center text-center">
                   <button

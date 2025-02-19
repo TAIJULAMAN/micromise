@@ -9,11 +9,34 @@ import {
 } from "../../redux/api/technicianApi";
 import { getBaseUrl } from "../../config/envConfig";
 import Swal from "sweetalert2";
+import { Pagination } from "antd";
+import { useDebounced } from "../../utils/hook";
 
 function Technician() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  // ............................................................
+  const query = { isDeleted: false, page: currentPage };
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounced({
+    searchTerm: searchTerm,
+    delay: 500,
+  });
+  console.log(debouncedSearchTerm, " debouncedSearchTerm");
+  query["searchTerm"] = debouncedSearchTerm;
+  // eslint-disable-next-line no-extra-boolean-cast
+  // if (!!debouncedSearchTerm) {
+  //     query["searchTerm"] = debouncedSearchTerm;
+  // }
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    // console.log(searchText,"searchText")
+    setSearchTerm(searchText);
+  };
+
+  // ...................................................................
 
   // fetch all technician
   const {
@@ -21,8 +44,12 @@ function Technician() {
     error,
     isLoading,
     refetch,
-  } = useGetAllTechnicianQuery({ isDeleted: false });
-  console.log(technicianData);
+  } = useGetAllTechnicianQuery(query);
+  // console.log(technicianData);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   // delete Data
   const [deleteTechnician] = useDeleteTechnicianMutation();
@@ -63,15 +90,16 @@ function Technician() {
     return (
       <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
     );
-  if (error) return <p className="text-red-500">Failed to load service!</p>;
+  if (error) return <p className="text-red-500">Failed to load technisians!</p>;
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 overflow-hidden">
       <div className="flex items-center justify-between pb-5 gap-5">
         <h3 className="font-semibold text-xl text-[#242424]">Technician</h3>
         <div className="relative w-full sm:w-[300px]">
           <input
             type="text"
+            onChange={handleSearch}
             placeholder="Search..."
             className="border border-[#e5eaf2] py-3 pl-4 pr-[65px] outline-none w-full rounded-md"
           />
@@ -81,8 +109,8 @@ function Technician() {
         </div>
       </div>
 
-      <div className="relative overflow-x-auto min-w-full">
-        <table className="bg-white w-full">
+      <div className="min-w-full">
+        <table className="bg-white w-full overflow-hidden">
           <thead>
             <tr className="grid grid-cols-[1.5fr_2fr_1.5fr_1fr_1.5fr_1.5fr_1fr] px-2 py-4 text-[#171717]">
               <th>Name</th>
@@ -128,7 +156,7 @@ function Technician() {
                     "No Data"
                   )}
                 </td>
-                <td>{technician?.completedJobs || "5"}</td>
+                <td>{technician?.completedJobs || "No Data"}</td>
                 <td className="flex justify-center gap-2">
                   <button
                     onClick={() => {
@@ -150,6 +178,16 @@ function Technician() {
             ))}
           </tbody>
         </table>
+        <div className="mt-5 flex justify-end ">
+          {technicianData?.data?.result?.length !== 0 && (
+            <Pagination
+              current={technicianData?.data?.meta?.page}
+              pageSize={technicianData?.data?.meta?.limit}
+              total={technicianData?.data?.meta?.total}
+              onChange={handlePageChange}
+            />
+          )}
+        </div>
       </div>
 
       {isModalVisible && (

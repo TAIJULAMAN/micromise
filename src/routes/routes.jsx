@@ -19,17 +19,13 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import VerificationCode from "../pages/auth/VerificationCode";
 import NewPassword from "../pages/auth/NewPassword";
 import SuccessPage from "../pages/auth/SuccessPage";
-import EmailVerificationCode from "../pages/auth/EmailVerificationCode";
 
 const router = createBrowserRouter([
   {
     path: "/sign-in",
     element: <SignInPage />,
   },
-  {
-    path: "/EmailVerificationCode",
-    element: <EmailVerificationCode />,
-  },
+
   {
     path: "/forget-password",
     element: <ForgotPassword />,
