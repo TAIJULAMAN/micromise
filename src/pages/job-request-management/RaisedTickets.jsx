@@ -229,6 +229,12 @@ function RaisedTickets() {
                     job={job}
                   />
                 )}
+                {messageTechnisian && (
+                  <MessageTechnisianModal
+                    setMessageTechnisian={setMessageTechnisian}
+                    job={job}
+                  />
+                )}
               </td>
             </tr>
           ))
@@ -241,10 +247,6 @@ function RaisedTickets() {
             setTicketModal={setTicketModal}
             currentRecord={currentRecord}
           />
-        )}
-
-        {messageTechnisian && (
-          <MessageTechnisianModal setMessageTechnisian={setMessageTechnisian} />
         )}
       </tbody>
     </table>
