@@ -1,7 +1,6 @@
 import { IoCloseSharp } from "react-icons/io5";
 
 function JobRequestModal({ setRequestModal, currentRecord }) {
-  console.log(currentRecord);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
       <div className="bg-white w-[400px] rounded-lg shadow-lg overflow-hidden">

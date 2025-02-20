@@ -15,7 +15,6 @@ function JobRequest() {
   const [messageModal, setMessageModal] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [visibleModals, setVisibleModals] = useState({});
-  const [accordionState, setAccordionState] = useState({});
   const [currentRecord, setCurrentRecord] = useState(null);
 
   const { data: jobData, isLoading, error } = useGetAllJobsQuery();
@@ -36,14 +35,6 @@ function JobRequest() {
     }));
   };
 
-  const toggleAccordion = (_id) => {
-    setAccordionState((prev) => ({
-      ...prev,
-      [_id]: !prev[_id],
-    }));
-  };
-
-  // console.log(filterTechnicians,'filterTechnicians')
 
   const [updateJob] = useUpdateJobMutation();
 
@@ -139,9 +130,6 @@ function JobRequest() {
     }
   };
 
-  // console.log(jobData?.data,'jobData?.data')
-
-  // console.log(openSelectTechnician,'openSelectTechnician')
   return (
     <table className="bg-white w-full pt-5">
       <thead>
@@ -327,7 +315,12 @@ function JobRequest() {
             </td>
           </tr>
         ))}
-        {requestModal && <JobRequestModal setRequestModal={setRequestModal} currentRecord={currentRecord} />}
+        {requestModal && (
+          <JobRequestModal
+            setRequestModal={setRequestModal}
+            currentRecord={currentRecord}
+          />
+        )}
 
         {addModalVisible && (
           <AddInvoiceModal setAddModalVisible={setAddModalVisible} />

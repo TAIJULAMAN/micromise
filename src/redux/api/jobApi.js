@@ -10,6 +10,14 @@ const jobApi = baseApi.injectEndpoints({
       }),
       providesTags: ["jobs"],
     }),
+    getAllRaisedJobs: builder.query({
+      query: (params) => ({
+        url: "jobs?status=raised",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["jobs"],
+    }),
     updateJob: builder.mutation({
       query: ({ _id, data }) => {
         // console.log(_id, data);
@@ -25,17 +33,10 @@ const jobApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllJobsQuery, useUpdateJobMutation } = jobApi;
+export const {
+  useGetAllJobsQuery,
+  useUpdateJobMutation,
+  useGetAllRaisedJobsQuery,
+} = jobApi;
 
 export default jobApi;
-
-//   createService: builder.mutation({
-//     query: (data) => ({
-//       url: "/services/create-service",
-//       method: "POST",
-//       body: data,
-//     }),
-//     invalidatesTags: ["services"],
-//   }),
-
-// /jobs/679871bb6e9478cfe64ae76f

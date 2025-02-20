@@ -1,0 +1,148 @@
+ {jobData?.data?.map((job, index) => (
+          <tr
+            key={index + 1}
+            className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
+          >
+            <td>{item.id}</td>
+            <td>
+              <div className="flex gap-2 justify-start">
+                <img
+                  className="h-[20px] w-[20px] object-cover rounded"
+                  alt="avatar"
+                  src={image}
+                />
+                <span>{item.aName}</span>
+              </div>
+            </td>
+            <td>
+              <div className="flex gap-2 justify-start">
+                <img
+                  className="h-[20px] w-[20px] object-cover rounded"
+                  alt="avatar"
+                  src={image}
+                />
+                <span>{item.sName}</span>
+              </div>
+            </td>
+            <td className="text-xs">
+              <ul className="flex gap-2 list-disc text-left border p-2 border-primary rounded">
+                {item.services.map((service, index) => (
+                  <li key={index} className="list-inside">
+                    {service}
+                  </li>
+                ))}
+              </ul>
+            </td>
+            <td>{item.date}</td>
+            <td>
+              <div className="flex gap-2 justify-center items-center border border-primary p-1 rounded-lg">
+                <img
+                  className="h-[20px] w-[20px] object-cover rounded"
+                  alt="avatar"
+                  src={image}
+                />
+                <span> Mr ray</span>
+              </div>
+            </td>
+            {/* Job Status dropdown */}
+            <td className="flex justify-center">
+              <span
+                style={{
+                  backgroundColor:
+                    item.jobStatus === "Pending"
+                      ? "#d95f5f"
+                      : item.jobStatus === "Assigned"
+                      ? "#f0d29c"
+                      : item.jobStatus === "Completed"
+                      ? "#3ac75d"
+                      : "#F32929",
+                }}
+                className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px]"
+              >
+                {item.jobStatus}
+              </span>
+            </td>
+            <td className="flex flex-col items-center relative">
+              <span
+                style={{
+                  backgroundColor:
+                    item.paymentStatus === "Payment pending"
+                      ? "#F32929"
+                      : item.paymentStatus === "Completed"
+                      ? "#3ac75d"
+                      : "#ff9500",
+                }}
+                className="py-1 px-3 rounded text-white flex justify-center text-center w-[200px] cursor-pointer"
+                onClick={() => toggleAccordion(item.id)}
+              >
+                {item.paymentStatus}
+              </span>
+              {accordionState[item.id] && (
+                <div className="z-50 mt-10 w-[200px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
+                  <button
+                    className="bg-white text-primary py-1 px-3 rounded w-full border border-primary"
+                    onClick={() => alert("Decline clicked")}
+                  >
+                    Decline
+                  </button>
+                  <button
+                    className="bg-primary text-white py-1 px-3 rounded w-full"
+                    onClick={() => alert("Approve clicked")}
+                  >
+                    Approve
+                  </button>
+                </div>
+              )}
+            </td>
+            <td className="relative">
+              <button onClick={() => toggleModal(item.id)} className="w-6 h-6">
+                <TbDotsVertical />
+              </button>
+
+              {/* Popover Modal */}
+              {visibleModals[item.id] && (
+                <div className="absolute top-full right-0 mt-2 bg-white border border-primary rounded-lg shadow-lg w-[130px] z-10">
+                  <div className="bg-white shadow-lg rounded-lg p-2">
+                    <button
+                      className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
+                      onClick={() => setRequestModal(true)}
+                    >
+                      View details
+                    </button>
+                    <button
+                      className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
+                      onClick={() => setMessageTechnisian(true)}
+                    >
+                      Message Technisian
+                    </button>
+                    <button
+                      className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
+                      onClick={() => setMessageModal(true)}
+                    >
+                      Message client
+                    </button>
+                    <button
+                      className="border border-primary text-primary py-2 rounded w-full mb-2 text-xs"
+                      onClick={() => toggleModal(item.id)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Overlay to close the popover */}
+              {visibleModals[item.id] && (
+                <div
+                  onClick={() => toggleModal(item.id)}
+                  className="fixed inset-0 z-0"
+                ></div>
+              )}
+            </td>
+          </tr>
+        ))}
+        {requestModal && <JobRequestModal setRequestModal={setRequestModal} />}
+        {messageModal && <MessageModal setMessageModal={setMessageModal} />}
+        {messageTechnisian && (
+          <MessageTechnisianModal setMessageTechnisian={setMessageTechnisian} />
+        )}

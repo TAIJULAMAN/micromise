@@ -4,6 +4,7 @@ import { TbDotsVertical } from "react-icons/tb";
 import JobRequestModal from "../../components/Modals/JobRequestModal";
 import MessageModal from "../../components/Modals/MessageModal";
 import MessageTechnisianModal from "../../components/Modals/MessageTechnisianModal";
+import { useGetAllRaisedJobsQuery } from "../../redux/api/jobApi";
 
 function RaisedTickets() {
   const [requestModal, setRequestModal] = useState(false);
@@ -18,62 +19,21 @@ function RaisedTickets() {
     }));
   };
 
-  const data = [
-    {
-      id: 1,
-      aName: "Dindiniya10",
-      sName: "Dindiniya",
-      services: ["ECU", "Diagnostics", "Software"],
-      date: "2025-01-01",
-      jobStatus: "Pending",
-      paymentStatus: "Payment pending",
-    },
-    {
-      id: 2,
-      aName: "TechGuru20",
-      sName: "Guru",
-      services: ["Hardware", "Network Setup"],
-      date: "2025-01-02",
-      jobStatus: "Assigned",
-      paymentStatus: "Completed",
-    },
-    {
-      id: 3,
-      aName: "FixItFast",
-      sName: "Fixer",
-      services: ["Cleaning", "Replacement"],
-      date: "2025-01-03",
-      jobStatus: "Completed",
-      paymentStatus: "Payment pending",
-    },
-    {
-      id: 4,
-      aName: "CodeMaster",
-      sName: "Coder",
-      services: ["Troubleshoot", "Debug"],
-      date: "2025-01-04",
-      jobStatus: "Canceled",
-      paymentStatus: "Payment Made",
-    },
-    {
-      id: 5,
-      aName: "NetPro",
-      sName: "Networker",
-      services: ["Optimization", "Setup", "VPN"],
-      date: "2025-01-05",
-      jobStatus: "Pending",
-      paymentStatus: "Completed",
-    },
-  ];
-
   const [visibleModals, setVisibleModals] = useState({});
 
-  const toggleModal = (id) => {
+  const toggleModal = (_id) => {
     setVisibleModals((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [_id]: !prev[_id],
     }));
   };
+
+  const { data: raisedJobsData, isLoading, error } = useGetAllRaisedJobsQuery();
+  console.log(raisedJobsData?.data);
+  const filteredRaisedJobs = raisedJobsData?.data.filter(
+    (job) => job.status === "raised"
+  );
+  console.log(filteredRaisedJobs);
 
   return (
     <table className="bg-white w-full pt-5">
@@ -91,149 +51,181 @@ function RaisedTickets() {
         </tr>
       </thead>
       <tbody className="text-start">
-        {data.map((item) => (
-          <tr
-            key={item.id}
-            className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
-          >
-            <td>{item.id}</td>
-            <td>
-              <div className="flex gap-2 justify-start">
-                <img
-                  className="h-[20px] w-[20px] object-cover rounded"
-                  alt="avatar"
-                  src={image}
-                />
-                <span>{item.aName}</span>
-              </div>
-            </td>
-            <td>
-              <div className="flex gap-2 justify-start">
-                <img
-                  className="h-[20px] w-[20px] object-cover rounded"
-                  alt="avatar"
-                  src={image}
-                />
-                <span>{item.sName}</span>
-              </div>
-            </td>
-            <td className="text-xs">
-              <ul className="flex gap-2 list-disc text-left border p-2 border-primary rounded">
-                {item.services.map((service, index) => (
-                  <li key={index} className="list-inside">
-                    {service}
-                  </li>
-                ))}
-              </ul>
-            </td>
-            <td>{item.date}</td>
-            <td>
-              <div className="flex gap-2 justify-center items-center border border-primary p-1 rounded-lg">
-                <img
-                  className="h-[20px] w-[20px] object-cover rounded"
-                  alt="avatar"
-                  src={image}
-                />
-                <span> Mr ray</span>
-              </div>
-            </td>
-            {/* Job Status dropdown */}
-            <td className="flex justify-center">
-              <span
-                style={{
-                  backgroundColor:
-                    item.jobStatus === "Pending"
-                      ? "#d95f5f"
-                      : item.jobStatus === "Assigned"
-                      ? "#f0d29c"
-                      : item.jobStatus === "Completed"
-                      ? "#3ac75d"
-                      : "#F32929",
-                }}
-                className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px]"
-              >
-                {item.jobStatus}
-              </span>
-            </td>
-            <td className="flex flex-col items-center relative">
-              <span
-                style={{
-                  backgroundColor:
-                    item.paymentStatus === "Payment pending"
-                      ? "#F32929"
-                      : item.paymentStatus === "Completed"
-                      ? "#3ac75d"
-                      : "#ff9500",
-                }}
-                className="py-1 px-3 rounded text-white flex justify-center text-center w-[200px] cursor-pointer"
-                onClick={() => toggleAccordion(item.id)}
-              >
-                {item.paymentStatus}
-              </span>
-              {accordionState[item.id] && (
-                <div className="z-50 mt-10 w-[200px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
-                  <button
-                    className="bg-white text-primary py-1 px-3 rounded w-full border border-primary"
-                    onClick={() => alert("Decline clicked")}
-                  >
-                    Decline
-                  </button>
-                  <button
-                    className="bg-primary text-white py-1 px-3 rounded w-full"
-                    onClick={() => alert("Approve clicked")}
-                  >
-                    Approve
-                  </button>
-                </div>
-              )}
-            </td>
-            <td className="relative">
-              <button onClick={() => toggleModal(item.id)} className="w-6 h-6">
-                <TbDotsVertical />
-              </button>
-
-              {/* Popover Modal */}
-              {visibleModals[item.id] && (
-                <div className="absolute top-full right-0 mt-2 bg-white border border-primary rounded-lg shadow-lg w-[130px] z-10">
-                  <div className="bg-white shadow-lg rounded-lg p-2">
-                    <button
-                      className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
-                      onClick={() => setRequestModal(true)}
-                    >
-                      View details
-                    </button>
-                    <button
-                      className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
-                      onClick={() => setMessageTechnisian(true)}
-                    >
-                      Message Technisian
-                    </button>
-                    <button
-                      className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
-                      onClick={() => setMessageModal(true)}
-                    >
-                      Message client
-                    </button>
-                    <button
-                      className="border border-primary text-primary py-2 rounded w-full mb-2 text-xs"
-                      onClick={() => toggleModal(item.id)}
-                    >
-                      Cancel
-                    </button>
+        {filteredRaisedJobs?.length > 0 ? (
+          filteredRaisedJobs.map((job, index) => (
+            <tr
+              key={index + 1}
+              className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
+            >
+              <td>{index + 1}</td>
+              <td>
+                {job?.grandId ? (
+                  <div className="flex gap-2 justify-start items-center">
+                    <img
+                      src={
+                        job?.grandId?.profileImg
+                          ? `${job?.grandId?.profileImg}`
+                          : "https://avatar.iran.liara.run/public/44"
+                      }
+                      alt={job?.grandId?.fullName}
+                      className="h-8 w-8 rounded-full object-cover"
+                      width={20}
+                      height={20}
+                    />
+                    <span>{job?.grandId?.fullName}</span>
                   </div>
-                </div>
-              )}
+                ) : job?.userId?.role === "client" ? (
+                  <div className="flex gap-2 justify-start items-center">
+                    <img
+                      src={
+                        job?.userId?.profileImg
+                          ? `${job?.userId?.profileImg}`
+                          : "https://avatar.iran.liara.run/public/44"
+                      }
+                      alt={job?.userId?.fullName}
+                      className="h-6 w-6 rounded-full object-cover"
+                      width={20}
+                      height={20}
+                    />
+                    <span>{job?.userId?.fullName}</span>
+                  </div>
+                ) : (
+                  <span>No Client</span>
+                )}
+              </td>
+              <td>
+                {job?.userId?.role === "supervisor" ? (
+                  <div className="flex gap-2 justify-start items-center">
+                    <img
+                      src={
+                        job?.userId?.profileImg
+                          ? `${job?.userId?.profileImg}`
+                          : "https://avatar.iran.liara.run/public/44"
+                      }
+                      alt={job?.userId?.fullName || "Anonymous User"}
+                      className="h-6 w-6 rounded-full object-cover"
+                    />
+                    <span>{job?.userId?.fullName || "Unknown User"}</span>
+                  </div>
+                ) : (
+                  <span>No Supervisor</span>
+                )}
+              </td>
+              <td className="text-xs">
+                <ul className="flex gap-2 list-disc text-left border p-2 border-primary rounded">
+                  {job?.services?.map((service, index) => (
+                    <li key={index} className="list-inside">
+                      {service}
+                    </li>
+                  ))}
+                </ul>
+              </td>
+              <td>
+                {job?.createdAt
+                  ? new Date(job?.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "2-digit",
+                    })
+                  : "N/A"}
+              </td>
 
-              {/* Overlay to close the popover */}
-              {visibleModals[item.id] && (
-                <div
-                  onClick={() => toggleModal(item.id)}
-                  className="fixed inset-0 z-0"
-                ></div>
-              )}
-            </td>
-          </tr>
-        ))}
+              <td>
+                <div className="flex gap-2 justify-center items-center border border-primary p-1 rounded-lg">
+                  <img
+                    src={
+                      job?.assignedTechnician
+                        ? `${job?.assignedTechnician?.profileImg}`
+                        : "https://avatar.iran.liara.run/public/44"
+                    }
+                    alt={job?.assignedTechnician?.fullName}
+                    className="h-6 w-6 rounded-full object-cover"
+                    width={20}
+                    height={20}
+                  />
+                  <span>{job?.assignedTechnician?.fullName}</span>
+                </div>
+              </td>
+              {/* Job Status dropdown */}
+              <td className="flex justify-center">
+                <span
+                  style={{
+                    backgroundColor:
+                      job?.status === "pending"
+                        ? "#d95f5f"
+                        : job?.status === "raised"
+                        ? "#f0d29c"
+                        : job?.status === "completed"
+                        ? "#3ac75d"
+                        : "#F32929",
+                  }}
+                  className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px]"
+                >
+                  {job?.status}
+                </span>
+              </td>
+              <td className="flex flex-col items-center relative">
+                <span
+                  style={{
+                    backgroundColor:
+                      job?.paymentStatus === "cancelled"
+                        ? "#F32929"
+                        : job?.paymentStatus === "completed"
+                        ? "#3ac75d"
+                        : "#ff9500",
+                  }}
+                  className="py-1 px-3 rounded text-white flex justify-center text-center w-[100px] cursor-pointer"
+                >
+                  {job?.paymentStatus}
+                </span>
+              </td>
+              <td className="relative">
+                <button
+                  onClick={() => toggleModal(job?._id)}
+                  className="w-6 h-6"
+                >
+                  <TbDotsVertical />
+                </button>
+
+                {/* Popover Modal */}
+                {visibleModals[job?._id] && (
+                  <div className="absolute top-full right-0 mt-2 bg-white border border-primary rounded-lg shadow-lg w-[130px] z-10">
+                    <div className="bg-white shadow-lg rounded-lg p-2">
+                      <button
+                        className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
+                        onClick={() => setRequestModal(true)}
+                      >
+                        View details
+                      </button>
+                      <button
+                        className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
+                        onClick={() => setMessageTechnisian(true)}
+                      >
+                        Message Technisian
+                      </button>
+                      <button
+                        className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
+                        onClick={() => setMessageModal(true)}
+                      >
+                        Message client
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Overlay to close the popover */}
+                {visibleModals[job._id] && (
+                  <div
+                    onClick={() => toggleModal(job._id)}
+                    className="fixed inset-0 z-0"
+                  ></div>
+                )}
+              </td>
+            </tr>
+          ))
+        ) : (
+          <p>No raised jobs found.</p>
+        )}
 
         {requestModal && <JobRequestModal setRequestModal={setRequestModal} />}
         {messageModal && <MessageModal setMessageModal={setMessageModal} />}
