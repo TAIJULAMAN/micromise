@@ -16,7 +16,12 @@ export default function SelectAndSubmit({
     }
   }, [defaultValues]);
 
-  // console.log(defaultValues,'defaultValues')
+  // Customize default selected label
+  const customizeDefaultSelected = (selected) => {
+    return selected && selected.length > 0
+      ? `${selected[0].label} (Custom Text)` // Modify the text here as needed
+      : "Select a person"; // Fallback text
+  };
 
   return (
     <div>
@@ -31,16 +36,11 @@ export default function SelectAndSubmit({
         maxCount={1}
         options={options}
         labelInValue
-        value={selectedValues}
+        // value={selectedValues}
         open={openSelect === Id}
-        onDropdownVisibleChange={(visible) =>
-          setOpenSelect(visible ? Id : null)
-        }
+        onDropdownVisibleChange={(visible) => setOpenSelect(visible ? Id : null)}
         onChange={(value) => {
           setSelectedValues(value);
-          //   if (value && value.length > 0) {
-          //     OnSaveHandler(value[0].value, Id);
-          //   }
         }}
         dropdownRender={(menu) => {
           return (
@@ -69,6 +69,15 @@ export default function SelectAndSubmit({
             </div>
           );
         }}
+        // Custom render for the default selected text (without showing multiple)
+
+        value={selectedValues && selectedValues.length > 0 ? selectedValues[0] : null}
+        optionLabelProp="label" // To display the customized label in select box
+        displayValue={customizeDefaultSelected(selectedValues)}
+        labelRender={(label) => (
+          <span className="font-bold text-[#242424]">{label.label}</span>
+        )}
+        // status="error"
       />
     </div>
   );

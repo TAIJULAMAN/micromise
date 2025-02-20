@@ -1,21 +1,42 @@
 import { useState } from "react";
 import { useCreateNotificationMutation } from "../../redux/api/notificationApi";
+import Swal from "sweetalert2";
 
-function MessageModal({ setMessageModal ,job}) {
-  // console.log(job,'job')
+function MessageModal({ setMessageModal, job }) {
+  // console.log(job, "job");
 
-  const [createNotification]=useCreateNotificationMutation();
-const [message,setMessage]=useState("");
+  const [createNotification] = useCreateNotificationMutation();
+  const [message, setMessage] = useState("");
 
+  // console.log(message,'message')
+  const sendNotification = async () => {
+    console.log(message, "message");
+    const bodyData = {
+      Notification: {
+        message: message,
+        status: "created",
+        jobId: job?._id,
+        userId: job?.userId?._id,
+      },
+    };
 
-// console.log(message,'message')
-const  sendNotification=async()=>{
-  console.log(message,'message');
-  setMessageModal(false);
-}
-
-
-
+    console.log(bodyData, "bodyData");
+    const result = await createNotification(bodyData).unwrap();
+    if (result?.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Message sent successfully",
+      });
+      setMessageModal(false);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to send message",
+      });
+    }
+  };
   return (
     <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center">
       <div className="relative bg-white p-6 rounded shadow-lg px-10 w-[400px]">
@@ -39,7 +60,10 @@ const  sendNotification=async()=>{
           >
             Cancle
           </button>
-          <button onClick={sendNotification} className="px-4 py-2 bg-primary text-white rounded">
+          <button
+            onClick={sendNotification}
+            className="px-4 py-2 bg-primary text-white rounded"
+          >
             Send
           </button>
         </div>
