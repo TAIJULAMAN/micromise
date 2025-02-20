@@ -1,8 +1,18 @@
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
+import { useOwnDataQuery } from "../../redux/api/getMeApi";
 
 const MainHeader = ({ toggleSidebar }) => {
   const navigate = useNavigate();
+
+  const { data: ownData, error, isLoading } = useOwnDataQuery();
+
+  console.log("own data of super admin", ownData);
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load technisians!</p>;
 
   return (
     <div className="relative w-full">
@@ -50,12 +60,16 @@ const MainHeader = ({ toggleSidebar }) => {
             {/* Profile */}
             <Link to="/profile" className="flex items-center gap-2">
               <img
-                src="/avatar.png"
-                className="w-8 md:w-10 h-8 md:h-10 object-cover rounded-full border-[1px] border-primary"
+                src={
+                  ownData?.data?.profileImg
+                    ? `${ownData?.data?.profileImg}`
+                    : "https://avatar.iran.liara.run/public/44"
+                }
+                className="w-8 md:w-10 h-8 md:h-10 object-cover rounded-full"
                 alt="User Avatar"
               />
               <h3 className="hidden md:block text-gray-500 font-semibold">
-                Mr.Zuberi
+                {ownData?.data?.fullName}
               </h3>
             </Link>
           </div>
