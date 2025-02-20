@@ -6,14 +6,15 @@ import { BsHouseGearFill } from "react-icons/bs";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
 import { IoMdSettings } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
+import { useOwnDataQuery } from "../../redux/api/getMeApi";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   // const { pathname } = useLocation();
 
   // State to track the active sections
-  const [activeMenu, setActiveMenu] = useState("");  
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);  
-  const [isUserOpen, setIsUserOpen] = useState(false); 
+  const [activeMenu, setActiveMenu] = useState("");
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isUserOpen, setIsUserOpen] = useState(false);
 
   // Handle active menu and submenu logic
   const handleMenuClick = (menu) => {
@@ -27,6 +28,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       setIsUserOpen(!isUserOpen);
     }
   };
+  const { data: ownData, error, isLoading } = useOwnDataQuery();
+
+  // console.log("own data of super admin", ownData);
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load technisians!</p>;
 
   return (
     <div
@@ -56,7 +65,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* Dashboard */}
         <li
           className={`flex items-center gap-4 mt-8 cursor-pointer ${
-            activeMenu === "dashboard" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+            activeMenu === "dashboard"
+              ? "bg-primary text-white px-2 py-3 rounded-lg"
+              : ""
           }`}
           onClick={() => handleMenuClick("dashboard")}
         >
@@ -67,7 +78,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* User Management */}
         <li
           className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${
-            activeMenu === "user-management" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+            activeMenu === "user-management"
+              ? "bg-primary text-white px-2 py-3 rounded-lg"
+              : ""
           }`}
           onClick={() => {
             handleMenuClick("user-management");
@@ -80,19 +93,25 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {isUserOpen && (
           <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
             <li
-              className={`py-[6px] ${activeMenu === "technician" ? "bg-[#f77777]" : ""}`}
+              className={`py-[6px] ${
+                activeMenu === "technician" ? "bg-[#f77777]" : ""
+              }`}
               onClick={() => handleMenuClick("technician")}
             >
               <Link to="/technician">Technician</Link>
             </li>
             <li
-              className={`py-[6px] ${activeMenu === "admin-client" ? "bg-[#f77777]" : ""}`}
+              className={`py-[6px] ${
+                activeMenu === "admin-client" ? "bg-[#f77777]" : ""
+              }`}
               onClick={() => handleMenuClick("admin-client")}
             >
               <Link to="/admin-client">Client</Link>
             </li>
             <li
-              className={`py-[6px] ${activeMenu === "client-supervisor" ? "bg-[#f77777]" : ""}`}
+              className={`py-[6px] ${
+                activeMenu === "client-supervisor" ? "bg-[#f77777]" : ""
+              }`}
               onClick={() => handleMenuClick("client-supervisor")}
             >
               <Link to="/client-supervisor">Supervisor</Link>
@@ -103,7 +122,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* Job Request Management */}
         <li
           className={`flex items-center gap-4 mt-8 ${
-            activeMenu === "request-management" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+            activeMenu === "request-management"
+              ? "bg-primary text-white px-2 py-3 rounded-lg"
+              : ""
           }`}
           onClick={() => handleMenuClick("request-management")}
         >
@@ -114,7 +135,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* Invoice */}
         <li
           className={`flex items-center gap-4 mt-8 ${
-            activeMenu === "invoice" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+            activeMenu === "invoice"
+              ? "bg-primary text-white px-2 py-3 rounded-lg"
+              : ""
           }`}
           onClick={() => handleMenuClick("invoice")}
         >
@@ -125,7 +148,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* Add Service Category */}
         <li
           className={`flex items-center gap-4 mt-8 ${
-            activeMenu === "add-service" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+            activeMenu === "add-service"
+              ? "bg-primary text-white px-2 py-3 rounded-lg"
+              : ""
           }`}
           onClick={() => handleMenuClick("add-service")}
         >
@@ -134,20 +159,26 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
 
         {/* Make Admin */}
-        <li
-          className={`flex items-center gap-4 mt-8 ${
-            activeMenu === "make-admin" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
-          }`}
-          onClick={() => handleMenuClick("make-admin")}
-        >
-          <FaUserPlus className="w-5 h-5" />
-          <Link to="/make-admin">Make Admin</Link>
-        </li>
+        {ownData?.data?.role == "superAdmin" ? (
+          <li
+            className={`flex items-center gap-4 mt-8 ${
+              activeMenu === "make-admin"
+                ? "bg-primary text-white px-2 py-3 rounded-lg"
+                : ""
+            }`}
+            onClick={() => handleMenuClick("make-admin")}
+          >
+            <FaUserPlus className="w-5 h-5" />
+            <Link to="/make-admin">Make Admin</Link>
+          </li>
+        ) : null}
 
         {/* Settings */}
         <li
           className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${
-            activeMenu === "settings" ? "bg-primary text-white px-2 py-3 rounded-lg" : ""
+            activeMenu === "settings"
+              ? "bg-primary text-white px-2 py-3 rounded-lg"
+              : ""
           }`}
           onClick={() => {
             handleMenuClick("settings");
@@ -160,13 +191,17 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {isSettingsOpen && (
           <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
             <li
-              className={`py-[6px] ${activeMenu === "privacy-policy" ? "bg-[#f77777]" : ""}`}
+              className={`py-[6px] ${
+                activeMenu === "privacy-policy" ? "bg-[#f77777]" : ""
+              }`}
               onClick={() => handleMenuClick("privacy-policy")}
             >
               <Link to="/privacy-policy">Privacy Policy</Link>
             </li>
             <li
-              className={`py-[6px] ${activeMenu === "terms-and-condition" ? "bg-[#f77777]" : ""}`}
+              className={`py-[6px] ${
+                activeMenu === "terms-and-condition" ? "bg-[#f77777]" : ""
+              }`}
               onClick={() => handleMenuClick("terms-and-condition")}
             >
               <Link to="/terms-and-condition">Terms and Conditions</Link>
@@ -189,6 +224,3 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 };
 
 export default Sidebar;
-
-
-

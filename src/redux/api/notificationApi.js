@@ -10,6 +10,14 @@ const notificationApi = baseApi.injectEndpoints({
       }),
       providesTags: ["notification"],
     }),
+    getAllReadNotification: builder.query({
+      query: (params) => ({
+        url: "notifications/read-all",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["notification"],
+    }),
     createNotification: builder.mutation({
       query: (data) => ({
         url: "/notifications/create-notification",
@@ -21,7 +29,7 @@ const notificationApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllNotificationQuery, useCreateNotificationMutation } =
+export const { useGetAllNotificationQuery, useCreateNotificationMutation, useGetAllReadNotificationQuery } =
   notificationApi;
 
 export default notificationApi;

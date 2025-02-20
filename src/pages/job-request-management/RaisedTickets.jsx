@@ -8,16 +8,8 @@ import TicketMessageModall from "../../components/Modals/TicketMessageModall";
 function RaisedTickets() {
   const [ticketModal, setTicketModal] = useState(false);
   const [messageTechnisian, setMessageTechnisian] = useState(false);
-  const [accordionState, setAccordionState] = useState({});
   const [currentRecord, setCurrentRecord] = useState(null);
   const [ticketMessageModal, setTicketMessageModall] = useState(false);
-
-  const toggleAccordion = (id) => {
-    setAccordionState((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
 
   const [visibleModals, setVisibleModals] = useState({});
 

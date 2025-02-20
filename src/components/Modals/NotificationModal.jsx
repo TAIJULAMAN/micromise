@@ -1,6 +1,7 @@
 import { IoCloseSharp } from "react-icons/io5";
 
-function NotificationModal({ setIsModalOpen }) {
+function NotificationModal({ setIsModalOpen, currentRecord }) {
+  console.log(currentRecord);
   const handleModal = () => {
     setIsModalOpen(false);
   };
@@ -15,17 +16,15 @@ function NotificationModal({ setIsModalOpen }) {
           <IoCloseSharp />
         </button>
         <h3 className="text-lg font-semibold mb-4 text-start text-[#555555]">
-          A Quote has been submitted
+          {currentRecord?.status == "created"
+            ? "New notification about creation"
+            : currentRecord?.status == "raised"
+            ? "New notification about technisian"
+            : "New Notification"}
         </h3>
-        <p className="text-sm mb-4 text-[#919191] text-start">Uploaded admin</p>
-        <div className="flex justify-center pt-10">
-          <button
-            onClick={() => {}}
-            className="px-4 py-2 bg-primary text-white rounded"
-          >
-            View Page
-          </button>
-        </div>
+        <p className="text-sm mb-4 text-[#919191] text-start">
+          {currentRecord?.message}
+        </p>
       </div>
     </div>
   );
