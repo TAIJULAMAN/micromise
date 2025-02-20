@@ -23,7 +23,7 @@ function JobRequest() {
   const [dropdownOpen, setDropdownOpen] = useState("");
 
   const { data: jobData, isLoading, error } = useGetAllJobsQuery();
-  const { data: technicianData } = useGetAllTechnicianQuery();
+  const { data: technicianData } = useGetAllTechnicianQuery({ limit: 100 });
 
   const [jobs, setJobs] = useState([]);
   const [accordionState2, setAccordionState2] = useState({});

@@ -84,7 +84,7 @@
 
 import { useState } from "react";
 import NotificationModal from "../../components/Modals/NotificationModal";
-import { useGetAllNotificationQuery, useGetAllNotificationReadAllQuery } from "../../redux/api/notificationApi";
+import { useGetAllNotificationQuery } from "../../redux/api/notificationApi";
 
 function NotificationPage() {
   const [readNotifications, setReadNotifications] = useState(new Set());
@@ -94,7 +94,7 @@ function NotificationPage() {
   const { data: notificationData, refetch } = useGetAllNotificationQuery();
 
   // Use the read-all API and get the refetch function
-  const { refetch: refetchReadAll } = useGetAllNotificationReadAllQuery();
+  const { refetch: refetchReadAll } = useGetAllNotificationQuery();
 
   const handleNotificationClick = (index) => {
     setReadNotifications((prev) => new Set([...prev, index]));
