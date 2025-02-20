@@ -263,7 +263,7 @@ function Technician() {
                   <div className="flex flex-col space-y-2">
                     <span className="font-medium text-[#171717]">Upline</span>
                     <span className="text-[#707070]">
-                      {currentRecord.upline}
+                      {currentRecord?.upline}
                     </span>
                   </div>
                 )}

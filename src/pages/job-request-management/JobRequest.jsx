@@ -8,61 +8,25 @@ import {
   useUpdateJobMutation,
 } from "../../redux/api/jobApi";
 import { useGetAllTechnicianQuery } from "../../redux/api/technicianApi";
-import { Select } from 'antd';
 import SelectAndSubmit from "../../components/Common/SelectAndSubmit";
 import Swal from "sweetalert2";
 function JobRequest() {
-  const [searchText, setSearchText] = useState("");
   const [requestModal, setRequestModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [visibleModals, setVisibleModals] = useState({});
-  const [accordionState, setAccordionState] = useState({});
-
-  const [selectedTechnician, setSelectedTechnician] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState("");
+  const [currentRecord, setCurrentRecord] = useState(null);
 
   const { data: jobData, isLoading, error } = useGetAllJobsQuery();
   const { data: technicianData } = useGetAllTechnicianQuery({ limit: 100 });
 
   const [jobs, setJobs] = useState([]);
-  const [accordionState2, setAccordionState2] = useState({});
 
   useEffect(() => {
     if (jobData?.data) {
       setJobs(jobData.data);
     }
   }, [jobData]);
-
-  const toggleAccordion2 = (jobId) => {
-    setAccordionState2((prevState) => ({
-      ...prevState,
-      [jobId]: !prevState[jobId],
-    }));
-  };
-
-  const handleUpdateJobStatus = async (jobId, newStatus) => {
-    try {
-      await updateJob({ _id: jobId, data: { status: newStatus } }).unwrap();
-
-      // Update local state to reflect the status change immediately
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId ? { ...job, status: newStatus } : job
-        )
-      );
-
-      // Close the dropdown after updating the status
-      setAccordionState2((prevState) => ({
-        ...prevState,
-        [jobId]: false,
-      }));
-    } catch (error) {
-      console.error("Failed to update job status:", error);
-    }
-  };
-
-
 
   const toggleModal = (_id) => {
     setVisibleModals((prev) => ({
@@ -71,127 +35,101 @@ function JobRequest() {
     }));
   };
 
-  const toggleAccordion = (_id) => {
-    setAccordionState((prev) => ({
-      ...prev,
-      [_id]: !prev[_id],
-    }));
-  };
-
-
-
-  // console.log(filterTechnicians,'filterTechnicians')
 
   const [updateJob] = useUpdateJobMutation();
 
- // ! Technicians Selecting
+  // ! Technicians Selecting
   const filterTechnicians = Array.isArray(technicianData?.data?.result)
-  ? technicianData?.data?.result.map((technician) =>
-     {
-      return {
-        label: technician.fullName,
-        value: technician._id
-      }
-     }
-    )
-  : [];
-  // console.log(filterTechnicians,"filterTechnicians")
-
-  const handleTechnicianSelect= async(value,jobId)=>{
-    const  bodyData={
-      Job:{
-        assignedTechnician: value
-      }
-    }
-    // console.log(bodyData,"bodyData")
-    const result= await updateJob({
+    ? technicianData?.data?.result.map((technician) => {
+        return {
+          label: technician.fullName,
+          value: technician._id,
+        };
+      })
+    : [];
+  const handleTechnicianSelect = async (value, jobId) => {
+    const bodyData = {
+      Job: {
+        assignedTechnician: value,
+      },
+    };
+    const result = await updateJob({
       _id: jobId,
-      data: bodyData
-    })
-    if(result?.data?.success){
+      data: bodyData,
+    });
+    if (result?.data?.success) {
       Swal.fire({
         icon: "success",
         title: "Success",
         text: "The job has been assigned successfully.",
-      })
+      });
     }
-  }
+  };
 
-  
-//! Job Status Update
-const filterJobStatus= ['cancelled' , 'pending' , 'completed' , 'raised']?.map((status) =>
-  {
-   return {
-    label: status,
-    value: status
-   }
-  }
- )
-
-//  console.log(filterJobStatus,'filterJobStatus')
-const HandleJobStatusUpdate= async(value,jobId)=>{
-  const  bodyData={
-    Job:{
-      status: value
+  //! Job Status Update
+  const filterJobStatus = ["cancelled", "pending", "completed", "raised"]?.map(
+    (status) => {
+      return {
+        label: status,
+        value: status,
+      };
     }
-  }
-  // console.log(bodyData,"bodyData")
-  const result= await updateJob({
-    _id: jobId,
-    data: bodyData
-  })
-  if(result?.data?.success){
-    Swal.fire({
-      icon: "success",
-      title: "Success",
-      text: "The job status has been updated successfully.",
-    })
-  }
-}
- 
+  );
+  const HandleJobStatusUpdate = async (value, jobId) => {
+    const bodyData = {
+      Job: {
+        status: value,
+      },
+    };
+    // console.log(bodyData,"bodyData")
+    const result = await updateJob({
+      _id: jobId,
+      data: bodyData,
+    });
+    if (result?.data?.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "The job status has been updated successfully.",
+      });
+    }
+  };
 
   //! Payment Status Update
-//  'cancelled' | 'pending' | 'completed'
-  const filterPaymentStatus=[{
-    label:<span className="text-red-500">cancelled</span>,
-    value: 'cancelled'
-  },
-  {
-    label: <span className="text-yellow-500">pending</span>,
-    value: 'pending'
-  },
-  {
-    label: <span className="text-green-500">completed</span>,
-    value: 'completed' 
-  },
-]
-
-
-  const handleUpdatePaymentStatus = async (value,jobId) => {
-    const  bodyData={
-      Job:{
-        paymentStatus: value
-      }
-    }
+  const filterPaymentStatus = [
+    {
+      label: <span className="text-red-500">cancelled</span>,
+      value: "cancelled",
+    },
+    {
+      label: <span className="text-yellow-500">pending</span>,
+      value: "pending",
+    },
+    {
+      label: <span className="text-green-500">completed</span>,
+      value: "completed",
+    },
+  ];
+  const handleUpdatePaymentStatus = async (value, jobId) => {
+    const bodyData = {
+      Job: {
+        paymentStatus: value,
+      },
+    };
     // console.log(bodyData,"bodyData")
-    const result= await updateJob({
+    const result = await updateJob({
       _id: jobId,
-      data: bodyData
-    })
-    if(result?.data?.success){
+      data: bodyData,
+    });
+    if (result?.data?.success) {
       Swal.fire({
         icon: "success",
         title: "Success",
         text: "The payment Status has been updated successfully.",
-      })
+      });
     }
   };
 
-
- 
-  // console.log(jobData?.data,'jobData?.data')
-
-  // console.log(openSelectTechnician,'openSelectTechnician')
   return (
     <table className="bg-white w-full pt-5">
       <thead>
@@ -281,81 +219,58 @@ const HandleJobStatusUpdate= async(value,jobId)=>{
             {/*//! selectTechnician */}
             <td>
               <div className="relative w-[280px]">
-           <SelectAndSubmit 
-           options={filterTechnicians} 
-           Id={job?._id} 
-           OnSaveHandler={handleTechnicianSelect}
-           defaultValues={job?.assignedTechnician ? [{
-             value: job?.assignedTechnician?._id,
-             label: job?.assignedTechnician?.fullName
-           }] : []}
-           />
+                <SelectAndSubmit
+                  options={filterTechnicians}
+                  Id={job?._id}
+                  OnSaveHandler={handleTechnicianSelect}
+                  defaultValues={
+                    job?.assignedTechnician
+                      ? [
+                          {
+                            value: job?.assignedTechnician?._id,
+                            label: job?.assignedTechnician?.fullName,
+                          },
+                        ]
+                      : []
+                  }
+                />
               </div>
             </td>
             <td>
-          
-
-              <SelectAndSubmit 
-           options={filterJobStatus} 
-           Id={job?._id} 
-           OnSaveHandler={HandleJobStatusUpdate}
-           defaultValues={job?.status ? [{
-             value: job?.status,
-             label: job?.status
-           }] : []}
-           />
+              <SelectAndSubmit
+                options={filterJobStatus}
+                Id={job?._id}
+                OnSaveHandler={HandleJobStatusUpdate}
+                defaultValues={
+                  job?.status
+                    ? [
+                        {
+                          value: job?.status,
+                          label: job?.status,
+                        },
+                      ]
+                    : []
+                }
+              />
             </td>
             <td>
-              {/* <span
-                style={{
-                  backgroundColor:
-                    job?.paymentStatus === "pending"
-                      ? "#ff9500"
-                      : job?.paymentStatus === "completed"
-                      ? "#3ac75d"
-                      : job?.paymentStatus === "cancelled"
-                      ? "#F32929"
-                      : "#F32929",
-                }}
-                className="py-1 px-3 rounded text-white flex justify-center text-center w-[200px] cursor-pointer"
-                onClick={() => toggleAccordion(job?._id)}
-              >
-                {job.paymentStatus}
-              </span>
-              {accordionState[job._id] && (
-                <div className="z-50 mt-2 w-[200px] bg-white p-3 rounded shadow flex justify-center items-center gap-2 absolute">
-                  <button
-                    className="bg-white text-primary py-1 px-3 rounded w-full border border-primary"
-                    onClick={() =>
-                      handleUpdatePaymentStatus(job._id, "declined")
-                    }
-                  >
-                    Decline
-                  </button>
-                  <button
-                    className="bg-primary text-white py-1 px-3 rounded w-full"
-                    onClick={() =>
-                      handleUpdatePaymentStatus(job._id, "completed")
-                    }
-                  >
-                    Approve
-                  </button>
-                </div>
-              )} */}
-
-
-       <div className="ml-2">
-               
-       <SelectAndSubmit 
-           options={filterPaymentStatus} 
-           Id={job?._id} 
-           OnSaveHandler={handleUpdatePaymentStatus}
-           defaultValues={job?.paymentStatus ? [{
-             value: job?.paymentStatus,
-             label: job?.paymentStatus
-           }] : []}
-           />
-       </div>
+              <div className="ml-2">
+                <SelectAndSubmit
+                  options={filterPaymentStatus}
+                  Id={job?._id}
+                  OnSaveHandler={handleUpdatePaymentStatus}
+                  defaultValues={
+                    job?.paymentStatus
+                      ? [
+                          {
+                            value: job?.paymentStatus,
+                            label: job?.paymentStatus,
+                          },
+                        ]
+                      : []
+                  }
+                />
+              </div>
             </td>
             <td className="relative">
               <button onClick={() => toggleModal(job._id)} className="w-6 h-6">
@@ -366,7 +281,10 @@ const HandleJobStatusUpdate= async(value,jobId)=>{
                   <div className="bg-white shadow-lg rounded-lg p-2">
                     <button
                       className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
-                      onClick={() => setRequestModal(true)}
+                      onClick={() => {
+                        setRequestModal(true);
+                        setCurrentRecord(job);
+                      }}
                     >
                       View details
                     </button>
@@ -391,12 +309,19 @@ const HandleJobStatusUpdate= async(value,jobId)=>{
                   </div>
                 </div>
               )}
-                  {messageModal && <MessageModal setMessageModal={setMessageModal} job={job}  />}
+              {messageModal && (
+                <MessageModal setMessageModal={setMessageModal} job={job} />
+              )}
             </td>
           </tr>
         ))}
-        {requestModal && <JobRequestModal setRequestModal={setRequestModal} />}
-    
+        {requestModal && (
+          <JobRequestModal
+            setRequestModal={setRequestModal}
+            currentRecord={currentRecord}
+          />
+        )}
+
         {addModalVisible && (
           <AddInvoiceModal setAddModalVisible={setAddModalVisible} />
         )}
