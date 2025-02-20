@@ -12,7 +12,6 @@ const [message,setMessage]=useState("");
 const  sendNotification=async()=>{
   console.log(message,'message');
   setMessageModal(false);
-
 }
 
 
