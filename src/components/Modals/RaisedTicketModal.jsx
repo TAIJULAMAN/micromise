@@ -1,43 +1,43 @@
 import { IoCloseSharp } from "react-icons/io5";
 
-function JobRequestModal({ setRequestModal, currentRecord }) {
+function RaisedTicketModal({ setTicketModal, currentRecord }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2">
       <div className="bg-white w-[400px] rounded-lg shadow-lg overflow-hidden">
         {/* Header Section */}
         <div className="bg-secondary pt-5 pb-2 text-center relative">
           <div className="w-20 h-20 mx-auto rounded-full overflow-hidden">
-            <div className="flex gap-2 justify-center items-center">
+            <div className="flex gap-2 justify-start items-center">
               {currentRecord?.grandId ? (
-                <div className="flex gap-2 justify-center items-center">
+                <div className="flex gap-2 justify-start items-center">
                   <img
                     src={
                       currentRecord?.grandId?.profileImg
                         ? `${currentRecord?.grandId?.profileImg}`
                         : "https://avatar.iran.liara.run/public/44"
                     }
-                    alt={currentRecord?.grandId?.fullName || "Anonymous User"}
+                    alt={currentRecord?.grandId?.fullName}
                     className="h-20 w-20 rounded-full object-cover"
                     width={20}
                     height={20}
                   />
                 </div>
               ) : currentRecord?.userId?.role === "client" ? (
-                <div className="flex gap-2 justify-center items-center">
+                <div className="flex gap-2 justify-start items-center">
                   <img
                     src={
                       currentRecord?.userId?.profileImg
                         ? `${currentRecord?.userId?.profileImg}`
                         : "https://avatar.iran.liara.run/public/44"
                     }
-                    alt={currentRecord?.userId?.fullName || "Anonymous User"}
+                    alt={currentRecord?.userId?.fullName}
                     className="h-20 w-20 rounded-full object-cover"
                     width={20}
                     height={20}
                   />
                 </div>
               ) : (
-                <div className="flex gap-2 justify-center items-center">
+                <div className="flex gap-2 justify-start items-center">
                   <img
                     src={"https://avatar.iran.liara.run/public/44"}
                     alt={currentRecord?.userId?.fullName}
@@ -61,7 +61,7 @@ function JobRequestModal({ setRequestModal, currentRecord }) {
           <h2 className="text-sm mt-1 text-gray-600">Client</h2>
           {/* Close Button */}
           <button
-            onClick={() => setRequestModal(false)}
+            onClick={() => setTicketModal(false)}
             className="absolute top-2 right-2 text-white bg-primary focus:outline-none p-2 rounded-full"
           >
             <IoCloseSharp />
@@ -120,4 +120,4 @@ function JobRequestModal({ setRequestModal, currentRecord }) {
   );
 }
 
-export default JobRequestModal;
+export default RaisedTicketModal;

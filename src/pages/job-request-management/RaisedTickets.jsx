@@ -5,12 +5,14 @@ import JobRequestModal from "../../components/Modals/JobRequestModal";
 import MessageModal from "../../components/Modals/MessageModal";
 import MessageTechnisianModal from "../../components/Modals/MessageTechnisianModal";
 import { useGetAllRaisedJobsQuery } from "../../redux/api/jobApi";
+import RaisedTicketModal from "../../components/Modals/RaisedTicketModal";
 
 function RaisedTickets() {
-  const [requestModal, setRequestModal] = useState(false);
+  const [ticketModal, setTicketModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false);
   const [messageTechnisian, setMessageTechnisian] = useState(false);
   const [accordionState, setAccordionState] = useState({});
+  const [currentRecord, setCurrentRecord] = useState(null);
 
   const toggleAccordion = (id) => {
     setAccordionState((prev) => ({
@@ -193,7 +195,10 @@ function RaisedTickets() {
                     <div className="bg-white shadow-lg rounded-lg p-2">
                       <button
                         className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
-                        onClick={() => setRequestModal(true)}
+                        onClick={() => {
+                          setTicketModal(true);
+                          setCurrentRecord(job);
+                        }}
                       >
                         View details
                       </button>
@@ -227,7 +232,12 @@ function RaisedTickets() {
           <p>No raised jobs found.</p>
         )}
 
-        {requestModal && <JobRequestModal setRequestModal={setRequestModal} />}
+        {ticketModal && (
+          <RaisedTicketModal
+          setTicketModal={setTicketModal}
+            currentRecord={currentRecord}
+          />
+        )}
         {messageModal && <MessageModal setMessageModal={setMessageModal} />}
         {messageTechnisian && (
           <MessageTechnisianModal setMessageTechnisian={setMessageTechnisian} />
