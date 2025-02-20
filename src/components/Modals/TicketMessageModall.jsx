@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useCreateNotificationMutation } from "../../redux/api/notificationApi";
 import Swal from "sweetalert2";
 
-function MessageModal({ setMessageModal, job }) {
+function TicketMessageModall({ setTicketMessageModall, job }) {
+  console.log("jobs in ticket modal", job);
   const [createNotification] = useCreateNotificationMutation();
   const [message, setMessage] = useState("");
   const sendNotification = async () => {
@@ -23,7 +24,7 @@ function MessageModal({ setMessageModal, job }) {
         title: "Success",
         text: "Message sent successfully",
       });
-      setMessageModal(false);
+      setTicketMessageModall(false);
     } else {
       Swal.fire({
         icon: "error",
@@ -49,7 +50,7 @@ function MessageModal({ setMessageModal, job }) {
         <div className="flex justify-start gap-2 mt-5">
           <button
             onClick={() => {
-              setMessageModal(false);
+              setTicketMessageModall(false);
             }}
             className="px-4 py-2 bg-white border border-primary text-primary rounded"
           >
@@ -67,4 +68,4 @@ function MessageModal({ setMessageModal, job }) {
   );
 }
 
-export default MessageModal;
+export default TicketMessageModall;

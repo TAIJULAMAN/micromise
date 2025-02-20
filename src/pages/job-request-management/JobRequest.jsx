@@ -35,7 +35,6 @@ function JobRequest() {
     }));
   };
 
-  // console.log(filterTechnicians,'filterTechnicians')
 
   const [updateJob] = useUpdateJobMutation();
 

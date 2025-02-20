@@ -1,18 +1,16 @@
 import { useState } from "react";
-import image from "/table.png";
 import { TbDotsVertical } from "react-icons/tb";
-import JobRequestModal from "../../components/Modals/JobRequestModal";
-import MessageModal from "../../components/Modals/MessageModal";
 import MessageTechnisianModal from "../../components/Modals/MessageTechnisianModal";
 import { useGetAllRaisedJobsQuery } from "../../redux/api/jobApi";
 import RaisedTicketModal from "../../components/Modals/RaisedTicketModal";
+import TicketMessageModall from "../../components/Modals/TicketMessageModall";
 
 function RaisedTickets() {
   const [ticketModal, setTicketModal] = useState(false);
-  const [messageModal, setMessageModal] = useState(false);
   const [messageTechnisian, setMessageTechnisian] = useState(false);
   const [accordionState, setAccordionState] = useState({});
   const [currentRecord, setCurrentRecord] = useState(null);
+  const [ticketMessageModal, setTicketMessageModall] = useState(false);
 
   const toggleAccordion = (id) => {
     setAccordionState((prev) => ({
@@ -210,7 +208,7 @@ function RaisedTickets() {
                       </button>
                       <button
                         className="bg-primary text-white py-2 rounded w-full mb-2 text-xs"
-                        onClick={() => setMessageModal(true)}
+                        onClick={() => setTicketMessageModall(true)}
                       >
                         Message client
                       </button>
@@ -225,6 +223,12 @@ function RaisedTickets() {
                     className="fixed inset-0 z-0"
                   ></div>
                 )}
+                {ticketMessageModal && (
+                  <TicketMessageModall
+                    setTicketMessageModall={setTicketMessageModall}
+                    job={job}
+                  />
+                )}
               </td>
             </tr>
           ))
@@ -234,11 +238,11 @@ function RaisedTickets() {
 
         {ticketModal && (
           <RaisedTicketModal
-          setTicketModal={setTicketModal}
+            setTicketModal={setTicketModal}
             currentRecord={currentRecord}
           />
         )}
-        {messageModal && <MessageModal setMessageModal={setMessageModal} />}
+
         {messageTechnisian && (
           <MessageTechnisianModal setMessageTechnisian={setMessageTechnisian} />
         )}
