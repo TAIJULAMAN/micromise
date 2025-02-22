@@ -4,6 +4,7 @@ import EditProfile from "./EditProfile";
 import ChangePass from "./ChangePass";
 import { useOwnDataQuery } from "../../redux/api/getMeApi";
 import { getBaseUrl } from "../../config/envConfig";
+import { message } from "antd";
 
 function ProfilePage() {
   const [profilePic, setProfilePic] = useState(null);
@@ -15,6 +16,24 @@ function ProfilePage() {
   const handleProfilePicUpload = (e) => {
     setProfilePic(e.target.files[0]);
   };
+
+//   const uploadImage = () => {
+//     const formData = new FormData();
+
+//     formData.append('data', JSON.stringify({}));
+//     if (profilePic) {
+//         formData.append('file', profilePic);
+//     }
+
+//     updateTraineeProfile({ data: formData, id: user?._id }).unwrap()
+//         .then(() => {
+//             message.success(`Updated Successfully`)
+//             setProfilePic(null)
+//         })
+//         .catch((error) => {
+//             message.error(error?.data?.message)
+//         })
+// }
 
   return (
     <div className=" overflow-y-auto">
