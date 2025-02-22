@@ -20,7 +20,7 @@ function JobRequest() {
   const { data: jobData, isLoading, error } = useGetAllJobsQuery();
   const { data: technicianData } = useGetAllTechnicianQuery({ limit: 100 });
 
-  const [jobs, setJobs] = useState([]);
+  const [, setJobs] = useState([]);
 
   useEffect(() => {
     if (jobData?.data) {
@@ -34,7 +34,6 @@ function JobRequest() {
       [_id]: !prev[_id],
     }));
   };
-
 
   const [updateJob] = useUpdateJobMutation();
 
@@ -130,6 +129,13 @@ function JobRequest() {
     }
   };
 
+
+  
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load service!</p>;
   return (
     <table className="bg-white w-full pt-5">
       <thead>
@@ -306,6 +312,12 @@ function JobRequest() {
                     >
                       Cancel
                     </button>
+                    {addModalVisible && (
+                      <AddInvoiceModal
+                        setAddModalVisible={setAddModalVisible}
+                        job={job}
+                      />
+                    )}
                   </div>
                 </div>
               )}
@@ -320,10 +332,6 @@ function JobRequest() {
             setRequestModal={setRequestModal}
             currentRecord={currentRecord}
           />
-        )}
-
-        {addModalVisible && (
-          <AddInvoiceModal setAddModalVisible={setAddModalVisible} />
         )}
       </tbody>
     </table>

@@ -23,7 +23,7 @@ const invoiceApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["invoices"],
+      invalidatesTags: ["invoices", "jobs"],
     }),
     updateInvoice: builder.mutation({
       query: ({ _id, data }) => {
@@ -39,8 +39,11 @@ const invoiceApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllInvoicesQuery, useDeleteInvoiceMutation, useCreateInvoiceMutation, } = invoiceApi;
+export const {
+  useGetAllInvoicesQuery,
+  useDeleteInvoiceMutation,
+  useCreateInvoiceMutation,
+  useUpdateInvoiceMutation
+} = invoiceApi;
 
 export default invoiceApi;
-
-
