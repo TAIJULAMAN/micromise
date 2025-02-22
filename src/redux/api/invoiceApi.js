@@ -27,9 +27,9 @@ const invoiceApi = baseApi.injectEndpoints({
     }),
     updateInvoice: builder.mutation({
       query: ({ _id, data }) => {
-        console.log(_id, data);
+        // console.log(_id, data);
         return {
-          url: `/services/${_id}`,
+          url: `/invoices/${_id}`,
           method: "PATCH",
           body: data,
         };
@@ -43,7 +43,7 @@ export const {
   useGetAllInvoicesQuery,
   useDeleteInvoiceMutation,
   useCreateInvoiceMutation,
-  useUpdateInvoiceMutation
+  useUpdateInvoiceMutation,
 } = invoiceApi;
 
 export default invoiceApi;

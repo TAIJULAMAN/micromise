@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../../components/Modals/DeleteModal";
-import EditInvoiceModal from "../../components/Modals/EditInvoiceModal";
 import {
   useCreateInvoiceMutation,
   useDeleteInvoiceMutation,
@@ -12,10 +11,11 @@ import { Pagination } from "antd";
 import Swal from "sweetalert2";
 import { IoCloseSharp } from "react-icons/io5";
 import ShowInvoiceModal from "../../components/Modals/ShowInvoiceModal";
+import EditInvoiceModal from "../../components/Modals/EditInvoiceModal";
 
 function InvoicePage() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(null);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
@@ -138,6 +138,7 @@ function InvoicePage() {
       Swal.fire("Error", "Failed to create invoice.", "error");
     }
   };
+
   if (isLoading)
     return (
       <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
@@ -256,7 +257,7 @@ function InvoicePage() {
             <div className="flex place-items-start gap-1">
               <FiEdit3
                 onClick={() => {
-                  setEditModalVisible(true);
+                  setEditModalVisible(invoice);
                 }}
                 className="w-6 h-6"
               />
@@ -267,6 +268,12 @@ function InvoicePage() {
                 className="text-primary w-6 h-6"
               />
             </div>
+            {editModalVisible?._id === invoice?._id && (
+              <EditInvoiceModal
+                invoice={invoice}
+                setEditModalVisible={setEditModalVisible}
+              />
+            )}
           </div>
         ))}
         {showInvoiceModal && (
@@ -277,10 +284,6 @@ function InvoicePage() {
         )}
         {isDeleteModalVisible && (
           <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
-        )}
-
-        {editModalVisible && (
-          <EditInvoiceModal setEditModalVisible={setEditModalVisible} />
         )}
       </div>
       <div className="mt-5 flex justify-end ">

@@ -1,31 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useCreateInvoiceMutation } from "../../redux/api/invoiceApi";
 import Swal from "sweetalert2";
 
-function AddInvoiceModal({ setAddModalVisible }) {
+function AddInvoiceModal({ setAddModalVisible, job }) {
   const [createInvoice] = useCreateInvoiceMutation();
 
   const [newInvoice, setNewInvoice] = useState({
     Invoice: {
-      jobId: "",
+      jobId: job._id || "", // Automatically set jobId
       clientAdminName: "",
       services: [{ serviceName: "", serviceCost: "" }],
       paymentStatus: "Pending",
-      totalCost: 0,
+      totalCost: "0",
     },
   });
+
+  useEffect(() => {
+    setNewInvoice((prevState) => ({
+      Invoice: { ...prevState.Invoice, jobId: job._id || "" },
+    }));
+  }, [job]);
 
   const calculateTotalCost = () => {
     return newInvoice.Invoice.services?.reduce(
       (acc, service) => acc + Number(service.serviceCost || 0),
       0
-    );
+    ).toString();
   };
 
   const handleAddService = () => {
     setNewInvoice({
-      ...newInvoice,
       Invoice: {
         ...newInvoice.Invoice,
         services: [
@@ -42,16 +47,14 @@ function AddInvoiceModal({ setAddModalVisible }) {
       updatedServices[index][field] =
         field === "serviceCost" ? Number(e.target.value) : e.target.value;
       setNewInvoice({
-        ...newInvoice,
         Invoice: {
           ...newInvoice.Invoice,
           services: updatedServices,
-          totalCost: calculateTotalCost().toString(),
+          totalCost: calculateTotalCost(),
         },
       });
     } else {
       setNewInvoice({
-        ...newInvoice,
         Invoice: { ...newInvoice.Invoice, [e.target.name]: e.target.value },
       });
     }
@@ -62,16 +65,18 @@ function AddInvoiceModal({ setAddModalVisible }) {
       const invoiceData = {
         Invoice: {
           ...newInvoice.Invoice,
-          totalCost: calculateTotalCost().toString(),
+          totalCost: calculateTotalCost(),
         },
       };
       await createInvoice(invoiceData).unwrap();
       Swal.fire("Success", "Invoice created successfully!", "success");
       setAddModalVisible(false);
     } catch (error) {
+      console.log(error);
       Swal.fire("Error", "Failed to create invoice.", "error");
     }
   };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded shadow-lg w-[500px] relative">
@@ -88,8 +93,8 @@ function AddInvoiceModal({ setAddModalVisible }) {
           name="jobId"
           placeholder="Job ID"
           value={newInvoice.Invoice.jobId}
-          onChange={handleInputChange}
-          className="w-full p-2 border rounded mb-4"
+          disabled
+          className="w-full p-2 border rounded mb-4 bg-gray-200 cursor-not-allowed"
         />
         <select
           name="paymentStatus"
