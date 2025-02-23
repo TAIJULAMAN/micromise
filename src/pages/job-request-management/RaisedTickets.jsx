@@ -5,6 +5,8 @@ import { useGetAllRaisedJobsQuery } from "../../redux/api/jobApi";
 import RaisedTicketModal from "../../components/Modals/RaisedTicketModal";
 import TicketMessageModall from "../../components/Modals/TicketMessageModall";
 import { Pagination } from "antd";
+import { useDebounced } from "../../utils/hook";
+import { IoSearch } from "react-icons/io5";
 
 function RaisedTickets() {
   const [ticketModal, setTicketModal] = useState(false);
@@ -13,7 +15,7 @@ function RaisedTickets() {
   const [ticketMessageModal, setTicketMessageModall] = useState(false);
   const [visibleModals, setVisibleModals] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const query = { isDeleted: false, page: currentPage };
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleModal = (_id) => {
     setVisibleModals((prev) => ({
@@ -21,6 +23,7 @@ function RaisedTickets() {
       [_id]: !prev[_id],
     }));
   };
+  const query = { isDeleted: false, page: currentPage };
 
   const {
     data: raisedJobsData,
@@ -30,6 +33,18 @@ function RaisedTickets() {
   const filteredRaisedJobs = raisedJobsData?.data.filter(
     (job) => job.status === "raised"
   );
+
+  const debouncedSearchTerm = useDebounced({
+    searchTerm: searchTerm,
+    delay: 500,
+  });
+  query.searchTerm = debouncedSearchTerm;
+
+  const handleSearch = (e) => {
+    const searchText = e?.target?.value;
+    setSearchTerm(searchText);
+  };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -42,31 +57,49 @@ function RaisedTickets() {
 
   return (
     <div>
+      <div className="flex justify-end items-center mb-5">
+        <div className="relative w-[320px]">
+          <input
+            type="text"
+            placeholder="Search..."
+            onChange={handleSearch}
+            className="border border-[#e5eaf2] py-3 pl-4 pr-[65px] outline-none w-full rounded-md "
+          />
+
+          <span className="bg-gray-300 text-gray-500 absolute top-0 right-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer hover:bg-gray-400 group">
+            <IoSearch className="text-[1.3rem]  group-hover:text-gray-200" />
+          </span>
+        </div>
+      </div>
       <table className="bg-white w-full pt-5">
         <thead>
           <tr className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-[#171717]">
             <th>Job Id</th>
-            <th className="flex justify-start">Client</th>
-            <t className="flex justify-start font-bold">Supervisor</t>
-            <th>Needed Service</th>
-            <th>Date</th>
-            <th>Assign Technician</th>
-            <th>Status</th>
-            <th>Payment</th>
+            <th className="flex justify-center">Client</th>
+            <th className="flex justify-start text-center">Supervisor</th>
+            <th className="flex justify-start text-start ml-10">
+              Needed Service
+            </th>
+            <th className="flex justify-start text-start ml-16">Date</th>
+            <th className="flex justify-start text-start ml-10">
+              Assign Technician
+            </th>
+            <th className="flex justify-start text-start ml-10">Job Status</th>
+            <th className="flex justify-start text-start ml-10">Payment</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody className="text-start">
           {filteredRaisedJobs?.length > 0 ? (
-            filteredRaisedJobs.map((job, index) => (
+            filteredRaisedJobs.map((job) => (
               <tr
-                key={index + 1}
+                key={job?._id}
                 className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
               >
-                <td>{index + 1}</td>
+                <td>{job?.jobId}</td>
                 <td>
                   {job?.grandId ? (
-                    <div className="flex gap-2 justify-start items-center">
+                    <div className="flex gap-2 justify-center items-center text-sm">
                       <img
                         src={
                           job?.grandId?.profileImg
@@ -74,14 +107,14 @@ function RaisedTickets() {
                             : "https://avatar.iran.liara.run/public/44"
                         }
                         alt={job?.grandId?.fullName}
-                        className="h-8 w-8 rounded-full object-cover"
+                        className="h-5 w-5 rounded-full object-cover"
                         width={20}
                         height={20}
                       />
                       <span>{job?.grandId?.fullName}</span>
                     </div>
                   ) : job?.userId?.role === "client" ? (
-                    <div className="flex gap-2 justify-start items-center">
+                    <div className="flex gap-2 justify-center items-center text-sm">
                       <img
                         src={
                           job?.userId?.profileImg
@@ -89,19 +122,19 @@ function RaisedTickets() {
                             : "https://avatar.iran.liara.run/public/44"
                         }
                         alt={job?.userId?.fullName}
-                        className="h-6 w-6 rounded-full object-cover"
+                        className="h-5 w-5 rounded-full object-cover"
                         width={20}
                         height={20}
                       />
                       <span>{job?.userId?.fullName}</span>
                     </div>
                   ) : (
-                    <span>No Client</span>
+                    <span className="text-sm">No Client</span>
                   )}
                 </td>
                 <td>
                   {job?.userId?.role === "supervisor" ? (
-                    <div className="flex gap-2 justify-start items-center">
+                    <div className="flex gap-2 justify-center items-center text-sm">
                       <img
                         src={
                           job?.userId?.profileImg
@@ -114,11 +147,11 @@ function RaisedTickets() {
                       <span>{job?.userId?.fullName || "Unknown User"}</span>
                     </div>
                   ) : (
-                    <span>No Supervisor</span>
+                    <span className="text-sm">No Supervisor</span>
                   )}
                 </td>
-                <td className="text-xs">
-                  <ul className="flex gap-2 list-disc text-left border p-2 border-primary rounded">
+                <td className="text-xs w-full">
+                  <ul className="flex gap-1 list-disc text-left border p-1 border-primary rounded">
                     {job?.services?.map((service, index) => (
                       <li key={index} className="list-inside">
                         {service}
@@ -126,16 +159,7 @@ function RaisedTickets() {
                     ))}
                   </ul>
                 </td>
-                <td>
-                  {job?.createdAt
-                    ? new Date(job?.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "2-digit",
-                      })
-                    : "N/A"}
-                </td>
-
+                <td>{new Date(job?.createdAt).toLocaleDateString()}</td>
                 <td>
                   <div className="flex gap-2 justify-center items-center border border-primary p-1 rounded-lg">
                     <img

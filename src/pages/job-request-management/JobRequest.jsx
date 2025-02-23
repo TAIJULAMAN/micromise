@@ -31,7 +31,7 @@ function JobRequest() {
     delay: 500,
   });
   query.searchTerm = debouncedSearchTerm;
-  
+
   const handleSearch = (e) => {
     const searchText = e?.target?.value;
     setSearchTerm(searchText);
@@ -174,26 +174,26 @@ function JobRequest() {
         <thead>
           <tr className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-[#171717]">
             <th>Job Id</th>
-            <th className="flex justify-start">Client</th>
-            <th className="flex justify-start">Supervisor</th>
-            <th>Needed Service</th>
-            <th>Date</th>
-            <th>Assign Technician</th>
-            <th className="">Job Status</th>
-            <th className="flex justify-start">Payment</th>
+            <th className="flex justify-center">Client</th>
+            <th className="flex justify-start text-center">Supervisor</th>
+            <th className="flex justify-start text-start ml-10">Needed Service</th>
+            <th className="flex justify-start text-start ml-10">Date</th>
+            <th className="flex justify-start text-start ml-10">Assign Technician</th>
+            <th className="flex justify-start text-start ml-10">Job Status</th>
+            <th className="flex justify-start text-start ml-10">Payment</th>
             <th>Action</th>
           </tr>
         </thead>
-        <tbody className="text-start">
+        <tbody className="text-center text-sm">
           {jobData?.data?.map((job) => (
             <tr
-              key={job._id}
+              key={job?._id}
               className="grid grid-cols-[.5fr_1fr_1fr_1.5fr_1fr_1.5fr_1fr_1fr_.5fr] px-2 py-4 text-center text-[#707070]"
             >
-              <td>{job.jobId}</td>
+              <td >{job?.jobId}</td>
               <td>
                 {job?.grandId ? (
-                  <div className="flex gap-2 justify-start items-center">
+                  <div className="flex gap-2 justify-center items-center text-sm">
                     <img
                       src={
                         job?.grandId?.profileImg
@@ -201,14 +201,14 @@ function JobRequest() {
                           : "https://avatar.iran.liara.run/public/44"
                       }
                       alt={job?.grandId?.fullName || "Anonymous User"}
-                      className="h-8 w-8 rounded-full object-cover"
+                      className="h-5 w-5 rounded-full object-cover"
                       width={20}
                       height={20}
                     />
                     <span>{job?.grandId?.fullName || "No Name"}</span>
                   </div>
                 ) : job?.userId?.role === "client" ? (
-                  <div className="flex gap-2 justify-start items-center">
+                  <div className="flex gap-2 justify-center items-center text-sm">
                     <img
                       src={
                         job?.userId?.profileImg
@@ -216,19 +216,19 @@ function JobRequest() {
                           : "https://avatar.iran.liara.run/public/44"
                       }
                       alt={job?.userId?.fullName || "Anonymous User"}
-                      className="h-8 w-8 rounded-full object-cover"
+                      className="h-5 w-5 rounded-full object-cover"
                       width={20}
                       height={20}
                     />
                     <span>{job?.userId?.fullName || "No Name"}</span>
                   </div>
                 ) : (
-                  <span>No Client</span>
+                  <span className="text-sm">No Client</span>
                 )}
               </td>
               <td>
                 {job?.userId?.role === "supervisor" ? (
-                  <div className="flex gap-2 justify-start items-center">
+                  <div className="flex gap-2 text-sm">
                     <img
                       src={
                         job.userId.profileImg
@@ -236,16 +236,16 @@ function JobRequest() {
                           : "https://avatar.iran.liara.run/public/44"
                       }
                       alt={job.userId.fullName || "Anonymous User"}
-                      className="h-8 w-8 rounded-full object-cover"
+                      className="h-5 w-5 rounded-full object-cover"
                     />
                     <span>{job.userId.fullName || "Unknown User"}</span>
                   </div>
                 ) : (
-                  <span>No Supervisor</span>
+                  <span className="flex text-sm ">No Supervisor</span>
                 )}
               </td>
               <td className="text-xs w-full">
-                <ul className="flex gap-2 list-disc text-left border p-2 border-primary rounded">
+                <ul className="flex gap-1 list-disc text-left border p-1 border-primary rounded">
                   {(job?.services || []).map((service, index) => (
                     <li key={index} className="list-inside">
                       {service}

@@ -90,7 +90,7 @@ function Technician() {
           <input
             type="text"
             onChange={handleSearch}
-            placeholder="Search..."
+            placeholder="Search Using Name"
             className="border border-[#e5eaf2] py-3 pl-4 pr-[65px] outline-none w-full rounded-md"
           />
           <span className="bg-gray-300 text-gray-500 absolute top-0 right-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer hover:bg-gray-400 group">
@@ -266,8 +266,6 @@ function Technician() {
           </div>
         </div>
       )}
-
-    
     </div>
   );
 }

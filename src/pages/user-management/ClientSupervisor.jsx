@@ -90,7 +90,7 @@ function ClientSupervisor() {
           <input
             type="text"
             onChange={handleSearch}
-            placeholder="Search..."
+            placeholder="Search Using Name"
             className="border border-[#e5eaf2] py-3 pl-4 pr-[65px] outline-none w-full rounded-md "
           />
 
