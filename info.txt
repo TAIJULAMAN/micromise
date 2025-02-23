@@ -1,4 +1,0 @@
-Extra Small (Phones): 0px - 575px 
-Small (Tablets): 576px - 767px 
-Medium (Tablets/Small Laptops): 768px - 991px 
-Large (Desktops/Large Laptops): 992px - 1199px 

@@ -9,14 +9,10 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useOwnDataQuery } from "../../redux/api/getMeApi";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  // const { pathname } = useLocation();
-
-  // State to track the active sections
   const [activeMenu, setActiveMenu] = useState("");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUserOpen, setIsUserOpen] = useState(false);
 
-  // Handle active menu and submenu logic
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
   };
@@ -30,7 +26,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   };
   const { data: ownData, error, isLoading } = useOwnDataQuery();
 
-  // console.log("own data of super admin", ownData);
   if (isLoading)
     return (
       <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>

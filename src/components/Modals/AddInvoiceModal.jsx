@@ -8,7 +8,7 @@ function AddInvoiceModal({ setAddModalVisible, job }) {
 
   const [newInvoice, setNewInvoice] = useState({
     Invoice: {
-      jobId: job._id || "", // Automatically set jobId
+      jobId: job._id || "",
       clientAdminName: "",
       services: [{ serviceName: "", serviceCost: "" }],
       paymentStatus: "Pending",

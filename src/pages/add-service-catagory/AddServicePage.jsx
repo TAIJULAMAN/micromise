@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import DeleteModal from "../../components/Modals/DeleteModal";
 import { FiEdit3 } from "react-icons/fi";
 import {
   useCreateServiceMutation,
@@ -14,7 +13,6 @@ import { Pagination } from "antd";
 
 function AddServicePage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,6 +63,7 @@ function AddServicePage() {
       }
     });
   };
+
   // add new service
   const [createService] = useCreateServiceMutation();
   const [newService, setNewService] = useState({
@@ -84,7 +83,6 @@ function AddServicePage() {
       },
     }));
   };
-
   const handleAddService = async () => {
     try {
       await createService(newService).unwrap();
@@ -321,9 +319,6 @@ function AddServicePage() {
               </div>
             </div>
           </div>
-        )}
-        {isDeleteModalVisible && (
-          <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
         )}
       </div>
     </div>

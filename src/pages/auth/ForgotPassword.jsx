@@ -12,7 +12,6 @@ function ForgotPassword() {
 
   const handleSendCode = (e) => {
     e.preventDefault();
-    // console.log("email of forgot pass", email);
     if (!email) {
       Swal.fire({
         icon: "error",
@@ -34,7 +33,6 @@ function ForgotPassword() {
         navigate(`/verification-code?email=${email}`);
       })
       .catch((error) => {
-        // console.log("error of forgot pass", error);
         Swal.fire({
           icon: "error",
           title: "Error",

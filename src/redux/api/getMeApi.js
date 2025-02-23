@@ -12,9 +12,19 @@ const UserApi = baseApi.injectEndpoints({
         },
       }),
     }),
+    updateAdmin: builder.mutation({
+      query: ({ _id, file }) => {
+        return {
+          url: `/users/${_id}`,
+          method: "PATCH",
+          body: file,
+        };
+      },
+      invalidatesTags: ["own"],
+    }),
   }),
 });
 
-export const { useOwnDataQuery } = UserApi;
+export const { useOwnDataQuery, useUpdateAdminMutation } = UserApi;
 
 export default UserApi;

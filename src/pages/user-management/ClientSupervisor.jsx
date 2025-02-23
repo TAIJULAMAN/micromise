@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import DeleteModal from "../../components/Modals/DeleteModal";
 import { LuEye } from "react-icons/lu";
 import { IoCloseSharp, IoSearch } from "react-icons/io5";
 import {
@@ -14,7 +13,6 @@ import { useDebounced } from "../../utils/hook";
 
 function ClientSupervisor() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,9 +23,7 @@ function ClientSupervisor() {
     delay: 500,
   });
 
-  console.log("add er age", query);
   query.searchTerm = debouncedSearchTerm;
-  console.log("add er pore", query);
 
   const handleSearch = (e) => {
     const searchText = e.target.value;
@@ -94,7 +90,7 @@ function ClientSupervisor() {
           <input
             type="text"
             onChange={handleSearch}
-            placeholder="Search..."
+            placeholder="Search Using Name"
             className="border border-[#e5eaf2] py-3 pl-4 pr-[65px] outline-none w-full rounded-md "
           />
 
@@ -255,9 +251,6 @@ function ClientSupervisor() {
             </div>
           </div>
         </div>
-      )}
-      {isDeleteModalVisible && (
-        <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
       )}
     </div>
   );

@@ -17,13 +17,11 @@ const PrivacyPolicyPage = () => {
     isLoading: isFetching,
     error,
   } = useGetPrivacyQuery();
-  console.log(privacyData);
 
   const [updatePrivacy] = useUpdatePrivacyMutation();
 
   useEffect(() => {
     if (privacyData?.data?.message) {
-      console.log(privacyData?.data?.message);
       setContent(privacyData?.data?.message);
     }
   }, [privacyData]);
@@ -32,8 +30,6 @@ const PrivacyPolicyPage = () => {
     const finalData = {
       Privacy: { message: content },
     };
-    console.log(finalData);
-
     Swal.fire({
       title: "Are you sure?",
       text: "Do you want to save the changes to privacy policy?",
@@ -60,14 +56,11 @@ const PrivacyPolicyPage = () => {
 
           setIsSaving(false);
         } catch (error) {
-          console.error("Error updating content:", error);
-
           Swal.fire({
             icon: "error",
-            title: "Error",
-            text: "Failed to save privacy policy. Please try again.",
+            title: "Login Failed",
+            text: error?.data?.message || "Failed to save privacy policy!",
           });
-
           setIsSaving(false);
         }
       }

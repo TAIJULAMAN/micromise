@@ -17,12 +17,9 @@ function NewPassword() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
-  console.log(email);
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
-    console.log(newPassword, confirmPassword);
-
     if (newPassword !== confirmPassword) {
       Swal.fire({
         icon: "error",
@@ -33,8 +30,6 @@ function NewPassword() {
     }
 
     const resetToken = localStorage.getItem("resetToken");
-    console.log("Reset Token:", resetToken);
-
     if (!resetToken) {
       Swal.fire({
         icon: "error",
@@ -56,7 +51,6 @@ function NewPassword() {
       const response = await resetPassword({
         email,
         newPassword: confirmPassword,
-        // resetToken,
       }).unwrap();
       console.log("Response of reset password:", response);
 
@@ -68,7 +62,6 @@ function NewPassword() {
 
       navigate("/success-message");
     } catch (error) {
-      console.error("Reset Password Error:", error);
       Swal.fire({
         icon: "error",
         title: "Password Reset Failed",
