@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import DeleteModal from "../../components/Modals/DeleteModal";
 import { LuEye } from "react-icons/lu";
 import { IoCloseSharp, IoSearch } from "react-icons/io5";
 import {
@@ -14,7 +13,6 @@ import { useDebounced } from "../../utils/hook";
 
 function Technician() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
   // ............................................................
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,9 +23,7 @@ function Technician() {
     delay: 500,
   });
 
-  // console.log("add er age", query);
   query.searchTerm = debouncedSearchTerm;
-  // console.log("add er pore", query);
 
   const handleSearch = (e) => {
     const searchText = e.target.value;
@@ -37,9 +33,7 @@ function Technician() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  // ...................................................................
 
-  // fetch all technician
   const {
     data: technicianData,
     error,
@@ -273,9 +267,7 @@ function Technician() {
         </div>
       )}
 
-      {isDeleteModalVisible && (
-        <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
-      )}
+    
     </div>
   );
 }

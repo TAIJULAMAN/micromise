@@ -10,19 +10,15 @@ function VerificationCode() {
   const [searchParams] = useSearchParams();
 
   const email = searchParams.get("email");
-  // console.log("Email of otp page:", email);
   const navigate = useNavigate();
 
   const [verifyEmail, { isLoading }] = useVerifyEmailMutation();
 
   const handleChange = (value, index) => {
-    // Only accept numeric input
     if (!isNaN(value)) {
       const newCode = [...code];
       newCode[index] = value;
       setCode(newCode);
-
-      // Automatically focus the next input
       if (value && index < 4) {
         document.getElementById(`code-${index + 1}`).focus();
       }
@@ -31,13 +27,10 @@ function VerificationCode() {
 
   const handleVerifyCode = async () => {
     const enteredCode = code.join("");
-    // console.log(enteredCode);
     if (enteredCode.length === 4) {
       await verifyEmail({ Otp: { email, otp: enteredCode } })
         .unwrap()
         .then((response) => {
-          // console.log("Verification response:", response);
-
         storeResetToken({ resetToken: response?.data?.resetToken });
 
           Swal.fire({

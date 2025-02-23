@@ -2,38 +2,42 @@ import { useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import ChangePass from "./ChangePass";
-import { useOwnDataQuery } from "../../redux/api/getMeApi";
-import { getBaseUrl } from "../../config/envConfig";
+import {
+  useOwnDataQuery,
+  useUpdateAdminMutation,
+} from "../../redux/api/getMeApi";
 import { message } from "antd";
 
 function ProfilePage() {
-  const [profilePic, setProfilePic] = useState(null);
+  const [profilePic, setProfilePic] = useState();
   const [activeTab, setActiveTab] = useState("editProfile");
 
-  const { data: getMeData, isLoading, refetch } = useOwnDataQuery();
-  console.log(getMeData);
+  const { data: getMeData, isLoading, error,  refetch } = useOwnDataQuery();
+  const [updateAdmin] = useUpdateAdminMutation();
 
-  const handleProfilePicUpload = (e) => {
-    setProfilePic(e.target.files[0]);
+  const handleProfilePicUpload = async (e) => {
+    const pro = e?.target?.files[0];
+    const formData = new FormData();
+    formData.append("file", e?.target?.files[0]);
+    const response = await updateAdmin({
+      file: formData,
+      _id: getMeData?.data?._id,
+    }).unwrap();
+    console.log("========",response);
+
+    if (response?.success) {
+      message.success(`Profile Picture Updated Successfully`);
+      setProfilePic(e?.target?.files[0]);
+      refetch();
+    } else {
+      message.error(`Failed to update Profile Picture`);
+    }
   };
-
-//   const uploadImage = () => {
-//     const formData = new FormData();
-
-//     formData.append('data', JSON.stringify({}));
-//     if (profilePic) {
-//         formData.append('file', profilePic);
-//     }
-
-//     updateTraineeProfile({ data: formData, id: user?._id }).unwrap()
-//         .then(() => {
-//             message.success(`Updated Successfully`)
-//             setProfilePic(null)
-//         })
-//         .catch((error) => {
-//             message.error(error?.data?.message)
-//         })
-// }
+  if (isLoading)
+    return (
+      <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
+    );
+  if (error) return <p className="text-red-500">Failed to load service!</p>;
 
   return (
     <div className=" overflow-y-auto">
@@ -49,7 +53,7 @@ function ProfilePage() {
                 <img
                   src={
                     getMeData?.data?.profileImg
-                      ? `${getBaseUrl()}/${getMeData?.data?.profileImg}`
+                      ? `${getMeData?.data?.profileImg}`
                       : "https://avatar.iran.liara.run/public/44"
                   }
                   alt={getMeData?.data?.fullName || "User"}

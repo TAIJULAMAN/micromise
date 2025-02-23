@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import DeleteModal from "../../components/Modals/DeleteModal";
 import {
   useCreateInvoiceMutation,
   useDeleteInvoiceMutation,
@@ -14,7 +13,6 @@ import ShowInvoiceModal from "../../components/Modals/ShowInvoiceModal";
 import EditInvoiceModal from "../../components/Modals/EditInvoiceModal";
 
 function InvoicePage() {
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(null);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
@@ -135,7 +133,11 @@ function InvoicePage() {
       setAddModalVisible(false);
       refetch();
     } catch (error) {
-      Swal.fire("Error", "Failed to create invoice.", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error?.data?.message || "Something went wrong!",
+      });
     }
   };
 
@@ -281,9 +283,6 @@ function InvoicePage() {
             currentRecord={currentRecord}
             setShowInvoiceModal={setShowInvoiceModal}
           />
-        )}
-        {isDeleteModalVisible && (
-          <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
         )}
       </div>
       <div className="mt-5 flex justify-end ">

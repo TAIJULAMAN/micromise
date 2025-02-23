@@ -30,6 +30,7 @@ export const baseApi = createApi({
     "Profile",
     "jobs",
     "tickets",
-    "invoices"
+    "invoices",
+    "own"
   ],
 });

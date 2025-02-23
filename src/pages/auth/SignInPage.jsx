@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
 import { useLogInMutation } from "../../redux/api/authApi";
 import { storeUserToken } from "../../services/auth.service";
 
@@ -43,7 +42,6 @@ function SignInPage() {
         navigate("/");
       }
     } catch (error) {
-      console.error("Login error:", error);
       Swal.fire({
         icon: "error",
         title: "Login Failed",

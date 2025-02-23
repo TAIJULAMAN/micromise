@@ -13,7 +13,6 @@ const TermsConditions = () => {
 
   // Fetch data from the backend
   const { data: termsData, isLoading: isFetching, error } = useGetTermsQuery();
-  console.log(termsData);
 
   const [updateTerms] = useUpdateTermsAndConditionMutation();
 
@@ -86,7 +85,6 @@ const TermsConditions = () => {
       {/* Editor Container */}
       {!isFetching && (
         <div className="border border-bg rounded-md p-5">
-          {/* ReactQuill Editor */}
           <ReactQuill
             style={{ height: 300, padding:"10px" }}
             theme="snow"

@@ -7,7 +7,6 @@ const MainHeader = ({ toggleSidebar }) => {
 
   const { data: ownData, error, isLoading } = useOwnDataQuery();
 
-  // console.log("own data of super admin", ownData);
   if (isLoading)
     return (
       <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>

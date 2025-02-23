@@ -1,5 +1,4 @@
 import { useState } from "react";
-import DeleteModal from "../../components/Modals/DeleteModal";
 import {
   useCreateAdminMutation,
   useDeleteAdminMutation,
@@ -12,7 +11,6 @@ import { Pagination } from "antd";
 
 function MakeAdminPage() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const query = { isDeleted: false, page: currentPage };
@@ -31,7 +29,6 @@ function MakeAdminPage() {
   const [createAdmin] = useCreateAdminMutation();
   const [deleteAdmin] = useDeleteAdminMutation();
 
-  // Handle deleting an admin
   const handleDeleteAdmin = (admin) => {
     console.log(admin);
     Swal.fire({
@@ -74,7 +71,6 @@ function MakeAdminPage() {
     },
   });
 
-  // Function to update User fields inside newAdmin
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewAdmin((prevState) => ({
@@ -187,9 +183,7 @@ function MakeAdminPage() {
           )}
         </div>
 
-        {isDeleteModalVisible && (
-          <DeleteModal setIsDeleteModalVisible={setIsDeleteModalVisible} />
-        )}
+       
 
         {isAddModalVisible && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
