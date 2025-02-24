@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { MdDashboard, MdOutlineCategory } from "react-icons/md";
 import { FaUserPlus, FaUsers } from "react-icons/fa";
@@ -12,6 +12,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [activeMenu, setActiveMenu] = useState("");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUserOpen, setIsUserOpen] = useState(false);
+  const router = useNavigate();
 
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
@@ -25,6 +26,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     }
   };
   const { data: ownData, error, isLoading } = useOwnDataQuery();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    router("/sign-in");
+  };
 
   if (isLoading)
     return (
@@ -207,12 +213,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
       {/* Logout Button */}
       <div className="absolute mt-8 md:mt-0 mmd:mt-8 md:bottom-4 lg:bottom-4 w-full px-4">
-        <Link to="/sign-in">
-          <button className="flex items-center gap-4 w-full py-3 rounded-lg">
-            <IoMdSettings className="w-5 h-5" />
-            <span>Logout</span>
-          </button>
-        </Link>
+        {/* <Link to="/sign-in"> */}
+        <button
+          className="flex items-center gap-4 w-full py-3 rounded-lg bg-primary text-white justify-center"
+          onClick={handleLogout}
+        >
+          <IoMdSettings className="w-5 h-5" />
+          <span>Logout</span>
+        </button>
+        {/* </Link> */}
       </div>
     </div>
   );

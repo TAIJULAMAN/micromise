@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getBaseUrl } from "../../config/envConfig";
 import { getUserToken } from "../../services/auth.service";
@@ -9,7 +10,7 @@ export const baseApi = createApi({
     baseUrl: getBaseUrl(),
 
     prepareHeaders: (headers, { getState }) => {
-      console.log(getState);
+      // console.log(getState);
       const token = getUserToken();
       if (token) {
         headers.set("Authorization", token);
@@ -31,6 +32,6 @@ export const baseApi = createApi({
     "jobs",
     "tickets",
     "invoices",
-    "own"
+    "own",
   ],
 });
