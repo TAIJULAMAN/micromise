@@ -19,6 +19,7 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import VerificationCode from "../pages/auth/VerificationCode";
 import NewPassword from "../pages/auth/NewPassword";
 import SuccessPage from "../pages/auth/SuccessPage";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -44,7 +45,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <PrivateRoute>
+        <MainLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "/",

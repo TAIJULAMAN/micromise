@@ -160,7 +160,7 @@ function JobRequest() {
         <div className="relative w-[320px]">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search Using Job Id"
             onChange={handleSearch}
             className="border border-[#e5eaf2] py-3 pl-4 pr-[65px] outline-none w-full rounded-md "
           />

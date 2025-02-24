@@ -30,6 +30,7 @@ function SignInPage() {
     try {
       const response = await logIn(loginData).unwrap();
       if (response?.data?.accessToken) {
+        console.log(response?.data?.accessToken);
         storeUserToken({ accessToken: response?.data?.accessToken });
         if (rememberMe) {
           localStorage.setItem("accessToken", response?.data?.accessToken);
