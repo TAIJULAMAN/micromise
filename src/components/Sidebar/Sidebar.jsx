@@ -7,6 +7,7 @@ import { LiaFileInvoiceSolid } from "react-icons/lia";
 import { IoMdSettings } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 import { useOwnDataQuery } from "../../redux/api/getMeApi";
+import { RiLogoutBoxLine } from "react-icons/ri";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -65,10 +66,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <ul className="mt-20 px-4">
         {/* Dashboard */}
         <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer ${
+          className={`flex items-center gap-4 mt-8 cursor-pointer px-2 py-3 rounded-lg ${
             activeMenu === "dashboard"
-              ? "bg-primary text-white px-2 py-3 rounded-lg"
-              : ""
+              ? "bg-primary text-white delay-100 duration-100"
+              : " hover:bg-gray "
           }`}
           onClick={() => handleMenuClick("dashboard")}
         >
@@ -78,10 +79,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* User Management */}
         <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${
-            activeMenu === "user-management"
-              ? "bg-primary text-white px-2 py-3 rounded-lg"
-              : ""
+          className={`flex items-center gap-4 mt-4 cursor-pointer  px-2 py-3 rounded-lg mb-3 ${
+            activeMenu === "user-management" ||
+            activeMenu === "technician" ||
+            activeMenu === "admin-client" ||
+            activeMenu === "client-supervisor"
+              ? "bg-primary text-white delay-100 duration-100"
+              : "hover:bg-gray "
           }`}
           onClick={() => {
             handleMenuClick("user-management");
@@ -92,26 +96,32 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <span>User Management</span>
         </li>
         {isUserOpen && (
-          <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
+          <ul className="bg-[#ffebeb] rounded-lg text-center ">
             <li
-              className={`py-[6px] ${
-                activeMenu === "technician" ? "bg-[#f77777]" : ""
+              className={` rounded-md  delay-100 duration-100 py-3 ${
+                activeMenu === "technician"
+                  ? "bg-[#bb4343] text-white"
+                  : "hover:bg-gray"
               }`}
               onClick={() => handleMenuClick("technician")}
             >
               <Link to="/technician">Technician</Link>
             </li>
             <li
-              className={`py-[6px] ${
-                activeMenu === "admin-client" ? "bg-[#f77777]" : ""
+              className={`py-[6px] my-2  rounded-md delay-100 duration-100 ${
+                activeMenu === "admin-client"
+                  ? "bg-[#bb4343] text-white "
+                  : "hover:bg-gray"
               }`}
               onClick={() => handleMenuClick("admin-client")}
             >
               <Link to="/admin-client">Client</Link>
             </li>
             <li
-              className={`py-[6px] ${
-                activeMenu === "client-supervisor" ? "bg-[#f77777]" : ""
+              className={`py-[6px] rounded-md  ${
+                activeMenu === "client-supervisor"
+                  ? "bg-[#bb4343] text-white delay-100 duration-100 "
+                  : "hover:bg-gray"
               }`}
               onClick={() => handleMenuClick("client-supervisor")}
             >
@@ -122,10 +132,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Job Request Management */}
         <li
-          className={`flex items-center gap-4 mt-8 ${
+          className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
             activeMenu === "request-management"
-              ? "bg-primary text-white px-2 py-3 rounded-lg"
-              : ""
+              ? "bg-primary text-white "
+              : "hover:bg-gray "
           }`}
           onClick={() => handleMenuClick("request-management")}
         >
@@ -135,10 +145,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Invoice */}
         <li
-          className={`flex items-center gap-4 mt-8 ${
+          className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
             activeMenu === "invoice"
-              ? "bg-primary text-white px-2 py-3 rounded-lg"
-              : ""
+              ? "bg-primary text-white "
+              : "hover:bg-gray "
           }`}
           onClick={() => handleMenuClick("invoice")}
         >
@@ -148,10 +158,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Add Service Category */}
         <li
-          className={`flex items-center gap-4 mt-8 ${
+          className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
             activeMenu === "add-service"
-              ? "bg-primary text-white px-2 py-3 rounded-lg"
-              : ""
+              ? "bg-primary text-white "
+              : "hover:bg-gray "
           }`}
           onClick={() => handleMenuClick("add-service")}
         >
@@ -162,10 +172,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* Make Admin */}
         {ownData?.data?.role == "superAdmin" ? (
           <li
-            className={`flex items-center gap-4 mt-8 ${
+            className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
               activeMenu === "make-admin"
-                ? "bg-primary text-white px-2 py-3 rounded-lg"
-                : ""
+                ? "bg-primary text-white "
+                : "hover:bg-gray "
             }`}
             onClick={() => handleMenuClick("make-admin")}
           >
@@ -176,10 +186,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Settings */}
         <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer py-2 ${
-            activeMenu === "settings"
-              ? "bg-primary text-white px-2 py-3 rounded-lg"
-              : ""
+          className={`flex items-center gap-4 mt-4 px-2  rounded-lg  delay-100 duration-100 cursor-pointer py-2 mb-2 ${
+            activeMenu === "settings" ||
+            activeMenu === "privacy-policy" ||
+            activeMenu === "terms-and-condition"
+              ? "bg-primary text-white "
+              : "hover:bg-gray "
           }`}
           onClick={() => {
             handleMenuClick("settings");
@@ -190,18 +202,22 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <span>Settings</span>
         </li>
         {isSettingsOpen && (
-          <ul className="bg-[#ffebeb] rounded-lg text-center py-3">
+          <ul className="bg-[#ffebeb] rounded-lg text-center ">
             <li
-              className={`py-[6px] ${
-                activeMenu === "privacy-policy" ? "bg-[#f77777]" : ""
+              className={`rounded-md  delay-100 duration-100 py-3 ${
+                activeMenu === "privacy-policy"
+                  ? "bg-[#bb4343] text-white"
+                  : "hover:bg-gray"
               }`}
               onClick={() => handleMenuClick("privacy-policy")}
             >
               <Link to="/privacy-policy">Privacy Policy</Link>
             </li>
             <li
-              className={`py-[6px] ${
-                activeMenu === "terms-and-condition" ? "bg-[#f77777]" : ""
+              className={`py-3 delay-100 duration-100 ${
+                activeMenu === "terms-and-condition"
+                  ? "bg-[#bb4343] text-white"
+                  : "hover:bg-gray"
               }`}
               onClick={() => handleMenuClick("terms-and-condition")}
             >
@@ -215,10 +231,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <div className="absolute mt-8 md:mt-0 mmd:mt-8 md:bottom-4 lg:bottom-4 w-full px-4">
         {/* <Link to="/sign-in"> */}
         <button
-          className="flex items-center gap-4 w-full py-3 rounded-lg bg-primary text-white justify-center"
+          className="flex items-center gap-4 w-full py-3 rounded-lg bg-[#a33131] hover:bg-primary duration-200 text-white justify-center "
           onClick={handleLogout}
         >
-          <IoMdSettings className="w-5 h-5" />
+          <RiLogoutBoxLine className="w-5 h-5 font-bold" />
           <span>Logout</span>
         </button>
         {/* </Link> */}

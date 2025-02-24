@@ -8,7 +8,8 @@ export default {
       secondary: "#f79292",
       bg: "#ededed",
       white: "#ffffff",
-      black: "#000000"
+      black: "#000000",
+      gray: "#eae8e8",
     },
     fontFamily: {
       sans: ["Poppins", "sans-serif"],
