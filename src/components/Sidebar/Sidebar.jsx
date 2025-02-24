@@ -65,17 +65,19 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       {/* Sidebar Menu */}
       <ul className="mt-20 px-4">
         {/* Dashboard */}
-        <li
-          className={`flex items-center gap-4 mt-8 cursor-pointer px-2 py-3 rounded-lg ${
-            activeMenu === "dashboard"
-              ? "bg-primary text-white delay-100 duration-100"
-              : " hover:bg-gray "
-          }`}
-          onClick={() => handleMenuClick("dashboard")}
-        >
-          <MdDashboard className="w-5 h-5" />
-          <Link to="/">Dashboard</Link>
-        </li>
+        <Link to="/">
+          <li
+            className={`flex items-center gap-4 mt-8 cursor-pointer px-2 py-3 rounded-lg ${
+              activeMenu === "dashboard"
+                ? "bg-primary text-white delay-100 duration-100"
+                : " hover:bg-gray "
+            }`}
+            onClick={() => handleMenuClick("dashboard")}
+          >
+            <MdDashboard className="w-5 h-5" />
+            <p>Dashboard</p>
+          </li>
+        </Link>
 
         {/* User Management */}
         <li
@@ -97,91 +99,105 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
         {isUserOpen && (
           <ul className="bg-[#ffebeb] rounded-lg text-center ">
-            <li
-              className={` rounded-md  delay-100 duration-100 py-3 ${
-                activeMenu === "technician"
-                  ? "bg-[#bb4343] text-white"
-                  : "hover:bg-gray"
-              }`}
-              onClick={() => handleMenuClick("technician")}
-            >
-              <Link to="/technician">Technician</Link>
-            </li>
-            <li
-              className={`py-[6px] my-2  rounded-md delay-100 duration-100 ${
-                activeMenu === "admin-client"
-                  ? "bg-[#bb4343] text-white "
-                  : "hover:bg-gray"
-              }`}
-              onClick={() => handleMenuClick("admin-client")}
-            >
-              <Link to="/admin-client">Client</Link>
-            </li>
-            <li
-              className={`py-[6px] rounded-md  ${
-                activeMenu === "client-supervisor"
-                  ? "bg-[#bb4343] text-white delay-100 duration-100 "
-                  : "hover:bg-gray"
-              }`}
-              onClick={() => handleMenuClick("client-supervisor")}
-            >
-              <Link to="/client-supervisor">Supervisor</Link>
-            </li>
+            <Link to="/technician">
+              <li
+                className={` rounded-md  delay-100 duration-100 py-3 ${
+                  activeMenu === "technician"
+                    ? "bg-[#bb4343] text-white"
+                    : "hover:bg-gray"
+                }`}
+                onClick={() => handleMenuClick("technician")}
+              >
+                <p>Technician</p>
+              </li>
+            </Link>
+            <Link to="/admin-client">
+              <li
+                className={`py-[6px] my-2  rounded-md delay-100 duration-100 ${
+                  activeMenu === "admin-client"
+                    ? "bg-[#bb4343] text-white "
+                    : "hover:bg-gray"
+                }`}
+                onClick={() => handleMenuClick("admin-client")}
+              >
+                <p>Client</p>
+              </li>
+            </Link>
+            <Link to="/client-supervisor">
+              <li
+                className={`py-[6px] rounded-md  ${
+                  activeMenu === "client-supervisor"
+                    ? "bg-[#bb4343] text-white delay-100 duration-100 "
+                    : "hover:bg-gray"
+                }`}
+                onClick={() => handleMenuClick("client-supervisor")}
+              >
+                <p>Supervisor</p>
+              </li>
+            </Link>
           </ul>
         )}
 
         {/* Job Request Management */}
-        <li
-          className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
-            activeMenu === "request-management"
-              ? "bg-primary text-white "
-              : "hover:bg-gray "
-          }`}
-          onClick={() => handleMenuClick("request-management")}
-        >
-          <BsHouseGearFill className="w-5 h-5" />
-          <Link to="/request-management">Job Req. Management</Link>
-        </li>
-
-        {/* Invoice */}
-        <li
-          className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
-            activeMenu === "invoice"
-              ? "bg-primary text-white "
-              : "hover:bg-gray "
-          }`}
-          onClick={() => handleMenuClick("invoice")}
-        >
-          <LiaFileInvoiceSolid className="w-5 h-5" />
-          <Link to="/invoice">Invoice</Link>
-        </li>
-
-        {/* Add Service Category */}
-        <li
-          className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
-            activeMenu === "add-service"
-              ? "bg-primary text-white "
-              : "hover:bg-gray "
-          }`}
-          onClick={() => handleMenuClick("add-service")}
-        >
-          <MdOutlineCategory className="w-5 h-5" />
-          <Link to="/add-service">Add Service Category</Link>
-        </li>
-
-        {/* Make Admin */}
-        {ownData?.data?.role == "superAdmin" ? (
+        <Link to="/request-management">
           <li
             className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
-              activeMenu === "make-admin"
+              activeMenu === "request-management"
                 ? "bg-primary text-white "
                 : "hover:bg-gray "
             }`}
-            onClick={() => handleMenuClick("make-admin")}
+            onClick={() => handleMenuClick("request-management")}
           >
-            <FaUserPlus className="w-5 h-5" />
-            <Link to="/make-admin">Make Admin</Link>
+            <BsHouseGearFill className="w-5 h-5" />
+            <p>Job Req. Management</p>
           </li>
+        </Link>
+
+        {/* Invoice */}
+        <Link to="/invoice">
+          <li
+            className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
+              activeMenu === "invoice"
+                ? "bg-primary text-white "
+                : "hover:bg-gray "
+            }`}
+            onClick={() => handleMenuClick("invoice")}
+          >
+            <LiaFileInvoiceSolid className="w-5 h-5" />
+            <p>Invoice</p>
+          </li>
+        </Link>
+
+        {/* Add Service Category */}
+        <Link to="/add-service">
+          <li
+            className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
+              activeMenu === "add-service"
+                ? "bg-primary text-white "
+                : "hover:bg-gray "
+            }`}
+            onClick={() => handleMenuClick("add-service")}
+          >
+            <MdOutlineCategory className="w-5 h-5" />
+            <p>Add Service Category</p>
+          </li>
+        </Link>
+
+        {/* Make Admin */}
+        {ownData?.data?.role == "superAdmin" ? (
+          <Link to="/make-admin">
+            <li
+              className={`flex items-center gap-4 mt-4 px-2 py-3 rounded-lg  delay-100 duration-100 ${
+                activeMenu === "make-admin"
+                  ? "bg-primary text-white "
+                  : "hover:bg-gray "
+              }`}
+              onClick={() => handleMenuClick("make-admin")}
+            >
+              <FaUserPlus className="w-5 h-5" />
+              <p>Make Admin</p>
+            </li>
+          </Link>
         ) : null}
 
         {/* Settings */}
@@ -203,26 +219,30 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
         {isSettingsOpen && (
           <ul className="bg-[#ffebeb] rounded-lg text-center ">
-            <li
-              className={`rounded-md  delay-100 duration-100 py-3 ${
-                activeMenu === "privacy-policy"
-                  ? "bg-[#bb4343] text-white"
-                  : "hover:bg-gray"
-              }`}
-              onClick={() => handleMenuClick("privacy-policy")}
-            >
-              <Link to="/privacy-policy">Privacy Policy</Link>
-            </li>
-            <li
-              className={`py-3 delay-100 duration-100 ${
-                activeMenu === "terms-and-condition"
-                  ? "bg-[#bb4343] text-white"
-                  : "hover:bg-gray"
-              }`}
-              onClick={() => handleMenuClick("terms-and-condition")}
-            >
-              <Link to="/terms-and-condition">Terms and Conditions</Link>
-            </li>
+            <Link to="/privacy-policy">
+              <li
+                className={`rounded-md  delay-100 duration-100 py-3 ${
+                  activeMenu === "privacy-policy"
+                    ? "bg-[#bb4343] text-white"
+                    : "hover:bg-gray"
+                }`}
+                onClick={() => handleMenuClick("privacy-policy")}
+              >
+                <p>Privacy Policy</p>
+              </li>
+            </Link>
+            <Link to="/terms-and-condition">
+              <li
+                className={`py-3 delay-100 duration-100 ${
+                  activeMenu === "terms-and-condition"
+                    ? "bg-[#bb4343] text-white"
+                    : "hover:bg-gray"
+                }`}
+                onClick={() => handleMenuClick("terms-and-condition")}
+              >
+                <p>Terms and Conditions</p>
+              </li>
+            </Link>
           </ul>
         )}
       </ul>
