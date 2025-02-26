@@ -8,7 +8,7 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["admin"],
+      // invalidatesTags: ["admin"],
     }),
 
     forgotPassword: builder.mutation({
@@ -32,7 +32,7 @@ const authApi = baseApi.injectEndpoints({
         url: "/auth/reset-password",
         method: "POST",
         body: data,
-        headers: { Authorization: localStorage.getItem("resetToken") },
+        // headers: { Authorization: localStorage.getItem("resetToken") },
       }),
       invalidatesTags: ["admin"],
     }),

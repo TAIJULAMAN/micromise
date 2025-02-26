@@ -8,14 +8,17 @@ export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: getBaseUrl(),
+    "ngrok-skip-browser-warning": "1",
 
     prepareHeaders: (headers, { getState }) => {
       // console.log(getState);
-      const token = getUserToken();
+      const token = getState().auth.token;
+      console.log(token);
+      // const token = getUserToken();
       if (token) {
         headers.set("Authorization", token);
       }
-
+      headers.set("ngrok-skip-browser-warning", "1");
       return headers;
     },
   }),

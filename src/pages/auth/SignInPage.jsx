@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useLogInMutation } from "../../redux/api/authApi";
-import { storeUserToken } from "../../services/auth.service";
+// import { storeUserToken } from "../../services/auth.service";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/Slice/auth/authSlice";
 
 function SignInPage() {
   const [email, setEmail] = useState("");
@@ -11,6 +13,7 @@ function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [logIn, { isLoading }] = useLogInMutation();
 
   const handleSignIn = async (e) => {
@@ -31,10 +34,13 @@ function SignInPage() {
       const response = await logIn(loginData).unwrap();
       if (response?.data?.accessToken) {
         // console.log(response?.data?.accessToken);
-        storeUserToken({ accessToken: response?.data?.accessToken });
-        if (rememberMe) {
-          localStorage.setItem("accessToken", response?.data?.accessToken);
-        }
+        // storeUserToken({ accessToken: response?.data?.accessToken });
+        dispatch(setUser({ token: response?.data?.accessToken }));
+        // if (rememberMe) {
+        //   localStorage.setItem("accessToken", response?.data?.accessToken);
+        // }
+       
+
         Swal.fire({
           icon: "success",
           title: "Login successful!",

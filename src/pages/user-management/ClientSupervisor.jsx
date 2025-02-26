@@ -40,6 +40,7 @@ function ClientSupervisor() {
     isLoading,
     refetch,
   } = useGetAllSupervisorQuery(query);
+  console.log(error)
 
   // deleteServiceData
   const [deleteTechnician] = useDeleteSupervisorMutation();
@@ -79,7 +80,7 @@ function ClientSupervisor() {
     return (
       <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
     );
-  if (error) return <p className="text-red-500">Failed to load service!</p>;
+  // if (error) return <p className="text-red-500">Failed to load service!</p>;
 
   return (
     <div className="mt-5 overflow-hidden">

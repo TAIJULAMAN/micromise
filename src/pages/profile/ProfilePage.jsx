@@ -9,14 +9,14 @@ import {
 import { message } from "antd";
 
 function ProfilePage() {
-  const [profilePic, setProfilePic] = useState();
+  const [, setProfilePic] = useState();
   const [activeTab, setActiveTab] = useState("editProfile");
 
   const { data: getMeData, isLoading, error,  refetch } = useOwnDataQuery();
   const [updateAdmin] = useUpdateAdminMutation();
 
   const handleProfilePicUpload = async (e) => {
-    const pro = e?.target?.files[0];
+    // const pro = e?.target?.files[0];
     const formData = new FormData();
     formData.append("file", e?.target?.files[0]);
     const response = await updateAdmin({
