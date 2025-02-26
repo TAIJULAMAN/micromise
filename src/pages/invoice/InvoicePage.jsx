@@ -54,7 +54,7 @@ function InvoicePage() {
           Swal.fire({
             icon: "success",
             title: "Deleted!",
-            text: "The admin has been deleted successfully.",
+            text: "The invoice has been deleted successfully.",
           });
           refetch();
         } catch (error) {
@@ -62,7 +62,7 @@ function InvoicePage() {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: "Failed to delete the admin. Please try again.",
+            text: "Failed to delete the invoice. Please try again.",
           });
         }
       }
@@ -145,7 +145,7 @@ function InvoicePage() {
     return (
       <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
     );
-  if (error) return <p className="text-red-500">Failed to load service!</p>;
+  if (error) return <p className="text-red-500">Failed to load invoices!</p>;
 
   return (
     <div>
