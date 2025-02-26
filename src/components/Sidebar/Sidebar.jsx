@@ -8,6 +8,7 @@ import { IoMdSettings } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 import { useOwnDataQuery } from "../../redux/api/getMeApi";
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { setUser } from "../../redux/Slice/auth/authSlice";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -29,7 +30,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { data: ownData, error, isLoading } = useOwnDataQuery();
 
   const handleLogout = () => {
-    localStorage.clear();
+    // localStorage.clear();
+    setUser()
     router("/sign-in");
   };
 
@@ -37,7 +39,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     return (
       <div className="w-10 h-10 animate-spin rounded-full border-dashed border-10 border-primary"></div>
     );
-  if (error) return <p className="text-red-500">Failed to load technicians!</p>;
+  if (error) return <p className="text-red-500">Failed to load admin data!</p>;
 
   return (
     <div
